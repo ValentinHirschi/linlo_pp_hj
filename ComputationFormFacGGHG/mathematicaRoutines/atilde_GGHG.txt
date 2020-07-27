@@ -1,0 +1,35 @@
+{{0, 0, 0, 0, 0, 0, 0, 0, 0}, {-Log[-(Sqrt[4 - s]*Sqrt[-s]) - s] + 
+   Log[Sqrt[4 - s]*Sqrt[-s] - s], -Log[4 - s], 0, 0, 0, 0, 0, 0, 0}, 
+ {-Log[-(Sqrt[4 - t]*Sqrt[-t]) - t] + Log[Sqrt[4 - t]*Sqrt[-t] - t], 0, 
+  -Log[4 - t], 0, 0, 0, 0, 0, 0}, 
+ {-Log[-(Sqrt[4 - b]*Sqrt[-b]) - b] + Log[Sqrt[4 - b]*Sqrt[-b] - b], 0, 0, 
+  I*Pi - Log[-4 + b], 0, 0, 0, 0, 0}, 
+ {0, 0, -Log[-(Sqrt[4 - t]*Sqrt[-t]) - t] + Log[Sqrt[4 - t]*Sqrt[-t] - t], 0, 
+  0, 0, 0, 0, 0}, {0, -Log[-(Sqrt[4 - s]*Sqrt[-s]) - s] + 
+   Log[Sqrt[4 - s]*Sqrt[-s] - s], 0, 0, 0, 0, 0, 0, 0}, 
+ {0, 0, Log[-(Sqrt[4 - t]*Sqrt[-t]) - t] - Log[Sqrt[4 - t]*Sqrt[-t] - t], 
+  -Log[-(Sqrt[4 - b]*Sqrt[-b]) - b] + Log[Sqrt[4 - b]*Sqrt[-b] - b], 0, 0, 0, 
+  0, 0}, {0, Log[-(Sqrt[4 - s]*Sqrt[-s]) - s] - 
+   Log[Sqrt[4 - s]*Sqrt[-s] - s], 0, -Log[-(Sqrt[4 - b]*Sqrt[-b]) - b] + 
+   Log[Sqrt[4 - b]*Sqrt[-b] - b], 0, 0, 0, 0, 0}, 
+ {0, 2*Log[4*b + s*t - 4*(s + t) - Sqrt[4 - s]*Sqrt[-t]*
+       Sqrt[4*b + s*t - 4*(s + t)]] - 
+   2*Log[4*b + s*t - 4*(s + t) + Sqrt[4 - s]*Sqrt[-t]*
+       Sqrt[4*b + s*t - 4*(s + t)]], 
+  2*Log[4*b + s*t - 4*(s + t) - Sqrt[-s]*Sqrt[4 - t]*
+       Sqrt[4*b + s*t - 4*(s + t)]] - 
+   2*Log[4*b + s*t - 4*(s + t) + Sqrt[-s]*Sqrt[4 - t]*
+       Sqrt[4*b + s*t - 4*(s + t)]], 
+  -2*Log[-(Sqrt[4 - b]*Sqrt[-b]*Sqrt[-s]*Sqrt[-t]*
+        Sqrt[4*b + s*t - 4*(s + t)]) - b*(4*b + s*t - 4*(s + t))] + 
+   2*Log[Sqrt[4 - b]*Sqrt[-b]*Sqrt[-s]*Sqrt[-t]*Sqrt[4*b + s*t - 4*(s + t)] - 
+      b*(4*b + s*t - 4*(s + t))], 
+  -Log[-(s*t) - Sqrt[-s]*Sqrt[-t]*Sqrt[4*b + s*t - 4*(s + t)]] + 
+   Log[-(s*t) + Sqrt[-s]*Sqrt[-t]*Sqrt[4*b + s*t - 4*(s + t)]], 
+  -Log[-(s*t) - Sqrt[-s]*Sqrt[-t]*Sqrt[4*b + s*t - 4*(s + t)]] + 
+   Log[-(s*t) + Sqrt[-s]*Sqrt[-t]*Sqrt[4*b + s*t - 4*(s + t)]], 
+  Log[-(s*t) - Sqrt[-s]*Sqrt[-t]*Sqrt[4*b + s*t - 4*(s + t)]] - 
+   Log[-(s*t) + Sqrt[-s]*Sqrt[-t]*Sqrt[4*b + s*t - 4*(s + t)]], 
+  Log[-(s*t) - Sqrt[-s]*Sqrt[-t]*Sqrt[4*b + s*t - 4*(s + t)]] - 
+   Log[-(s*t) + Sqrt[-s]*Sqrt[-t]*Sqrt[4*b + s*t - 4*(s + t)]], 
+  Log[-b + s + t] - Log[4*b + s*t - 4*(s + t)]}}
