@@ -1,3 +1,32 @@
+      SUBROUTINE %(proc_prefix)sSMATRIX(P,ANS_SUMMED)
+C
+C     Simple routine wrapper to provide the same interface for
+C     backward compatibility for usage without split orders.
+C
+C  
+C CONSTANTS
+C 
+      INTEGER    NEXTERNAL
+      PARAMETER (NEXTERNAL=%(nexternal)d)
+      INTEGER NSQAMPSO
+      PARAMETER (NSQAMPSO=%(nSqAmpSplitOrders)d)
+C  
+C ARGUMENTS 
+C 
+      REAL*8 P(0:3,NEXTERNAL), ANS_SUMMED
+C
+C VARIABLES
+C
+      INTEGER I
+	  REAL*8 ANS(0:NSQAMPSO)
+C
+C BEGIN CODE
+C
+	  CALL %(proc_prefix)sSMATRIX_SPLITORDERS(P,ANS)
+	  ANS_SUMMED=ANS(0)
+
+	  END
+
       SUBROUTINE %(proc_prefix)sSMATRIXHEL(P,HEL,ANS)
       IMPLICIT NONE
 C
@@ -7,10 +36,6 @@ C
       PARAMETER (NEXTERNAL=%(nexternal)d)
       INTEGER                 NCOMB         
       PARAMETER (             NCOMB=%(ncomb)d)
-CF2PY INTENT(OUT) :: ANS                                                                                                                                                                                     
-CF2PY INTENT(IN) :: HEL                                                                                                                                                                                    
-CF2PY INTENT(IN) :: P(0:3,NEXTERNAL)  
-
 C  
 C ARGUMENTS 
 C  
@@ -30,11 +55,11 @@ C ----------
 
 	  END
 
-      SUBROUTINE %(proc_prefix)sSMATRIX(P,ANS)
+      SUBROUTINE %(proc_prefix)sSMATRIX_SPLITORDERS(P,ANS)
 C  
 %(info_lines)s
 C 
-C MadGraph5_aMC@NLO StandAlone Version
+C MadGraph StandAlone Version
 C 
 C Returns amplitude squared summed/avg over colors
 c and helicities
@@ -54,22 +79,22 @@ C
       PARAMETER (NPOLENTRIES=(NEXTERNAL+1)*6)
       INTEGER                 NCOMB         
       PARAMETER (             NCOMB=%(ncomb)d)
+      INTEGER NSQAMPSO
+      PARAMETER (NSQAMPSO=%(nSqAmpSplitOrders)d)
 	  INTEGER HELAVGFACTOR
 	  PARAMETER (HELAVGFACTOR=%(hel_avg_factor)d)
+	  LOGICAL CHOSEN_SO_CONFIGS(NSQAMPSO)
+	  DATA CHOSEN_SO_CONFIGS/%(chosen_so_configs)s/
+	  COMMON/%(proc_prefix)sCHOSEN_BORN_SQSO/CHOSEN_SO_CONFIGS
 C  
 C ARGUMENTS 
 C  
-      REAL*8 P(0:3,NEXTERNAL),ANS
-CF2PY INTENT(OUT) :: ANS
-CF2PY INTENT(IN) :: P(0:3,NEXTERNAL)
+      REAL*8 P(0:3,NEXTERNAL),ANS(0:NSQAMPSO)
 C  
 C LOCAL VARIABLES 
-C  
-      INTEGER NHEL(NEXTERNAL,NCOMB),NTRY
-C  put in common block to expose this variable to python interface
-      COMMON/%(proc_prefix)sPROCESS_NHEL/NHEL 
-      REAL*8 T
-      REAL*8 %(proc_prefix)sMATRIX
+C
+      INTEGER NTRY
+      REAL*8 T(NSQAMPSO), BUFF
       INTEGER IHEL,IDEN, I, J
 C     For a 1>N process, them BEAMTWO_HELAVGFACTOR would be set to 1.
       INTEGER BEAMS_HELAVGFACTOR(2)
@@ -78,17 +103,18 @@ C     For a 1>N process, them BEAMTWO_HELAVGFACTOR would be set to 1.
       LOGICAL GOODHEL(NCOMB)
       DATA NTRY/0/
       DATA GOODHEL/NCOMB*.FALSE./
-
+%(den_factor_line)s
 C
 C GLOBAL VARIABLES
 C
-      INTEGER USERHEL
-	  COMMON/%(proc_prefix)sHELUSERCHOICE/USERHEL
-	  DATA USERHEL/-1/	  
-
+      INTEGER NHEL(NEXTERNAL,NCOMB)
 %(helicity_lines)s
-%(den_factor_line)s
-
+      COMMON/%(proc_prefix)sPROCESS_NHEL/NHEL
+      
+      INTEGER USERHEL
+	  DATA USERHEL/-1/	  	  
+	  COMMON/%(proc_prefix)sHELUSERCHOICE/USERHEL
+      
 	  INTEGER POLARIZATIONS(0:NEXTERNAL,0:5)
       COMMON/%(proc_prefix)sBORN_BEAM_POL/POLARIZATIONS
       DATA ((POLARIZATIONS(I,J),I=0,NEXTERNAL),J=0,5)/NPOLENTRIES*-1/
@@ -101,10 +127,13 @@ C
 C ----------
 C BEGIN CODE
 C ----------
-      IF(USERHEL.EQ.-1) NTRY=NTRY+1
+      NTRY=NTRY+1
       DO IHEL=1,NEXTERNAL
          JC(IHEL) = +1
       ENDDO
+	  DO I=1,NSQAMPSO
+      	ANS(I) = 0D0	  
+	  ENDDO
 C     When spin-2 particles are involved, the Helicity filtering is dangerous for the 2->1 topology.
 C     This is because depending on the MC setup the initial PS points have back-to-back initial states
 C     for which some of the spin-2 helicity configurations are zero. But they are no longer zero
@@ -116,38 +145,80 @@ C     For this reason, we simply remove the filterin when there is only three ex
 		  GOODHEL(IHEL)=.TRUE.
 		ENDDO
 	  ENDIF
-      ANS = 0D0
-          DO IHEL=1,NCOMB
-	         IF (USERHEL.EQ.-1.OR.USERHEL.EQ.IHEL) THEN		  
-                IF (GOODHEL(IHEL) .OR. NTRY .LT. 20.OR.USERHEL.NE.-1) THEN
-				    IF(NTRY.GE.2.AND.POLARIZATIONS(0,0).ne.-1.and.(.not.%(proc_prefix)sIS_BORN_HEL_SELECTED(IHEL))) THEN
-                        CYCLE
-                    ENDIF
-                    T=%(proc_prefix)sMATRIX(P ,NHEL(1,IHEL),JC(1))
-                    IF(POLARIZATIONS(0,0).eq.-1.or.%(proc_prefix)sIS_BORN_HEL_SELECTED(IHEL)) THEN
-                        ANS=ANS+T
-                    ENDIF
-				    IF (T .NE. 0D0 .AND. .NOT.    GOODHEL(IHEL)) THEN
-                        GOODHEL(IHEL)=.TRUE.
-                    ENDIF
-                ENDIF
-		     ENDIF
-          ENDDO
-      ANS=ANS/DBLE(IDEN)
+      DO IHEL=1,NCOMB
+	     IF (USERHEL.EQ.-1.OR.USERHEL.EQ.IHEL) THEN
+           IF (GOODHEL(IHEL) .OR. NTRY .LT. 2 .OR.USERHEL.NE.-1) THEN
+              IF(NTRY.GE.2.AND.POLARIZATIONS(0,0).ne.-1.and.(.not.%(proc_prefix)sIS_BORN_HEL_SELECTED(IHEL))) THEN
+                CYCLE
+              ENDIF
+              CALL %(proc_prefix)sMATRIX(P ,NHEL(1,IHEL),JC(1), T)
+	 	      BUFF=0D0
+			  DO I=1,NSQAMPSO
+                IF(POLARIZATIONS(0,0).eq.-1.or.%(proc_prefix)sIS_BORN_HEL_SELECTED(IHEL)) THEN
+                  ANS(I)=ANS(I)+T(I)
+				ENDIF
+			    BUFF=BUFF+T(I)
+		      ENDDO
+              IF (BUFF .NE. 0D0 .AND. .NOT.    GOODHEL(IHEL)) THEN
+                GOODHEL(IHEL)=.TRUE.
+              ENDIF
+            ENDIF
+		  ENDIF
+       ENDDO
+	  ANS(0)=0.0d0
+	  DO I=1,NSQAMPSO
+        ANS(I)=ANS(I)/DBLE(IDEN)
+		IF (CHOSEN_SO_CONFIGS(I)) THEN
+		  ANS(0)=ANS(0)+ANS(I)
+		ENDIF
+	  ENDDO
 	  IF(USERHEL.NE.-1) THEN
-          ANS=ANS*HELAVGFACTOR	  
+		DO I=0,NSQAMPSO
+          ANS(I)=ANS(I)*HELAVGFACTOR
+		ENDDO
 	  ELSE
 		DO J=1,NINITIAL
 		  IF (POLARIZATIONS(J,0).ne.-1) THEN
-            ANS=ANS*BEAMS_HELAVGFACTOR(J)
-            ANS=ANS/POLARIZATIONS(J,0)
+		    DO I=0,NSQAMPSO
+              ANS(I)=ANS(I)*BEAMS_HELAVGFACTOR(J)
+              ANS(I)=ANS(I)/POLARIZATIONS(J,0)
+		    ENDDO
 		  ENDIF
 		ENDDO
 	  ENDIF
+      END
+
+      SUBROUTINE %(proc_prefix)sSMATRIXHEL_SPLITORDERS(P,HEL,ANS)
+      IMPLICIT NONE
+C
+C CONSTANT
+C
+      INTEGER    NEXTERNAL
+      PARAMETER (NEXTERNAL=%(nexternal)d)
+      INTEGER                 NCOMB         
+      PARAMETER (             NCOMB=%(ncomb)d)
+      INTEGER NSQAMPSO
+      PARAMETER (NSQAMPSO=%(nSqAmpSplitOrders)d)
+C  
+C ARGUMENTS 
+C  
+      REAL*8 P(0:3,NEXTERNAL),ANS(0:NSQAMPSO)
+	  INTEGER HEL
+C
+C GLOBAL VARIABLES
+C
+      INTEGER USERHEL
+	  COMMON/%(proc_prefix)sHELUSERCHOICE/USERHEL
+C ----------
+C BEGIN CODE
+C ----------
+      USERHEL=HEL
+	  CALL %(proc_prefix)sSMATRIX_SPLITORDERS(P,ANS)
+	  USERHEL=-1
+
 	  END
-       
-       
-      REAL*8 FUNCTION %(proc_prefix)sMATRIX(P,NHEL,IC)
+ 
+      SUBROUTINE %(proc_prefix)sMATRIX(P,NHEL,IC,RES)
 C  
 %(info_lines)s
 C
@@ -166,6 +237,8 @@ C
       PARAMETER (NEXTERNAL=%(nexternal)d)
       INTEGER    NWAVEFUNCS, NCOLOR
       PARAMETER (NWAVEFUNCS=%(nwavefuncs)d, NCOLOR=%(ncolor)d) 
+      INTEGER NAMPSO, NSQAMPSO
+      PARAMETER (NAMPSO=%(nAmpSplitOrders)d, NSQAMPSO=%(nSqAmpSplitOrders)d)
       REAL*8     ZERO
       PARAMETER (ZERO=0D0)
       COMPLEX*16 IMAG1
@@ -175,21 +248,27 @@ C ARGUMENTS
 C  
       REAL*8 P(0:3,NEXTERNAL)
       INTEGER NHEL(NEXTERNAL), IC(NEXTERNAL)
+	  REAL*8 RES(NSQAMPSO)
 C  
 C LOCAL VARIABLES 
 C  
-      INTEGER I,J
+      INTEGER I,J,M,N
       COMPLEX*16 ZTEMP
       REAL*8 DENOM(NCOLOR), CF(NCOLOR,NCOLOR)
-      COMPLEX*16 AMP(NGRAPHS), JAMP(NCOLOR)
+      COMPLEX*16 AMP(NGRAPHS)
+	  COMPLEX*16 JAMP(NCOLOR,NAMPSO)
       COMPLEX*16 W(20,NWAVEFUNCS)
       COMPLEX*16 DUM0,DUM1
+      INTEGER FLIPSIGN
       DATA DUM0, DUM1/(0d0, 0d0), (1d0, 0d0)/
+C
+C FUNCTION
+C
+      INTEGER %(proc_prefix)sSQSOINDEX
 C  
 C GLOBAL VARIABLES
 C  
       include 'coupl.inc'
-%(global_variable)s
 C  
 C COLOR DATA
 C  
@@ -197,20 +276,28 @@ C
 C ----------
 C BEGIN CODE
 C ----------
-C I printed here
 %(helas_calls)s
 %(jamp_lines)s
 
-      %(proc_prefix)sMATRIX = 0.D0 
-      DO I = 1, NCOLOR
+      RES = 0.D0 
+	  DO M = 1, NAMPSO
+        DO I = 1, NCOLOR
           ZTEMP = (0.D0,0.D0)
           DO J = 1, NCOLOR
-              ZTEMP = ZTEMP + CF(J,I)*JAMP(J)
+              ZTEMP = ZTEMP + CF(J,I)*JAMP(J,M)
           ENDDO
-          %(proc_prefix)sMATRIX = %(proc_prefix)sMATRIX+ZTEMP*DCONJG(JAMP(I))/DENOM(I)   
+		  DO N = 1, NAMPSO
+            RES(%(proc_prefix)sSQSOINDEX(M,N)) = RES(%(proc_prefix)sSQSOINDEX(M,N)) + ZTEMP*DCONJG(JAMP(I,N))/DENOM(I)
+		  ENDDO
+        ENDDO
+	  ENDDO
+      FLIPSIGN = 1
+      DO M =1, size(NHEL)
+            IF (NHEL(M).eq.77) THEN
+                  FLIPSIGN=-1*FLIPSIGN
+            ENDIF
       ENDDO
-%(amp2_lines)s
-C I printed here
+      RES = RES*FLIPSIGN
       END
 
       SUBROUTINE %(proc_prefix)sGET_value(P, ALPHAS, NHEL ,ANS)
@@ -253,7 +340,7 @@ C     ROUTINE FOR F2PY to read the benchmark point.
 CF2PY INTENT(IN) :: PATH 
       call setpara(PATH)  !first call to setup the paramaters    
       return 
-      end      
+      end
 
       LOGICAL FUNCTION %(proc_prefix)sIS_BORN_HEL_SELECTED(HELID)
       IMPLICIT NONE

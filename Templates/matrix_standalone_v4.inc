@@ -197,7 +197,6 @@ C
 C ----------
 C BEGIN CODE
 C ----------
-C I printed here
 %(helas_calls)s
 %(jamp_lines)s
 
@@ -210,7 +209,6 @@ C I printed here
           %(proc_prefix)sMATRIX = %(proc_prefix)sMATRIX+ZTEMP*DCONJG(JAMP(I))/DENOM(I)   
       ENDDO
 %(amp2_lines)s
-C I printed here
       END
 
       SUBROUTINE %(proc_prefix)sGET_value(P, ALPHAS, NHEL ,ANS)
