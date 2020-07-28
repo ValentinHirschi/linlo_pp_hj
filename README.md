@@ -1,29 +1,21 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
 
 ### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* The plugin in is intended to run ggHg as a standalone with MG5
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* install MadGraph5_aMC@NLO VERSION 2.7.3
+* clone the repo in madgraphs /PLUGIN/ directory
+* copy the file /TEMPLATES/aloha_functions.f into ../../aloha/template_files. It only extends the functionality of the gluon wave function to allow for additional polarization states
 
-### Contribution guidelines ###
 
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+### How do I use the plugin ###
+* use ./mg5_aMC
+* type:
+    > import model PATH_TO/PLUGIN/higgsew/UFO_model_gggH/
+    > generate g g > g H GGGH^2==2
+    > output standalone_ggHg EXPORTDIRNAME
+    > launch -f

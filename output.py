@@ -41,7 +41,6 @@ def get_helicity_matrix_longitudinal(self,allow_reverse=True):
     #             else model.get('particle_dict')[\
     #                         wf.get('pdg_code')].get_helicity_states(allow_reverse)
     # for wf in self.get_external_wavefunctions()]
-    print hel_per_part
 
     return apply(itertools.product, hel_per_part)
 
@@ -93,9 +92,8 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                                 write=True, proc_prefix=''):
         """Export a matrix element to a matrix.f file in MG4 standalone format
             if write is on False, just return the replace_dict and not write anything."""
-        print "I use {}".format(self.matrix_template)
-        print _iolibpath
-        print _file_path
+        
+
         if not matrix_element.get('processes') or \
                 not matrix_element.get('diagrams'):
             return 0
@@ -238,7 +236,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                 0].get('id')
             replace_dict["color_information"] = self.get_color_string_lines(
                 matrix_element)
-        print "My splitorders are {}".format(len(split_orders) > 0)
+
         if len(split_orders) > 0:
             if self.opt['export_format'] in ['standalone_msP', 'standalone_msF']:
                 logger.debug("Warning: The export format %s is not " +
@@ -250,7 +248,10 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                 matrix_template = "matrix_standalone_splitOrders_v4_mod_hel_sum.inc"
             else:
                 matrix_template = "matrix_standalone_splitOrders_v4_mod_hel_sum.inc"
-        print "My matrix_templeate is now {}".format(matrix_template)
+        if not matrix_template=="matrix_standalone_splitOrders_v4_mod_hel_sum.inc":
+            raise SystemExit(
+                'Error: ' + matrix_element +' does not account for longitudinal polarizations.')
+
         replace_dict['template_file'] = pjoin(
             _file_path, 'Templates', matrix_template)
         replace_dict['template_file2'] = _iolibpath+'template_files/split_orders_helping_functions.inc'
