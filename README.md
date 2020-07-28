@@ -15,7 +15,7 @@
 ### How do I use the plugin ###
 * use ./mg5_aMC
 * type:
-    > import model PATH_TO/PLUGIN/higgsew/UFO_model_gggH/
-    > generate g g > g H GGGH^2==2
-    > output standalone_ggHg EXPORTDIRNAME
+    > import model PATH_TO/PLUGIN/higgsew/UFO_model_gggH/  
+    > generate g g > g H GGGH^2==2  
+    > output standalone_ggHg EXPORTDIRNAME  
     > launch -f
