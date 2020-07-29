@@ -15,8 +15,8 @@
 ### How do I use the plugin ###
 * use ./mg5_aMC
 * type:
-    > import model PATH_TO/PLUGIN/higgsew/UFO_model_gggH/
-    > generate g g > H g GGGH^2==2
-    > output standalone_ggHg EXPORTDIRNAME
-    > launch -f
+    > import model PATH_TO/PLUGIN/higgsew/UFO_model_gggH/  
+    > generate g g > H g GGGH^2==2  
+    > output standalone_ggHg EXPORTDIRNAME  
+    > launch -f  
     > The benchmark for the hardcoded parameter card from an analytic computation is: 1.1654775807795E-003  
