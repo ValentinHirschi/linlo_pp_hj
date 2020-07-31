@@ -13,6 +13,7 @@ sys.path.insert(0, root_path)
 
 if True:
     import output as output
+    import gghg_interface as gghg_interface
 #import output as output
 # 1. Define new output mode
 #    example: new_output = {'myformat': MYCLASS}
@@ -30,7 +31,7 @@ new_cluster = {}
 # 3. Define a new interface (allow to add/modify MG5 command)
 #    This can be activated via ./bin/mg5_aMC --mode=PLUGINNAME
 ## Put None if no dedicated command are required
-new_interface = None
+new_interface = gghg_interface.GGHGInterface
 
 
 ########################## CONTROL VARIABLE ####################################

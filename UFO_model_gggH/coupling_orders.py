@@ -15,7 +15,7 @@ QED = CouplingOrder(name = 'QED',
                     expansion_order = -1,
                     perturbative_expansion =0)
 
-GGGH = CouplingOrder(name = 'GGGH',
+GGGHQCD = CouplingOrder(name = 'GGGHQCD',
                     hierarchy = 1,
                     expansion_order = -1,
                     perturbative_expansion =0)

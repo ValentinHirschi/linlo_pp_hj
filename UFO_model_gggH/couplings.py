@@ -12,23 +12,23 @@ from function_library import complexconjugate, re, im, csc, sec, acsc, asec
 # ======================================================================
 AllGGGHCoup = Coupling(name = 'AllGGGHCoup',
                  value = '-((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
-                 order = {'GGGH':1,"QCD":3,"QED":3})
+                 order = {'GGGHQCD':1,"QCD":3,"QED":3})
 
 GGGH_C1 = Coupling(name = 'GGGH_C1',
                 value = '(AllGGGHCoup)*(GGGH_ForFac1_RE+complex(0,1)*GGGH_ForFac1_IM)',
-                order = {'GGGH':1,"QCD":3,"QED":3})
+                order = {'GGGHQCD':1,"QCD":3,"QED":3})
 
 GGGH_C2 = Coupling(name = 'GGGH_C2',
                 value = '(AllGGGHCoup)*(GGGH_ForFac2_RE+complex(0,1)*GGGH_ForFac2_IM)',
-                order = {'GGGH':1,"QCD":3,"QED":3})
+                order = {'GGGHQCD':1,"QCD":3,"QED":3})
 
 GGGH_C3 = Coupling(name = 'GGGH_C3',
                 value = '(AllGGGHCoup)*(GGGH_ForFac3_RE+complex(0,1)*GGGH_ForFac3_IM)',
-                order = {'GGGH':1,"QCD":3,"QED":3})
+                order = {'GGGHQCD':1,"QCD":3,"QED":3})
 
 GGGH_C4 = Coupling(name = 'GGGH_C4',
                 value = '(AllGGGHCoup)*(GGGH_ForFac4_RE+complex(0,1)*GGGH_ForFac4_IM)',
-                order = {'GGGH':1,"QCD":3,"QED":3})
+                order = {'GGGHQCD':1,"QCD":3,"QED":3})
 
 
 
