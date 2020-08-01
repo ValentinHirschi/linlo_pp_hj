@@ -64,6 +64,8 @@ def get_helicity_combinations_longitudinal(self):
                     hel_per_part)
 
 
+    
+
 # add longitudinal helicity matrix and combinations
 setattr(helas_objects.HelasMatrixElement,'get_helicity_matrix_longitudinal',get_helicity_matrix_longitudinal)
 setattr(helas_objects.HelasMatrixElement,'get_helicity_combinations_longitudinal',get_helicity_combinations_longitudinal)
@@ -273,3 +275,40 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             replace_dict['return_value'] = len(
                 filter(lambda call: call.find('#') != 0, helas_calls))
             return replace_dict  # for subclass update
+    
+    def do_fix_lib_directory(self, lib_dir):
+        """ Performs the following changes in the lib directory directory:
+            -> Add soft links to the static or dynamic libraries of
+               GGVVamp and its dependencies
+        """
+
+        logger.info("Post-processing of the lib directory in '%s'"%lib_dir)
+
+        # First clean up duties
+        lib_names = ['gmp','cln','ginac','ggvvamp']
+        for lib_name in lib_names:
+            lib_exts = ['a','so','dylib']
+            for lib_ext in lib_exts:
+                if os.path.exists(pjoin(lib_dir,'lib%s.%s'%(lib_name,lib_ext))):
+                    os.remove(pjoin(lib_dir,'lib%s.%s'%(lib_name,lib_ext)))
+
+        lib_extension = '.a'
+        if self._linking_mode == 'dynamic':
+            lib_extension = self._dylib_ext
+
+
+        # def ln(file_pos, starting_dir='.', name='', log=True, cwd=None, abspath=False):
+        ln(pjoin(self._gmp_prefix,'lib','libgmp.%s'%lib_extension),
+           starting_dir = lib_dir,
+           abspath = True)
+        ln(pjoin(self._cln_prefix,'lib','libcln.%s'%lib_extension),
+           starting_dir = lib_dir,
+           abspath = True)
+        ln(pjoin(self._ginac_prefix,'lib','libginac.%s'%lib_extension),
+           starting_dir = lib_dir,
+           abspath = True)
+        # For ggvvamp, the dynamic library extension is always so
+        ln(pjoin(self._ggvv_prefix,'libggvvamp.%s'%('so' if self._linking_mode == 'dynamic' else 'a')),
+           name = 'libggvvamp.%s'%lib_extension,
+           starting_dir = lib_dir,
+           abspath = True)
