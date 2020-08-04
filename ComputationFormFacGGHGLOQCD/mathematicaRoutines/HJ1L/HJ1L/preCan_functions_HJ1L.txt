@@ -1,0 +1,34 @@
+{0, MI[0, 1], MI[1, 1], MI[2, 1], MI[3, 1], MI[4, 1], 
+ ff[vv[1]^(-1)]*MI[0, 6], ff[vv[1]^(-1)]*MI[1, 6], ff[vv[1]^(-1)]*MI[2, 6], 
+ ff[vv[1]^(-1)]*MI[3, 6], ff[vv[1]^(-1)]*MI[4, 6], 
+ ff[Sqrt[-vv[1]]/(Sqrt[4 - vv[1]]*vv[1])]*MI[0, 2], 
+ ff[Sqrt[-vv[1]]/(Sqrt[4 - vv[1]]*vv[1])]*MI[1, 2], 
+ ff[Sqrt[-vv[1]]/(Sqrt[4 - vv[1]]*vv[1])]*MI[2, 2], 
+ ff[Sqrt[-vv[1]]/(Sqrt[4 - vv[1]]*vv[1])]*MI[3, 2], 
+ ff[Sqrt[-vv[1]]/(Sqrt[4 - vv[1]]*vv[1])]*MI[4, 2], ff[vv[2]^(-1)]*MI[0, 5], 
+ ff[vv[2]^(-1)]*MI[1, 5], ff[vv[2]^(-1)]*MI[2, 5], ff[vv[2]^(-1)]*MI[3, 5], 
+ ff[vv[2]^(-1)]*MI[4, 5], ff[Sqrt[-vv[2]]/(Sqrt[4 - vv[2]]*vv[2])]*MI[0, 3], 
+ ff[Sqrt[-vv[2]]/(Sqrt[4 - vv[2]]*vv[2])]*MI[1, 3], 
+ ff[Sqrt[-vv[2]]/(Sqrt[4 - vv[2]]*vv[2])]*MI[2, 3], 
+ ff[Sqrt[-vv[2]]/(Sqrt[4 - vv[2]]*vv[2])]*MI[3, 3], 
+ ff[Sqrt[-vv[2]]/(Sqrt[4 - vv[2]]*vv[2])]*MI[4, 3], 
+ ff[Sqrt[-vv[3]]/(Sqrt[4 - vv[3]]*vv[3])]*MI[0, 4], 
+ ff[Sqrt[-vv[3]]/(Sqrt[4 - vv[3]]*vv[3])]*MI[1, 4], 
+ ff[Sqrt[-vv[3]]/(Sqrt[4 - vv[3]]*vv[3])]*MI[2, 4], 
+ ff[Sqrt[-vv[3]]/(Sqrt[4 - vv[3]]*vv[3])]*MI[3, 4], 
+ ff[Sqrt[-vv[3]]/(Sqrt[4 - vv[3]]*vv[3])]*MI[4, 4], 
+ ff[(-vv[1] + vv[3])^(-1)]*MI[0, 8], ff[(-vv[1] + vv[3])^(-1)]*MI[1, 8], 
+ ff[(-vv[1] + vv[3])^(-1)]*MI[2, 8], ff[(-vv[1] + vv[3])^(-1)]*MI[3, 8], 
+ ff[(-vv[1] + vv[3])^(-1)]*MI[4, 8], ff[(-vv[2] + vv[3])^(-1)]*MI[0, 7], 
+ ff[(-vv[2] + vv[3])^(-1)]*MI[1, 7], ff[(-vv[2] + vv[3])^(-1)]*MI[2, 7], 
+ ff[(-vv[2] + vv[3])^(-1)]*MI[3, 7], ff[(-vv[2] + vv[3])^(-1)]*MI[4, 7], 
+ ff[-((Sqrt[-vv[1]]*Sqrt[-vv[2]])/(vv[1]*vv[2]*
+      Sqrt[-4*vv[1] - 4*vv[2] + vv[1]*vv[2] + 4*vv[3]]))]*MI[0, 9], 
+ ff[-((Sqrt[-vv[1]]*Sqrt[-vv[2]])/(vv[1]*vv[2]*
+      Sqrt[-4*vv[1] - 4*vv[2] + vv[1]*vv[2] + 4*vv[3]]))]*MI[1, 9], 
+ ff[-((Sqrt[-vv[1]]*Sqrt[-vv[2]])/(vv[1]*vv[2]*
+      Sqrt[-4*vv[1] - 4*vv[2] + vv[1]*vv[2] + 4*vv[3]]))]*MI[2, 9], 
+ ff[-((Sqrt[-vv[1]]*Sqrt[-vv[2]])/(vv[1]*vv[2]*
+      Sqrt[-4*vv[1] - 4*vv[2] + vv[1]*vv[2] + 4*vv[3]]))]*MI[3, 9], 
+ ff[-((Sqrt[-vv[1]]*Sqrt[-vv[2]])/(vv[1]*vv[2]*
+      Sqrt[-4*vv[1] - 4*vv[2] + vv[1]*vv[2] + 4*vv[3]]))]*MI[4, 9]}
