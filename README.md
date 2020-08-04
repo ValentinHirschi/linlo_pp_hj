@@ -13,7 +13,7 @@
 
 
 ### How do I use the plugin ###
-* use ./mg5_aMC
+* use ./mg5_aMC --mode=higgsew 
 * type:
     > import model PATH_TO/PLUGIN/higgsew/UFO_model_gggH/  
     > generate g g > H g GGGH^2==2  
