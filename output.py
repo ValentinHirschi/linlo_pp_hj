@@ -147,8 +147,6 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         # add the makefile 
         filename = pjoin(self.dir_path,'Source','makefile')
         self.write_source_makefile(writers.FileWriter(filename))    
-
-
     
     def create_lib(self,target_dir, repl_dict):
         """write the makefile to compile the relevant process in a standalone. Copy and link the .f and .a routines
