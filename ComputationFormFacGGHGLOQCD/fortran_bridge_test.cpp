@@ -57,8 +57,8 @@ extern"C" void get_gggh_tensor_coefs_fortran_(const double *pInput,
 	ostr<<scientific;
 
 
-	if (exists("./mathematicaRoutines/evaluation_amp.wls")) {
-		ostr<<"./mathematicaRoutines/evaluation_amp.wls ";
+	if (exists("./mathematicaRoutines/HJ1L/exphj1l.wls")) {
+		ostr<<"./mathematicaRoutines/HJ1L/exphj1l.wls ";
 	} else  {
 	   std::cerr<<"Could Not find 'evaluation_amp.wls'. Place it somewhere as defined in fortran_bridge_gggh.cpp"<<std::endl;
        exit (EXIT_FAILURE);

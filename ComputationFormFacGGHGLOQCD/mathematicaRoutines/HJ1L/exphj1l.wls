@@ -1,21 +1,34 @@
-#!/usr/bin/env /opt/mathematica-12.0/Executables/wolframscript
+#!/usr/bin/env /usr/bin/wolframscript
 (* ::Package:: *)
 
-Get["ExpCan3_Resc.m"];
+If[ByteCount[$mypath]==0,
+	$myImportPath=FileNameJoin[{DirectoryName @ $InputFileName, ""}];
+	SetDirectory[$myImportPath];
+	$myImportPath=".";
+	$mypath="."
+	,
+	$myImportPath=$mypath
+	];
 
 
-$Verbose=True;
+Get[$myImportPath<>"/ExpCan3_Resc.m"];
 
-basedir=Directory[];
+
+$Verbose=False;
+
+basedir=Directory[](*$myImportPath*);
 
 Print[basedir];
 
 nvar=4;
 nindvar=3;
+myVars=4;
+Do[kinvars[ii]=Rationalize[SetPrecision[ImportString[$ScriptCommandLine[[ii+1]],"CSV"],32][[1,1]],10^-32],{ii,myVars}];
 
-Do[inputcl[ii]=ToExpression[$ScriptCommandLine[[ii+1]]],{ii,nindvar}];
-precinput=ToExpression[$ScriptCommandLine[[nindvar+2]]];
-Do[inputcl[ii]=If[Accuracy[inputcl[ii]]===Infinity,inputcl[ii],Rationalize[inputcl[ii],10^(-32)]],{ii,nindvar}]
+Do[inputcl[ii]=kinvars[ii]/kinvars[4],{ii,nindvar}];
+rescalingNorm=kinvars[4]^(-3);
+loopMeasure=1/(16*Pi^2);
+precinput=16;(*ToExpression[$ScriptCommandLine[[nindvar+2]]];*)
 p1in=Table[inputcl[ii],{ii,nindvar}];
 pin=Table[vv[ii]->p1in[[ii]],{ii,nindvar}];
 
@@ -54,7 +67,7 @@ print["loading FF : Done ",Date[]];
 
 Do[INTP[p1li[[ii]]]=Transpose[Get["./"<>FileTagP<>"/BClist/BClist_HJ1L_p"<>ToString[Hash[p1li[[ii]]]]<>".txt"][[2]]],{ii,Length@p1li}];
 
-fflistn=fflist/.pin/.canMI[a_,b_,c_]:>INTP[c][[a,b+1]]//Rationalize[#,10^(-32)]&;
+fflistn=fflist*loopMeasure*rescalingNorm/.pin/.canMI[a_,b_,c_]:>INTP[c][[a,b+1]]//Rationalize[#,10^(-32)]&;
 
 
 print["points evaluated: ", p1li//N]
