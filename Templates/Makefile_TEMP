@@ -1,0 +1,19 @@
+CC = g++
+CF = gfortran
+CFLAGS  = -c -Wall
+FFLAGS  = -fbounds-check -lstdc++ -g 
+CL = ar rcs
+RM = rm -rf
+# default: libggHgLOQCD.a
+# libggHgLOQCD.a: fortran_bridge_ggHg_QCD.o set_coefficient_ggHg_QCD.o
+# 	$(BUILDLIB) libggHgLOQCD.a fortran_bridge_ggHg_QCD.o set_coefficient_ggHg_QCD.o
+all: fortran_bri
+	$(CL)  libfortran_bridge.a fortran_bridge.o
+fortran_bri: fortran_bridge.cpp
+	$(CC) $(CFLAGS) fortran_bridge.cpp
+
+# fortran_eval:  fortran_evaluation
+# 	$(CF) $(CFLAGS) fortran_evaluation
+
+clean: 
+	$(RM) count *.o *.out *.a

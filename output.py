@@ -5,12 +5,22 @@ import os
 import madgraph.core.helas_objects as helas_objects
 from functools import wraps
 import itertools
+import json as json
+import copy
+import shutil
+import madgraph.various.misc as misc
+from madgraph.iolibs.files import cp, ln, mv
+import madgraph.iolibs.files as files
+
+
+
 
 pjoin = os.path.join
 
 _file_path = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0] + '/higgsew/'
 _iolibpath= os.path.normpath(pjoin(os.path.dirname(__file__), '../../madgraph/iolibs/'))+'/'
-print dir(helas_objects.HelasMatrixElement)
+_plugin_path = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0] + '/higgsew'
+_tmp_dir = 'Templates'
 
 logger = logging.getLogger('madgraph.export_v4')
 
@@ -23,7 +33,7 @@ default_compiler= {'fortran': 'gfortran',
 ###############################################################################################
 # obtains the helicity matrix including longitudinal polarizations
 def get_helicity_matrix_longitudinal(self,allow_reverse=True):
-    """Gives the helicity matrix for external wavefunctions"""
+    """Gives the helicity matrix for external wavefunctions for the polarization sum g^{mu,nu}"""
 
     if not self.get('processes'):
         return None
@@ -75,7 +85,132 @@ setattr(helas_objects.HelasMatrixElement,'get_helicity_combinations_longitudinal
 ### MODIFY EXPORTER TO ACCOUNT FOR POLARIZATION SUM -g^\mu\nu
 ###############################################################################################
 class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
-    matrix_template = "Templates/matrix_standalone_v4_mod_hel_sum.inc"
+
+
+    matrix_template = "Templates/matrix_standalone_v4_mod_hel_sum.inc"    
+    
+    # for muli-process defintion
+    # load process definitions:
+    def __init__(self, *args, **opts):
+        with open(pjoin(_plugin_path,'process_information.json')) as json_file:
+            self.available_processes = json.load(json_file)
+        self.relevant_processes = {}
+        self.fortran_routines = []
+        self.add_libraries = ['lstdc++']          
+        super(My_ggHg_Exporter,self).__init__(*args, **opts)
+        
+    def copy_template(self, model):
+        """Additional actions needed for setup of Template
+        """
+
+        #First copy the full template tree if dir_path doesn't exit
+        if os.path.isdir(self.dir_path):
+            return
+        
+        logger.info('initialize a new standalone directory: %s' % \
+                        os.path.basename(self.dir_path))
+        temp_dir = pjoin(self.mgme_dir, 'Template/LO')
+        
+        # Create the directory structure
+        os.mkdir(self.dir_path)
+        os.mkdir(pjoin(self.dir_path, 'Source'))
+        os.mkdir(pjoin(self.dir_path, 'Source', 'MODEL'))
+        os.mkdir(pjoin(self.dir_path, 'Source', 'DHELAS'))
+        os.mkdir(pjoin(self.dir_path, 'SubProcesses'))
+        os.mkdir(pjoin(self.dir_path, 'bin'))
+        os.mkdir(pjoin(self.dir_path, 'bin', 'internal'))
+        os.mkdir(pjoin(self.dir_path, 'lib'))
+        os.mkdir(pjoin(self.dir_path, 'Cards'))
+        
+        # Information at top-level
+        #Write version info
+        shutil.copy(pjoin(temp_dir, 'TemplateVersion.txt'), self.dir_path)
+        try:
+            shutil.copy(pjoin(self.mgme_dir, 'MGMEVersion.txt'), self.dir_path)
+        except IOError:
+            MG5_version = misc.get_pkg_info()
+            open(pjoin(self.dir_path, 'MGMEVersion.txt'), 'w').write( \
+                "5." + MG5_version['version'])
+        
+        
+        # Add file in SubProcesses
+        shutil.copy(pjoin(self.mgme_dir, 'madgraph', 'iolibs', 'template_files', 'makefile_sa_f_sp'), 
+                    pjoin(self.dir_path, 'SubProcesses', 'makefileP'))
+        
+        if self.format == 'standalone':
+            shutil.copy(pjoin(self.mgme_dir, 'madgraph', 'iolibs', 'template_files', 'check_sa.f'), 
+                    pjoin(self.dir_path, 'SubProcesses', 'check_sa.f'))
+                        
+        # Add file in Source
+        shutil.copy(pjoin(temp_dir, 'Source', 'make_opts'), 
+                    pjoin(self.dir_path, 'Source'))        
+        # add the makefile 
+        filename = pjoin(self.dir_path,'Source','makefile')
+        self.write_source_makefile(writers.FileWriter(filename))    
+
+
+    
+    def create_lib(self,target_dir, repl_dict):
+        """write the makefile to compile the relevant process in a standalone. Copy and link the .f and .a routines
+
+        Args:
+            target_dir (location): process location
+            repl_dict (dictionary): replace routines my names having a unique prefix
+        """
+        with open(pjoin(_plugin_path,_tmp_dir, 'Makefile_TEMP' ), 'r') as file:
+            makefile = file.read()
+        # generate the makefile to compile the .cpp routines
+        new_lib = 'libfortran_bridge.a'
+        for key,value in repl_dict.items():
+            makefile = makefile.replace(str(key),str(value).replace(".cpp",""))
+            new_lib=new_lib.replace(str(key),str(value).replace(".cpp",""))
+        self.add_libraries += [new_lib.replace('lib','l').replace('.a','')]
+
+        export = open(pjoin(target_dir,'Makefile'),'w')
+        export.write(makefile)
+        export.close()
+
+        # compile into a static library
+        misc.compile(arg=['clean'],cwd = target_dir)
+        misc.compile(arg=[],cwd = target_dir)
+        # Link to library into EXPORTDIR/libs/
+        libtolink = pjoin(target_dir,new_lib)
+        ln(file_pos=libtolink,starting_dir=pjoin(self.dir_path, 'lib') )
+        # copy coupling redefintion into EXPORTDIR/Source/MODEL/
+        cp(path1=pjoin(target_dir,repl_dict['fortran_evaluation']),path2=pjoin(self.dir_path, 'Source','MODEL'))       
+        self.fortran_routines +=[repl_dict['fortran_evaluation'].replace('.f','.o')]
+
+
+    def copy_and_compile_process_files(self,matrix_element):
+        """create copies of the evaluation functions and compile
+        """
+        needed_procs ={}
+        possible_procs = self.available_processes
+        involved_couplings = matrix_element.get(
+            'processes')[0].get('split_orders')
+        for proc in self.available_processes:
+            if possible_procs[proc]['associated_coupling'] in involved_couplings:
+                prefix = str(proc)
+                needed_procs[prefix] = {}
+                old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_bridge'])
+                # make relativ path absolute, so that we dont have to copy the mathematica folders
+                file = open(old_file,'r') 
+                file_source = file.read()
+                file.close()
+                file_source = file_source.replace('PATHTOC',pjoin(_plugin_path,possible_procs[proc]['directory']))              
+                new_file = prefix+"_"+ possible_procs[proc]['fortran_bridge']
+                with open(pjoin(_plugin_path,possible_procs[proc]['directory'],new_file),'w') as file:
+                    file.write(file_source)
+                needed_procs[prefix]['fortran_bridge'] = new_file
+                old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_evaluation'])
+                new_file = prefix+"_"+ possible_procs[proc]['fortran_evaluation']
+                shutil.copyfile(old_file,pjoin(_plugin_path,possible_procs[proc]['directory'],new_file))
+                needed_procs[prefix]['fortran_evaluation'] = new_file
+                needed_procs[prefix]['coupling'] = copy.copy(possible_procs[proc]['associated_coupling'])
+                self.create_lib(pjoin(_plugin_path, possible_procs[proc]['directory']),needed_procs[prefix])
+                self.relevant_processes.update(copy.deepcopy(needed_procs))
+
+    
     def get_helicity_lines(self, matrix_element,array_name='NHEL'):
         """Return the Helicity matrix definition lines for this matrix element"""
 
@@ -90,16 +225,17 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                  ",".join(['%2r'] * len(helicities)) + "/") % tuple(int_list))
 
         return "\n".join(helicity_line_list)
+
+
     def write_matrix_element_v4(self, writer, matrix_element, fortran_model,
                                 write=True, proc_prefix=''):
         """Export a matrix element to a matrix.f file in MG4 standalone format
             if write is on False, just return the replace_dict and not write anything."""
-        
+
 
         if not matrix_element.get('processes') or \
                 not matrix_element.get('diagrams'):
-            return 0
-
+            return 
         if writer:
             if not isinstance(writer, writers.FortranWriter):
                 raise writers.FortranWriter.FortranWriterError(
@@ -109,7 +245,8 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
 
         if not self.opt.has_key('sa_symmetry'):
             self.opt['sa_symmetry'] = False
-
+        
+        self.copy_and_compile_process_files(matrix_element)
         # The proc_id is for MadEvent grouping which is never used in SA.
         replace_dict = {'global_variable': '', 'amp2_lines': '',
                         'proc_prefix': proc_prefix, 'proc_id': ''}
@@ -275,40 +412,22 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             replace_dict['return_value'] = len(
                 filter(lambda call: call.find('#') != 0, helas_calls))
             return replace_dict  # for subclass update
-    
-    def do_fix_lib_directory(self, lib_dir):
-        """ Performs the following changes in the lib directory directory:
-            -> Add soft links to the static or dynamic libraries of
-               GGVVamp and its dependencies
-        """
-
-        logger.info("Post-processing of the lib directory in '%s'"%lib_dir)
-
-        # First clean up duties
-        lib_names = ['gmp','cln','ginac','ggvvamp']
-        for lib_name in lib_names:
-            lib_exts = ['a','so','dylib']
-            for lib_ext in lib_exts:
-                if os.path.exists(pjoin(lib_dir,'lib%s.%s'%(lib_name,lib_ext))):
-                    os.remove(pjoin(lib_dir,'lib%s.%s'%(lib_name,lib_ext)))
-
-        lib_extension = '.a'
-        if self._linking_mode == 'dynamic':
-            lib_extension = self._dylib_ext
-
-
-        # def ln(file_pos, starting_dir='.', name='', log=True, cwd=None, abspath=False):
-        ln(pjoin(self._gmp_prefix,'lib','libgmp.%s'%lib_extension),
-           starting_dir = lib_dir,
-           abspath = True)
-        ln(pjoin(self._cln_prefix,'lib','libcln.%s'%lib_extension),
-           starting_dir = lib_dir,
-           abspath = True)
-        ln(pjoin(self._ginac_prefix,'lib','libginac.%s'%lib_extension),
-           starting_dir = lib_dir,
-           abspath = True)
-        # For ggvvamp, the dynamic library extension is always so
-        ln(pjoin(self._ggvv_prefix,'libggvvamp.%s'%('so' if self._linking_mode == 'dynamic' else 'a')),
-           name = 'libggvvamp.%s'%lib_extension,
-           starting_dir = lib_dir,
-           abspath = True)
+    def finalize(self, matrix_elements, history, mg5options, flaglist):
+        for ff in self.fortran_routines:
+            with open(pjoin(self.dir_path, 'Source','MODEL','makeinc.inc'),'a') as file:
+                file.write(' ' + ff)
+        # I am not sure, but I think -lstdc++ should be a the end
+        new_libs = ' '        
+        for ff in reversed(self.add_libraries):
+            new_libs += '-'+ff + ' '
+        # change makefile in SUBPROCESSES
+        with open(pjoin(self.dir_path, 'SubProcesses','makefileP'), 'r+') as f: #r+ does the work of rw
+            lines = f.readlines()
+            for i, line in enumerate(lines):
+                if line.startswith('LINKLIBS'):
+                    lines[i] = lines[i].strip() + new_libs + '\n'
+            f.seek(0)
+            for line in lines:
+                f.write(line)
+        super(My_ggHg_Exporter,self).finalize(matrix_elements, history, mg5options, flaglist)
+           

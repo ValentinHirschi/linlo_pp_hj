@@ -75,6 +75,7 @@ canMI[id_,epsOrder_,kinematicData[[4]]]:=npLookUp[[4,2,epsOrder+1,id]];
 
 (* load formfactors *)
 coeff=loopMeasure*rescalingNorm*Import[locationAmps];
+Print[coeff//N];
 Print["START_OUTPUT_STREAM"];
 Do[
 	Print[transToC[Re@(coeff[[countCoeff]])]];

@@ -1,0 +1,8 @@
+{
+	"ggHgLOQCD":{
+		"directory":"ComputationFormFacGGHGLOQCD",
+		"fortran_bridge":"fortran_bridge_ggHg_QCD.cpp",
+		"fortran_evaluation":"set_coefficient_ggHg_QCD.f",
+		"associated_coupling":"GGGHQCD"
+	}
+}

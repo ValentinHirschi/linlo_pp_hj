@@ -1,4 +1,4 @@
-      subroutine set1LoopGGHGQCDCoefficients(P,pmass) 
+      subroutine set1LoopGGHGQCDCoefficients(P,mH,mT) 
         include 'coupl.inc'
 
             double precision P(16)
