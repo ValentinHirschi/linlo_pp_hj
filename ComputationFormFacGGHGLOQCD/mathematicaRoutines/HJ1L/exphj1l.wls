@@ -24,8 +24,8 @@ nvar=4;
 nindvar=3;
 myVars=4;
 Do[kinvars[ii]=Rationalize[SetPrecision[ImportString[$ScriptCommandLine[[ii+1]],"CSV"],32][[1,1]],10^-32],{ii,myVars}];
-
-Do[inputcl[ii]=kinvars[ii]/kinvars[4],{ii,nindvar}];
+kinvars[3]=kinvars[3]^2;
+Do[inputcl[ii]=kinvars[ii]/kinvars[4]^2,{ii,nindvar}];
 rescalingNorm=kinvars[4]^(-3);
 loopMeasure=1/(16*Pi^2);
 precinput=16;(*ToExpression[$ScriptCommandLine[[nindvar+2]]];*)
