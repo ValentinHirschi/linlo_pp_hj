@@ -49,10 +49,8 @@ class GGHGInterface(master_interface.MasterCmd, cmd.CmdShell):
         procs = self.available_processes
         for proc in list(procs):
             print "Validate file integrity for "+ str(proc)
-            for (key,value) in (procs[proc]).items():
- 
-                
-                if key!="associated_coupling" and key!="directory":
+            for (key,value) in (procs[proc]).items():               
+                if key=="fortran_bridge" or key=="fortran_evaluation":
                     if os.path.exists(pjoin(_plugin_path,procs[proc]['directory'],value)):
                         logger.info(value + " exists")
                     else:

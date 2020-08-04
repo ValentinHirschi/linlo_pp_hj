@@ -39,8 +39,8 @@ extern"C" void get_gggh_tensor_coefs_fortran_(const double *pInput,
 						double *oneLoopTensorRe,
 						double *oneLoopTensorIm
 						)  {
-		int npart = 4;
-	    double p[4][4];
+		int npart = 3;
+	    double p[3][4];
 		for (int i=0; i<npart*4; i=i+4) {
 			for (int j=0; j<4; j++) {
 				p[(i/4)][j]=pInput[i+j];
@@ -57,16 +57,16 @@ extern"C" void get_gggh_tensor_coefs_fortran_(const double *pInput,
 	ostr<<scientific;
 
 
-	if (exists("PATHTOC/mathematicaRoutines/evaluation_amp.wls")) {
-		ostr<<"PATHTOC/mathematicaRoutines/evaluation_amp.wls ";
+	if (exists("PATHTOC/mathematicaRoutines/HJ1L/exphj1l.wls")) {
+		ostr<<"PATHTOC/mathematicaRoutines/HJ1L/exphj1l.wls ";
 	} else  {
-	   std::cerr<<"Could Not find 'evaluation_amp.wls'. Place it somewhere as defined in fortran_bridge_gggh.cpp"<<std::endl;
+	   std::cerr<<"Could Not find 'exphj1l.wls'. Place it somewhere as defined in fortran_bridge_ggHg_QCD.cpp"<<std::endl;
        exit (EXIT_FAILURE);
 	}
 	ostr<< s << " ";
     ostr<<t<<" ";
-    ostr<<massHiggs<<" ";
-    ostr<<massTop;
+    ostr<<massTop<<" ";
+    ostr<<massHiggs;
 	
 	std::string command = ostr.str();
 	std::cout<<"About to call wrapper with: "<<command<<std::endl;

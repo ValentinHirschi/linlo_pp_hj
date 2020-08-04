@@ -1,7 +1,7 @@
 import madgraph.iolibs.export_v4 as export_v4
 import madgraph.iolibs.file_writers as writers
 import logging
-import os
+import os as os
 import madgraph.core.helas_objects as helas_objects
 from functools import wraps
 import itertools
@@ -11,7 +11,7 @@ import shutil
 import madgraph.various.misc as misc
 from madgraph.iolibs.files import cp, ln, mv
 import madgraph.iolibs.files as files
-
+from madgraph import MadGraph5Error, InvalidCmd, MG5DIR
 
 
 
@@ -96,6 +96,8 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             self.available_processes = json.load(json_file)
         self.relevant_processes = {}
         self.fortran_routines = []
+        self.tensor_strucs = []
+        self.coupl_update =[]
         self.add_libraries = ['lstdc++']          
         super(My_ggHg_Exporter,self).__init__(*args, **opts)
         
@@ -175,7 +177,9 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         libtolink = pjoin(target_dir,new_lib)
         ln(file_pos=libtolink,starting_dir=pjoin(self.dir_path, 'lib') )
         # copy coupling redefintion into EXPORTDIR/Source/MODEL/
-        cp(path1=pjoin(target_dir,repl_dict['fortran_evaluation']),path2=pjoin(self.dir_path, 'Source','MODEL'))       
+        cp(path1=pjoin(target_dir,repl_dict['fortran_evaluation']),path2=pjoin(self.dir_path, 'Source','MODEL'))
+        # copy cache file
+        cp(path1=pjoin(target_dir,repl_dict['fortran_cache']),path2=pjoin(self.dir_path, 'Source','MODEL'))       
         self.fortran_routines +=[repl_dict['fortran_evaluation'].replace('.f','.o')]
 
 
@@ -189,7 +193,8 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         for proc in self.available_processes:
             if possible_procs[proc]['associated_coupling'] in involved_couplings:
                 prefix = str(proc)
-                needed_procs[prefix] = {}
+                needed_procs[prefix] = copy.deepcopy(possible_procs[proc])
+                #handle the fortran bridge
                 old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_bridge'])
                 # make relativ path absolute, so that we dont have to copy the mathematica folders
                 file = open(old_file,'r') 
@@ -200,13 +205,14 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                 with open(pjoin(_plugin_path,possible_procs[proc]['directory'],new_file),'w') as file:
                     file.write(file_source)
                 needed_procs[prefix]['fortran_bridge'] = new_file
+                # handle the fortran evaluation
                 old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_evaluation'])
                 new_file = prefix+"_"+ possible_procs[proc]['fortran_evaluation']
                 shutil.copyfile(old_file,pjoin(_plugin_path,possible_procs[proc]['directory'],new_file))
                 needed_procs[prefix]['fortran_evaluation'] = new_file
-                needed_procs[prefix]['coupling'] = copy.copy(possible_procs[proc]['associated_coupling'])
-                self.create_lib(pjoin(_plugin_path, possible_procs[proc]['directory']),needed_procs[prefix])
                 self.relevant_processes.update(copy.deepcopy(needed_procs))
+                self.create_lib(pjoin(_plugin_path, possible_procs[proc]['directory']),needed_procs[prefix])
+                
 
     
     def get_helicity_lines(self, matrix_element,array_name='NHEL'):
@@ -427,5 +433,39 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             f.seek(0)
             for line in lines:
                 f.write(line)
+        # fix helas code for inclusion of coupling updates:
+        _helas_dir = pjoin(self.dir_path, 'Source','DHELAS')
+        _template_dir = pjoin(_plugin_path,'Templates')
+        for proc in self.relevant_processes.values():
+            if proc['gluon_number'] == 2:
+                with open(pjoin(_template_dir,'gg_coupling_update.f'),'r') as file:
+                    helas_def ='\n      double precision pg(0:3,2)'
+                    helas_string = file.read()
+            if proc['gluon_number'] == 3:
+                with open(pjoin(_template_dir,'ggg_coupling_update.f'),'r') as file:
+                    helas_def ='\n      double precision pg(0:3,3)'
+                    helas_string = file.read()
+            helas_string = helas_string.replace('SETCOEFFFUNC',proc["coupling_update_function"])
+            # now edit the tensor structures in the helas functions
+            for tens in proc["tensor_structures"]:
+                tensfile = pjoin(_helas_dir,tens+'_0.f')
+                if os.path.exists(tensfile):
+                    new_routine = []
+                    appended1 = False
+                    appended2 = False
+                    for line in open(tensfile,'r').read().split('\n'):
+                        if line.strip().startswith('P1(0) =') and appended1==False:
+                            appended1 = True
+                            new_routine.append(helas_def)
+                        if line.strip().startswith('TMP') and appended2==False:
+                            appended2 = True
+                            new_routine.append(helas_string)
+                        new_routine.append(line)
+                    open(tensfile,'w').write('\n'.join(new_routine))                            
+                else:
+                    err= 'Tensor structure '+tensfile+' not found!'
+                    raise MadGraph5Error(err)
+        # compile helas DIR
+        misc.compile(arg=[],cwd = _helas_dir)
         super(My_ggHg_Exporter,self).finalize(matrix_elements, history, mg5options, flaglist)
            

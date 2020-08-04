@@ -3,6 +3,10 @@
 		"directory":"ComputationFormFacGGHGLOQCD",
 		"fortran_bridge":"fortran_bridge_ggHg_QCD.cpp",
 		"fortran_evaluation":"set_coefficient_ggHg_QCD.f",
-		"associated_coupling":"GGGHQCD"
+		"coupling_update_function":"set1LoopGGHGQCDLOCoefficients",
+		"tensor_structures":["gggHTensStruc1","gggHTensStruc2","gggHTensStruc3","gggHTensStruc4"],
+	    "associated_coupling":"GGGHQCD",
+		"fortran_cache": "gghgQCDLO_cache.inc",
+		"gluon_number":3
 	}
 }

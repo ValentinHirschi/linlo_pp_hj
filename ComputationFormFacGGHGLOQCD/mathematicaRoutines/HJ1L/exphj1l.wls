@@ -70,7 +70,7 @@ Do[INTP[p1li[[ii]]]=Transpose[Get["./"<>FileTagP<>"/BClist/BClist_HJ1L_p"<>ToStr
 fflistn=fflist*loopMeasure*rescalingNorm/.pin/.canMI[a_,b_,c_]:>INTP[c][[a,b+1]]//Rationalize[#,10^(-32)]&;
 
 
-print["points evaluated: ", p1li//N]
+Print["points evaluated: ", p1li//N]
 
 Print["START_OUTPUT_STREAM"];
 
