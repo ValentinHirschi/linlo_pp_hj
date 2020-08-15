@@ -133,7 +133,7 @@ ymb = Parameter(name='ymb',
 ymt = Parameter(name='ymt',
                 nature='external',
                 type='real',
-                value=164.5,
+                value=172.0,
                 texname='\\text{ymt}',
                 lhablock='YUKAWA',
                 lhacode=[6])
