@@ -9,7 +9,7 @@
 	  double precision key_MB(max_cache_size)
 
 	  double precision value_ewTwoLoopTensorIm(max_cache_size,4)
-	  double precision value_ewTwoLoopTensorIm(max_cache_size,4)
+	  double precision value_ewTwoLoopTensorRe(max_cache_size,4)
 	  
       data curr_cache_size/0/
       common/GGHGEW/curr_cache_size,key_P,key_MA,key_MB,

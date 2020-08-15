@@ -33,7 +33,7 @@ inline bool exists (const std::string& name) {
 
 
 
-extern"C" void get_gggh_tensor_coefs_fortran_EW_(const double *pInput,
+extern"C" void get_gggh_tensor_coefs_ew_(const double *pInput,
 		                const double &	massHiggs,
 						const double &	massBoson,
 						double *oneLoopTensorRe,

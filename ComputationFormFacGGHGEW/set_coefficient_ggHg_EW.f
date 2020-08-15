@@ -124,7 +124,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
-             call get_gggh_tensor_coefs_fortran_EW(PGGG,MDL_MH,MDL_MZ,
+             call get_gggh_tensor_coefs_ew(PGGG,MDL_MH,MDL_MZ,
      &     ewTwoLoopTensorRe,ewTwoLoopTensorIm)
              CALL ADD_TO_CACHE_GGHGEW(P,MDL_MH, MDL_MZ, 
      &                         ewTwoLoopTensorRe, ewTwoLoopTensorIm)
@@ -139,7 +139,7 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
           MDL_GGGHEWZZ_ForFac3_IM  = real(ewTwoLoopTensorIm(3) ,16)
           MDL_GGGHEWZZ_ForFac4_IM  = real(ewTwoLoopTensorIm(4) ,16)
           call COUP()
-      end subroutine set1LoopGGHGEWZZCoefficients
+      end subroutine set2LoopGGHGEWZZCoefficients
 
 
       subroutine set2LoopGGHGEWWWCoefficients(P) 
@@ -168,7 +168,7 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
-            call get_gggh_tensor_coefs_fortran_EW(PGGG,MDL_MH,MDL_MW,
+            call get_gggh_tensor_coefs_ew(PGGG,MDL_MH,MDL_MW,
      &     ewTwoLoopTensorRe,ewTwoLoopTensorIm)
             CALL ADD_TO_CACHE_GGHGEW(P,MDL_MH, MDL_MW, 
      &                         ewTwoLoopTensorRe, ewTwoLoopTensorIm)
@@ -183,4 +183,4 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
           MDL_GGGHEWWW_ForFac3_IM  = real(ewTwoLoopTensorIm(3) ,16)
           MDL_GGGHEWWW_ForFac4_IM  = real(ewTwoLoopTensorIm(4) ,16)
           call COUP()
-      end subroutine set1LoopGGHGEWWWCoefficients
+      end subroutine set2LoopGGHGEWWWCoefficients
