@@ -1,0 +1,2 @@
+"ERROR: spurious sing @ x=1: {27/5, -439/1620, 625/324} -> {5, 301/324, 625/324}"
+"Bad contour: overlapping physical-physical or physical-spurious singularities: {51/10, -4, 625/324} -> {1343/1620, -4, 625/324}"

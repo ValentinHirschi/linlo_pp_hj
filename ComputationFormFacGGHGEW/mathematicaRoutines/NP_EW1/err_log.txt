@@ -1,0 +1,4 @@
+"ERROR: log spurious singularity : {-23/5, 69/10, 625/324} -> {-4397/324, -1/10, 625/324}"
+"ERROR: log spurious singularity : {51/10, -21/5, 625/324} -> {1667/1620, -21/5, 625/324}"
+"ERROR: log spurious singularity : {51/10, -21/5, 625/324} -> {1181/1620, -21/5, 625/324}"
+"ERROR: spurious sing @ x=1: {-3517/1620, -49/10, 625/324} -> {-671/324, -5, 625/324}"

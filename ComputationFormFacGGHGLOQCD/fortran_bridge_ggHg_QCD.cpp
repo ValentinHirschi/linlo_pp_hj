@@ -34,8 +34,8 @@ inline bool exists (const std::string& name) {
 
 
 extern"C" void get_gggh_tensor_coefs_fortran_(const double *pInput,
-		                const double &	massTop,
-						const double &	massHiggs,
+		                const double &	massHiggs,
+						const double &	massTop,
 						double *oneLoopTensorRe,
 						double *oneLoopTensorIm
 						)  {
@@ -65,8 +65,8 @@ extern"C" void get_gggh_tensor_coefs_fortran_(const double *pInput,
 	}
 	ostr<< s << " ";
     ostr<<t<<" ";
-    ostr<<massTop<<" ";
-    ostr<<massHiggs;
+    ostr<<massHiggs<<" ";
+    ostr<<massTop;
 	
 	std::string command = ostr.str();
 	std::cout<<"About to call wrapper with: "<<command<<std::endl;
