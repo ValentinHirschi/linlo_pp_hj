@@ -10,26 +10,73 @@ from function_library import complexconjugate, re, im, csc, sec, acsc, asec
 # ======================================================================
 # Effective fake couplings for each of the 4 tensors
 # ======================================================================
-AllGGGHCoup = Coupling(name = 'AllGGGHCoup',
+AllGGGHQCDCoup = Coupling(name = 'AllGGGHQCDCoup',
                  value = '-((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
-                 order = {'GGGHQCD':1,"QCD":3,"QED":3})
+                 order = {'GGGHQCD':1,"QCD":3,"QED":1})
 
-GGGH_C1 = Coupling(name = 'GGGH_C1',
-                value = '(AllGGGHCoup)*(GGGH_ForFac1_RE+complex(0,1)*GGGH_ForFac1_IM)',
-                order = {'GGGHQCD':1,"QCD":3,"QED":3})
+GGGHQCD_C1 = Coupling(name = 'GGGHQCD_C1',
+                value = '(AllGGGHQCDCoup)*(GGGHQCD_ForFac1_RE+complex(0,1)*GGGHQCD_ForFac1_IM)',
+                order = {'GGGHQCD':1,"QCD":3,"QED":1})
 
-GGGH_C2 = Coupling(name = 'GGGH_C2',
-                value = '(AllGGGHCoup)*(GGGH_ForFac2_RE+complex(0,1)*GGGH_ForFac2_IM)',
-                order = {'GGGHQCD':1,"QCD":3,"QED":3})
+GGGHQCD_C2 = Coupling(name = 'GGGHQCD_C2',
+                value = '(AllGGGHQCDCoup)*(GGGHQCD_ForFac2_RE+complex(0,1)*GGGHQCD_ForFac2_IM)',
+                order = {'GGGHQCD':1,"QCD":3,"QED":1})
 
-GGGH_C3 = Coupling(name = 'GGGH_C3',
-                value = '(AllGGGHCoup)*(GGGH_ForFac3_RE+complex(0,1)*GGGH_ForFac3_IM)',
-                order = {'GGGHQCD':1,"QCD":3,"QED":3})
+GGGHQCD_C3 = Coupling(name = 'GGGHQCD_C3',
+                value = '(AllGGGHQCDCoup)*(GGGHQCD_ForFac3_RE+complex(0,1)*GGGHQCD_ForFac3_IM)',
+                order = {'GGGHQCD':1,"QCD":3,"QED":1})
 
-GGGH_C4 = Coupling(name = 'GGGH_C4',
-                value = '(AllGGGHCoup)*(GGGH_ForFac4_RE+complex(0,1)*GGGH_ForFac4_IM)',
-                order = {'GGGHQCD':1,"QCD":3,"QED":3})
+GGGHQCD_C4 = Coupling(name = 'GGGHQCD_C4',
+                value = '(AllGGGHQCDCoup)*(GGGHQCD_ForFac4_RE+complex(0,1)*GGGHQCD_ForFac4_IM)',
+                order = {'GGGHQCD':1,"QCD":3,"QED":1})
 
+
+# =========================================================================
+# Effective fake couplings for each of the 4 tensors in GGHG EW ZZ-exchange
+# =========================================================================
+AllGGGHEWZZCoup = Coupling(name = 'AllGGGHEWZZCoup',
+                 value = '-((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
+                 order = {'GGGHEW':1,"QCD":3,"QED":3,"ZZ":1})
+
+GGGHEWZZ_C1 = Coupling(name = 'GGGHEWZZ_C1',
+                value = '(AllGGGHEWZZCoup)*(GGGHEWZZ_ForFac1_RE+complex(0,1)*GGGHEWZZ_ForFac1_IM)',
+                order = {'GGGHEW':1,"QCD":3,"QED":3,"ZZ":1})
+
+GGGHEWZZ_C2 = Coupling(name = 'GGGHEWZZ_C2',
+                value = '(AllGGGHEWZZCoup)*(GGGHEWZZ_ForFac2_RE+complex(0,1)*GGGHEWZZ_ForFac2_IM)',
+                order = {'GGGHEW':1,"QCD":3,"QED":3,"ZZ":1})
+
+GGGHEWZZ_C3 = Coupling(name = 'GGGHEWZZ_C3',
+                value = '(AllGGGHEWZZCoup)*(GGGHEWZZ_ForFac3_RE+complex(0,1)*GGGHEWZZ_ForFac3_IM)',
+                order = {'GGGHEW':1,"QCD":3,"QED":3,"ZZ":1})
+
+GGGHEWZZ_C4 = Coupling(name = 'GGGHEWZZ_C4',
+                value = '(AllGGGHEWZZCoup)*(GGGHEWZZ_ForFac4_RE+complex(0,1)*GGGHEWZZ_ForFac4_IM)',
+                order = {'GGGHEW':1,"QCD":3,"QED":3,"ZZ":1})
+
+
+# =========================================================================
+# Effective fake couplings for each of the 4 tensors in GGHG EW W+W-exchange
+# =========================================================================
+AllGGGHEWWWCoup = Coupling(name = 'AllGGGHEWWWCoup',
+                 value = '-((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
+                 order = {'GGGHEW':1,"QCD":3,"QED":3,"WW":1})
+
+GGGHEWWW_C1 = Coupling(name = 'GGGHEWWW_C1',
+                value = '(AllGGGHEWWWCoup)*(GGGHEWWW_ForFac1_RE+complex(0,1)*GGGHEWWW_ForFac1_IM)',
+                order = {'GGGHEW':1,"QCD":3,"QED":3,"WW":1})
+
+GGGHEWWW_C2 = Coupling(name = 'GGGHEWWW_C2',
+                value = '(AllGGGHEWWWCoup)*(GGGHEWWW_ForFac2_RE+complex(0,1)*GGGHEWWW_ForFac2_IM)',
+                order = {'GGGHEW':1,"QCD":3,"QED":3,"WW":1})
+
+GGGHEWWW_C3 = Coupling(name = 'GGGHEWWW_C3',
+                value = '(AllGGGHEWWWCoup)*(GGGHEWWW_ForFac3_RE+complex(0,1)*GGGHEWWW_ForFac3_IM)',
+                order = {'GGGHEW':1,"QCD":3,"QED":3,"WW":1})
+
+GGGHEWWW_C4 = Coupling(name = 'GGGHEWWW_C4',
+                value = '(AllGGGHEWWWCoup)*(GGGHEWWW_ForFac4_RE+complex(0,1)*GGGHEWWW_ForFac4_IM)',
+                order = {'GGGHEW':1,"QCD":3,"QED":3,"WW":1})
 
 
 # ======================================================================

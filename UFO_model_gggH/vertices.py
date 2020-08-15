@@ -9,21 +9,45 @@ import couplings as C
 import lorentz as L
 
 # ======================================================================
-# Effective fake vertex (from most generic tensor)
+# Effective fake vertex for ggHg LO QCD
 # ======================================================================
 
-GGGH = Vertex(name = 'GGGH',
+GGGHQCD = Vertex(name = 'GGGHQCD',
                 particles = [ P.G, P.G, P.G, P.H ],
                 color = [ 'f(1,2,3)' ],
                 lorentz = [ L.gggHTensStruc1, L.gggHTensStruc2,
                             L.gggHTensStruc3, L.gggHTensStruc4
                            ],
-                couplings = {(0,0):C.GGGH_C1, (0,1):C.GGGH_C2,
-                             (0,2):C.GGGH_C3, (0,3):C.GGGH_C4
+                couplings = {(0,0):C.GGGHQCD_C1, (0,1):C.GGGHQCD_C2,
+                             (0,2):C.GGGHQCD_C3, (0,3):C.GGGHQCD_C4
                              }
                 )
 
+# ======================================================================
+# Effective fake vertex for ggHg EW ZZ and WW exchange
+# ======================================================================
 
+GGGHEWZZ = Vertex(name = 'GGGHEWZZ',
+                particles = [ P.G, P.G, P.G, P.H ],
+                color = [ 'f(1,2,3)' ],
+                lorentz = [ L.gggHTensStruc1, L.gggHTensStruc2,
+                            L.gggHTensStruc3, L.gggHTensStruc4
+                           ],
+                couplings = {(0,0):C.GGGHEWZZ_C1, (0,1):C.GGGHEWZZ_C2,
+                             (0,2):C.GGGHEWZZ_C3, (0,3):C.GGGHEWZZ_C4
+                             }
+                )
+                
+GGGHEWWW = Vertex(name = 'GGGHEWWW',
+                particles = [ P.G, P.G, P.G, P.H ],
+                color = [ 'f(1,2,3)' ],
+                lorentz = [ L.gggHTensStruc1, L.gggHTensStruc2,
+                            L.gggHTensStruc3, L.gggHTensStruc4
+                           ],
+                couplings = {(0,0):C.GGGHEWWW_C1, (0,1):C.GGGHEWWW_C2,
+                             (0,2):C.GGGHEWWW_C3, (0,3):C.GGGHEWWW_C4
+                             }
+                )
 # ======================================================================
                              # QCD base vertices
 # ======================================================================

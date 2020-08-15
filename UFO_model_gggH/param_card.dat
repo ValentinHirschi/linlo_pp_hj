@@ -65,33 +65,51 @@ DECAY  11 0.000000 # e- : 0.0
 DECAY  13 0.000000 # m- : 0.0 
 
 ###################################
+## INFORMATION FOR GGGHEWWW
+###################################
+Block GGGHEWWW 
+  88001 8.800100e+01 # GGGHEWWW_ForFac1_RE 
+  88002 8.800200e+01 # GGGHEWWW_ForFac1_IM 
+  88003 8.800300e+01 # GGGHEWWW_ForFac2_RE 
+  88004 8.800400e+01 # GGGHEWWW_ForFac2_IM 
+  88005 8.800500e+01 # GGGHEWWW_ForFac3_RE 
+  88006 8.800600e+01 # GGGHEWWW_ForFac3_IM 
+  88007 8.800700e+01 # GGGHEWWW_ForFac4_RE 
+  88008 8.800800e+01 # GGGHEWWW_ForFac4_IM 
+
+###################################
+## INFORMATION FOR GGGHEWZZ
+###################################
+Block GGGHEWZZ 
+  77001 7.700100e+01 # GGGHEWZZ_ForFac1_RE 
+  77002 7.700200e+01 # GGGHEWZZ_ForFac1_IM 
+  77003 7.700300e+01 # GGGHEWZZ_ForFac2_RE 
+  77004 7.700400e+01 # GGGHEWZZ_ForFac2_IM 
+  77005 7.700500e+01 # GGGHEWZZ_ForFac3_RE 
+  77006 7.700600e+01 # GGGHEWZZ_ForFac3_IM 
+  77007 7.700700e+01 # GGGHEWZZ_ForFac4_RE 
+  77008 7.700800e+01 # GGGHEWZZ_ForFac4_IM 
+
+###################################
+## INFORMATION FOR GGGHQCD
+###################################
+Block GGGHQCD 
+  40001 1.000000e+00 # n_loops 
+  40002 1.000000e-07 # requiredRelativeAccuracy 
+  66001 6.600100e+01 # GGGHQCD_ForFac1_RE 
+  66002 6.600200e+01 # GGGHQCD_ForFac1_IM 
+  66003 6.600300e+01 # GGGHQCD_ForFac2_RE 
+  66004 6.600400e+01 # GGGHQCD_ForFac2_IM 
+  66005 6.600500e+01 # GGGHQCD_ForFac3_RE 
+  66006 6.600600e+01 # GGGHQCD_ForFac3_IM 
+  66007 6.600700e+01 # GGGHQCD_ForFac4_RE 
+  66008 6.600800e+01 # GGGHQCD_ForFac4_IM 
+
+###################################
 ## INFORMATION FOR LOOP
 ###################################
 Block LOOP 
     1 9.118800e+01 # MU_R 
-
-###################################
-## INFORMATION FOR ONELOOPGGGH
-###################################
-Block ONELOOPGGGH 
-  40001 1.000000e+00 # n_loops 
-  40002 1.000000e-07 # requiredRelativeAccuracy 
-  40003 5.000000e+00 # NMasslessQuarks 
-  40004 0.000000e+00 # residueToReturn 
-  50001 1.000000e+00 # include_d_quark 
-  50002 1.000000e+00 # include_u_quark 
-  50003 1.000000e+00 # include_s_quark 
-  50004 1.000000e+00 # include_c_quark 
-  50005 1.000000e+00 # include_b_quark 
-  50006 1.000000e+00 # include_t_quark 
-  60001 6.600100e+01 # GGGH_ForFac1_RE 
-  60101 6.610100e+01 # GGGH_ForFac1_IM 
-  66002 6.600200e+01 # GGGH_ForFac2_RE 
-  67101 6.710100e+01 # GGGH_ForFac2_IM 
-  69001 6.900100e+01 # GGGH_ForFac3_RE 
-  71101 7.110100e+01 # GGGH_ForFac3_IM 
-  86001 8.600100e+01 # GGGH_ForFac4_RE 
-  86101 8.610100e+01 # GGGH_ForFac4_IM 
 
 ###################################
 ## INFORMATION FOR WOLFENSTEIN

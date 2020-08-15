@@ -19,3 +19,18 @@ GGGHQCD = CouplingOrder(name = 'GGGHQCD',
                     hierarchy = 1,
                     expansion_order = -1,
                     perturbative_expansion =0)
+
+GGGHEW = CouplingOrder(name = 'GGGHEW',
+                    hierarchy = 1,
+                    expansion_order = -1,
+                    perturbative_expansion =0)
+
+ZZ = CouplingOrder(name = 'ZZ',
+                    hierarchy = 2,
+                    expansion_order = -1,
+                    perturbative_expansion =0)
+
+WW = CouplingOrder(name = 'WW',
+                    hierarchy = 2,
+                    expansion_order = -1,
+                    perturbative_expansion =0)
