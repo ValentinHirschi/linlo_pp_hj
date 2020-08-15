@@ -130,13 +130,13 @@ c             Write(*,*) 'Recomputing it GGVVAMP'
      &                         oneLoopTensorRe, oneLoopTensorIm)
           endif     
 !         Update couplings
-          MDL_GGGH_ForFac1_RE  = real(oneLoopTensorRe(1) ,16)
-          MDL_GGGH_ForFac2_RE  = real(oneLoopTensorRe(2) ,16)
-          MDL_GGGH_ForFac3_RE  = real(oneLoopTensorRe(3) ,16)
-          MDL_GGGH_ForFac4_RE  = real(oneLoopTensorRe(4) ,16)
-          MDL_GGGH_ForFac1_IM  = real(oneLoopTensorIm(1) ,16)
-          MDL_GGGH_ForFac2_IM  = real(oneLoopTensorIm(2) ,16)
-          MDL_GGGH_ForFac3_IM  = real(oneLoopTensorIm(3) ,16)
-          MDL_GGGH_ForFac4_IM  = real(oneLoopTensorIm(4) ,16)
+          MDL_GGGHQCD_ForFac1_RE  = real(oneLoopTensorRe(1) ,16)
+          MDL_GGGHQCD_ForFac2_RE  = real(oneLoopTensorRe(2) ,16)
+          MDL_GGGHQCD_ForFac3_RE  = real(oneLoopTensorRe(3) ,16)
+          MDL_GGGHQCD_ForFac4_RE  = real(oneLoopTensorRe(4) ,16)
+          MDL_GGGHQCD_ForFac1_IM  = real(oneLoopTensorIm(1) ,16)
+          MDL_GGGHQCD_ForFac2_IM  = real(oneLoopTensorIm(2) ,16)
+          MDL_GGGHQCD_ForFac3_IM  = real(oneLoopTensorIm(3) ,16)
+          MDL_GGGHQCD_ForFac4_IM  = real(oneLoopTensorIm(4) ,16)
           call COUP()
       end subroutine set1LoopGGHGQCDLOCoefficients
