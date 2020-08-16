@@ -13,13 +13,13 @@
 ### Coupling orders and description ###
 * GGGHQCD: effective coupling for LO QCD    
 * GGGHEW: effective coupling for EW corrections (W and Z)    
-* ZZ and WW (lower hirachy): Z (resp. W) exchange only    
+* ZZ and WW (lower hierarchy): Z (resp. W) exchange only    
 
 ### How do I use the plugin ###
 * use ./mg5_aMC --mode=higgsew 
-* type:
-    > import model PATH_TO/PLUGIN/higgsew/UFO_model_gggH/  
+* type:    
     > generate g g > H g GGGHQCD^2==2  
     > output standalone_ggHg EXPORTDIRNAME  
     > launch -f  
-    > The benchmark for the hardcoded parameter card from an analytic computation is: 1.1654775807795E-003  
+    > The benchmark from an analytic computation is: 1.1654775807795E-003  
+    > Also see validate_default
