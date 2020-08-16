@@ -853,8 +853,10 @@ LWCoupling = Parameter(name='LWCoupling',
                        value='1./(sw*cmath.sqrt(2))',
                        texname='LWCoupling')
 # ===============================================================================
-# Form Factors for ggHg
+# Overall Couplings
 # ===============================================================================
+# my color factor is Tr[T^a T^b T^c]-Tr[T^a T^c T^b] = -1/2 i f^abc
+# therefore I include a -1/2 i
 # QCD
 AllGGGHQCDCoup = Parameter(name='AllGGGHQCDCoup',
                            nature='internal',
@@ -863,6 +865,26 @@ AllGGGHQCDCoup = Parameter(name='AllGGGHQCDCoup',
                            texname='AllGGGHQCDCoup',
                            lhablock='GGGHQCD',
                            lhacode=[66000])
+# Z-exchange                           
+AllGGGHEWZZCoup = Parameter(name='AllGGGHEWZZCoup',
+                            nature='internal',
+                            type='complex',
+                            value='-0.5*complex(0,1)*G**3*gw**3*MW/cw**4*(5./8. - (7.*sw**2)/6. + (11.*sw**4)/9.)',
+                            texname='AllGGGHEWCoup',
+                            lhablock='GGGHEWZZ',
+                            lhacode=[77000])
+# W exchange
+AllGGGHEWZZCoup = Parameter(name='AllGGGHEWWWCoup',
+                            nature='internal',
+                            type='complex',
+                            value='-0.5*complex(0,1)*G**3*gw**3*MW',
+                            texname='AllGGGHEWWWCoup',
+                            lhablock='GGGHEWWW',
+                            lhacode=[77000])
+# ===============================================================================
+# Form Factors for ggHg
+# ===============================================================================
+
 
 GGGHQCD_ForFac1_RE = Parameter(name='GGGHQCD_ForFac1_RE',
                                nature='external',
@@ -930,13 +952,7 @@ GGGHQCD_ForFac4_IM = Parameter(name='GGGHQCD_ForFac4_IM',
 # ----------------------------------------------------------
 # EW ZZ-exchange
 # ----------------------------------------------------------
-AllGGGHEWZZCoup = Parameter(name='AllGGGHEWZZCoup',
-                            nature='internal',
-                            type='complex',
-                            value='-((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
-                            texname='AllGGGHEWCoup',
-                            lhablock='GGGHEWZZ',
-                            lhacode=[77000])
+
 
 GGGHEWZZ_ForFac1_RE = Parameter(name='GGGHEWZZ_ForFac1_RE',
                                 nature='external',
@@ -1005,13 +1021,7 @@ GGGHEWZZ_ForFac4_IM = Parameter(name='GGGHEWZZ_ForFac4_IM',
 # ----------------------------------------------------------
 # EW WW-exchange
 # ----------------------------------------------------------
-AllGGGHEWZZCoup = Parameter(name='AllGGGHEWWWCoup',
-                            nature='internal',
-                            type='complex',
-                            value='-((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
-                            texname='AllGGGHEWWWCoup',
-                            lhablock='GGGHEWWW',
-                            lhacode=[77000])
+
 GGGHEWWW_ForFac1_RE = Parameter(name='GGGHEWWW_ForFac1_RE',
                                 nature='external',
                                 type='real',

@@ -26,8 +26,9 @@ myVars=4;
 Do[kinvars[ii]=Rationalize[SetPrecision[ImportString[$ScriptCommandLine[[ii+1]],"CSV"],32][[1,1]],10^-32],{ii,myVars}];
 kinvars[3]=kinvars[3]^2;
 Do[inputcl[ii]=kinvars[ii]/kinvars[4]^2,{ii,nindvar}];
-rescalingNorm=kinvars[4]^(-3);
-loopMeasure=1/(16*Pi^2);
+(* three dimension from the projector and one from the couplings *)
+rescalingNorm=kinvars[4]^(-4);
+loopMeasure=-(1/(4 Pi)^4);
 precinput=16;(*ToExpression[$ScriptCommandLine[[nindvar+2]]];*)
 p1in=Table[inputcl[ii],{ii,nindvar}];
 pin=Table[vv[ii]->p1in[[ii]],{ii,nindvar}];
@@ -69,7 +70,7 @@ print["loading FF : Done ",Date[]];
 Do[INTP[p1li[[ii]]]=Transpose[Get["./"<>FileTagP<>"/BClist/BClist_Planar_EW1_p"<>ToString[Hash[p1li[[ii]]]]<>".txt"][[2]]],{ii,Length@p1li}];
 Do[INTNP[p1li[[ii]]]=Transpose[Get["./"<>FileTagNP<>"/BClist/BClist_NP_EW1_p"<>ToString[Hash[p1li[[ii]]]]<>".txt"][[2]]],{ii,Length@p1li}];
 
-fflistn=fflist/.pin/.{canMINP[a_,b_,c_]:>INTNP[c][[a,b+1]],canMIPlanar[a_,b_,c_]:>INTP[c][[a,b+1]]}//Rationalize[#,10^(-32)]&;
+fflistn=rescalingNorm*loopMeasure*fflist/.pin/.{canMINP[a_,b_,c_]:>INTNP[c][[a,b+1]],canMIPlanar[a_,b_,c_]:>INTP[c][[a,b+1]]}//Rationalize[#,10^(-32)]&;
 
 print["Points evaluated ",p1li//N]
 
