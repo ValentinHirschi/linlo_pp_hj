@@ -190,6 +190,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         possible_procs = self.available_processes
         involved_couplings = matrix_element.get(
             'processes')[0].get('split_orders')
+        print involved_couplings
         for proc in self.available_processes:
             if possible_procs[proc]['associated_coupling'] in involved_couplings:
                 prefix = str(proc)
@@ -445,7 +446,9 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                 with open(pjoin(_template_dir,'ggg_coupling_update.f'),'r') as file:
                     helas_def ='\n      double precision pg(0:3,3)'
                     helas_string = file.read()
-            helas_string = helas_string.replace('SETCOEFFFUNC',proc["coupling_update_function"])
+            helas_string_update =''
+            for coup_update in proc["coupling_update_function"]:
+                helas_string_update +='      call SETCOEFFFUNC(pg)'.replace('SETCOEFFFUNC',coup_update)+'\n'
             # now edit the tensor structures in the helas functions
             for tens in proc["tensor_structures"]:
                 tensfile = pjoin(_helas_dir,tens+'_0.f')
@@ -453,13 +456,19 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                     new_routine = []
                     appended1 = False
                     appended2 = False
+                    appended3 = False
+                    if 'pg(0:3,' in open(tensfile,'r').read():
+                        appended3=True
+
                     for line in open(tensfile,'r').read().split('\n'):
-                        if line.strip().startswith('P1(0) =') and appended1==False:
+                        if line.strip().startswith('P1(0) =') and appended1==False and appended3==False:
                             appended1 = True
                             new_routine.append(helas_def)
                         if line.strip().startswith('TMP') and appended2==False:
                             appended2 = True
-                            new_routine.append(helas_string)
+                            if appended3==False:
+                                new_routine.append(helas_string)
+                            new_routine.append(helas_string_update)
                         new_routine.append(line)
                     open(tensfile,'w').write('\n'.join(new_routine))                            
                 else:

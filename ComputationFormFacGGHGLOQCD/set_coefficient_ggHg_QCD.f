@@ -55,7 +55,7 @@ C Cache
               enddo
             enddo
             FOUNDIT = .True.
-            write(*,*) 'RECYCLED A CALL! ',cache_index
+            ! write(*,*) 'RECYCLED A CALL! ',cache_index
             do i=1,4
               oneLoopTensorRe(i) = value_oneLoopTensorRe(cache_index,i)
               oneLoopTensorIm(i) = value_oneLoopTensorIm(cache_index,i)

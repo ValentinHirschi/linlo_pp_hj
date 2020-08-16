@@ -9,7 +9,7 @@
 
 using namespace std;
 
-std::string exec(const char* cmd) {
+std::string exec_ew(const char* cmd) {
     char buffer[128];
     std::string result = "";
     FILE* pipe = popen(cmd, "r");
@@ -27,7 +27,7 @@ std::string exec(const char* cmd) {
     return result;
 }
 
-inline bool exists (const std::string& name) {
+inline bool exists_ew (const std::string& name) {
     return ( access( name.c_str(), F_OK ) != -1 );
 }
 
@@ -57,7 +57,7 @@ extern"C" void get_gggh_tensor_coefs_ew_(const double *pInput,
 	ostr<<scientific;
 
 
-	if (exists("PATHTOC/mathematicaRoutines/expew.wls")) {
+	if (exists_ew("PATHTOC/mathematicaRoutines/expew.wls")) {
 		ostr<<"PATHTOC/mathematicaRoutines/expew.wls ";
 	} else  {
 	   std::cerr<<"Could Not find 'expew.wls'. Place it somewhere as defined in fortran_bridge_ggHg_EW.cpp"<<std::endl;
@@ -70,7 +70,7 @@ extern"C" void get_gggh_tensor_coefs_ew_(const double *pInput,
 	
 	std::string command = ostr.str();
 	std::cout<<"About to call wrapper with: "<<command<<std::endl;
-    std::string str_result = exec(command.c_str());
+    std::string str_result = exec_ew(command.c_str());
 	// std::cout<<"I got result="<<str_result<<std::endl;
     vector<std::string> result;
 	std::istringstream iss(str_result);
