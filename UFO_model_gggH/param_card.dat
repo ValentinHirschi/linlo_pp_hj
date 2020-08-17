@@ -106,6 +106,24 @@ Block GGGHQCD
   66008 6.600800e+01 # GGGHQCD_ForFac4_IM 
 
 ###################################
+## INFORMATION FOR GGHEWWW
+###################################
+Block GGHEWWW 
+  33001 3.300100e+01 # GGHEWWW2L_ForFac1_RE 
+  33002 3.300200e+01 # GGHEWWW2L_ForFac1_IM 
+  55001 5.500100e+01 # GGHEWWW3L_ForFac1_RE 
+  55002 5.500200e+01 # GGHEWWW3L_ForFac1_IM 
+
+###################################
+## INFORMATION FOR GGHEWZZ
+###################################
+Block GGHEWZZ 
+  22001 2.200100e+01 # GGHEWZZ2L_ForFac1_RE 
+  22002 2.200200e+01 # GGHEWZZ2L_ForFac1_IM 
+  44001 4.400100e+01 # GGHEWZZ3L_ForFac1_RE 
+  44002 4.400200e+01 # GGHEWZZ3L_ForFac1_IM 
+
+###################################
 ## INFORMATION FOR LOOP
 ###################################
 Block LOOP 
@@ -126,7 +144,7 @@ Block Wolfenstein
 Block YUKAWA 
     4 1.270000e+00 # ymc 
     5 4.200000e+00 # ymb 
-    6 1.72000e+02 # ymt 
+    6 1.720000e+02 # ymt 
    11 5.110000e-04 # yme 
    13 1.056600e-01 # ymm 
    15 1.777000e+00 # ymtau 

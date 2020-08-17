@@ -8,6 +8,37 @@ import particles as P
 import couplings as C
 import lorentz as L
 
+# =============================================================================
+# Effective fake vertex for ggH EW 1 and 2 Loop see 1711.1113v2 eq: (2.6), (6.3)
+# =============================================================================
+# 2-loop
+GGHEWZZ2L = Vertex(name = 'GGHEWZZ2L',
+                particles = [ P.G, P.G, P.H ],
+                color = [ 'Identity(1,2)' ],
+                lorentz = [ L.ggHTensStruc1],
+                couplings = {(0,0):C.GGHEWZZ2L_C1}
+                )
+GGHEWWW2L = Vertex(name = 'GGHEWWW2L',
+                particles = [ P.G, P.G, P.H ],
+                color = [ 'Identity(1,2)' ],
+                lorentz = [ L.ggHTensStruc1],
+                couplings = {(0,0):C.GGHEWWW2L_C1}
+                )
+# 3-loop
+GGHEWZZ3L = Vertex(name = 'GGHEWZZ3L',
+                particles = [ P.G, P.G, P.H ],
+                color = [ 'Identity(1,2)' ],
+                lorentz = [ L.ggHTensStruc1],
+                couplings = {(0,0):C.GGHEWZZ3L_C1}
+                )
+GGHEWWW3L = Vertex(name = 'GGHEWWW3L',
+                particles = [ P.G, P.G, P.H ],
+                color = [ 'Identity(1,2)' ],
+                lorentz = [ L.ggHTensStruc1],
+                couplings = {(0,0):C.GGHEWWW3L_C1}
+                )
+
+
 # ======================================================================
 # Effective fake vertex for ggHg LO QCD
 # ======================================================================
