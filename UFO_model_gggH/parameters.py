@@ -891,13 +891,13 @@ AllGGHEWWWCoup3L = Parameter(name='AllGGHEWWWCoup3L',
 # ===============================================================================
 # Overall Coupling for GGGH
 # ===============================================================================
-# my color factor is Tr[T^a T^b T^c]-Tr[T^a T^c T^b] = -1/2 i f^abc
+# my color factor is -Tr[T^a T^b T^c]+Tr[T^a T^c T^b] = 1/2 i f^abc
 # therefore I include a -1/2 i
 # QCD
 AllGGGHQCDCoup = Parameter(name='AllGGGHQCDCoup',
                            nature='internal',
                            type='complex',
-                           value='-((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
+                           value='((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
                            texname='AllGGGHQCDCoup',
                            lhablock='GGGHQCD',
                            lhacode=[66000])
@@ -905,7 +905,7 @@ AllGGGHQCDCoup = Parameter(name='AllGGGHQCDCoup',
 AllGGGHEWZZCoup = Parameter(name='AllGGGHEWZZCoup',
                             nature='internal',
                             type='complex',
-                            value='-0.5*complex(0,1)*G**3*gw**3*MW/cw**4*(5./8. - (7.*sw**2)/6. + (11.*sw**4)/9.)',
+                            value='0.5*complex(0,1)*G**3*gw**3*MW/cw**4*(5./8. - (7.*sw**2)/6. + (11.*sw**4)/9.)',
                             texname='AllGGGHEWCoup',
                             lhablock='GGGHEWZZ',
                             lhacode=[77000])
@@ -913,7 +913,7 @@ AllGGGHEWZZCoup = Parameter(name='AllGGGHEWZZCoup',
 AllGGGHEWZZCoup = Parameter(name='AllGGGHEWWWCoup',
                             nature='internal',
                             type='complex',
-                            value='-0.5*complex(0,1)*G**3*gw**3*MW',
+                            value='0.5*complex(0,1)*G**3*gw**3*MW',
                             texname='AllGGGHEWWWCoup',
                             lhablock='GGGHEWWW',
                             lhacode=[88000])
