@@ -12,7 +12,9 @@
 * copy the file /TEMPLATES/aloha_functions.f into ../../aloha/template_files. It only extends the functionality of the gluon wave function to allow for additional polarization states
 ### Coupling orders and description ###
 * GGGHQCD: effective coupling for LO QCD    
-* GGGHEW: effective coupling for EW corrections (W and Z)    
+* GGGHEW: effective coupling for EW corrections (W and Z)   
+* GGHEW2L: effective coupling for virtual 2-loop EW corrections (W and Z)        
+* GGHEW3L: effective coupling for virtual 3-loop EW corrections (W and Z)        
 * ZZ and WW (lower hierarchy): Z (resp. W) exchange only    
 
 ### How do I use the plugin ###
