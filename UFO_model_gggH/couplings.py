@@ -21,7 +21,7 @@ GGH_HEFT_1L_EP0_C1 = Coupling(name = 'GGH_HEFT_NLO_EP0_C1',
 
 GGH_HEFT_1L_EPM1_C1 = Coupling(name = 'GGH_HEFT_NLO_EPM1_C1',
                 value = '(CHEFT)*aS/(4.*cmath.pi)*complex(0,1)*(GGH_HEFT1L_EPM1_RE+GGH_HEFT1L_EPM1_IM*complex(0,1))',
-                order = {'GGHEFT':1,"QCD":4,"QED":1,"EPM11L";1})
+                order = {'GGHEFT':1,"QCD":4,"QED":1,"EPM11L":1})
 
 # ((-I/2)*aS*CW*Nc)/(eps^2*Pi): Nc=3
 GGH_HEFT_1L_EPM2_C1 = Coupling(name = 'GGH_HEFT_NLO_EPM2_C1',

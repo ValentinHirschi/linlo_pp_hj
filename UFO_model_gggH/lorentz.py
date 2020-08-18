@@ -25,7 +25,7 @@ gggHTensStruc4 = Lorentz(
 ###################################################
 # GGH-tensor structures
 ###################################################
-# we use do not use the structure in (2.6) of 1711.11113v2
+# we do not use the structure in (2.6) of 1711.11113v2
 ggHTensStruc1 = Lorentz(
     name='ggHTensStruc1',
     spins=[3, 3, 1],
