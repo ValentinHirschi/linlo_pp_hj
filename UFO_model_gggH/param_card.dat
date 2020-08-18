@@ -91,6 +91,15 @@ Block GGGHEWZZ
   77008 7.700800e+01 # GGGHEWZZ_ForFac4_IM 
 
 ###################################
+## INFORMATION FOR GGGHHEFT
+###################################
+Block GGGHHEFT 
+  30001 3.000100e+01 # GGGH_HEFT_ForFac1 
+  30002 3.000200e+01 # GGGH_HEFT_ForFac2 
+  30003 3.000300e+01 # GGGH_HEFT_ForFac3 
+  30004 3.000400e+01 # GGGH_HEFT_ForFac4 
+
+###################################
 ## INFORMATION FOR GGGHQCD
 ###################################
 Block GGGHQCD 
@@ -122,6 +131,15 @@ Block GGHEWZZ
   22002 2.200200e+01 # GGHEWZZ2L_ForFac1_IM 
   44001 4.400100e+01 # GGHEWZZ3L_ForFac1_RE 
   44002 4.400200e+01 # GGHEWZZ3L_ForFac1_IM 
+
+###################################
+## INFORMATION FOR GGHHEFT
+###################################
+Block GGHHEFT 
+  20001 2.000100e+01 # GGH_HEFT1L_EP0_RE 
+  20002 2.000200e+01 # GGH_HEFT1L_EP0_IM 
+  20003 2.000300e+01 # GGH_HEFT1L_EPM1_RE 
+  20004 2.000400e+01 # GGH_HEFT1L_EPM1_IM 
 
 ###################################
 ## INFORMATION FOR LOOP

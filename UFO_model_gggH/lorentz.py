@@ -5,31 +5,31 @@ from object_library import all_lorentz, Lorentz
 gggHTensStruc1 = Lorentz(
     name='gggHTensStruc1',
     spins=[3, 3, 3, 1],
-    structure='1*(((-(Metric(1, 2)*P(-6, 1)*P(-6, 2)) + P(1, 2)*P(2, 1))*(-(P(-15, 2)*P(-15, 3)*P(3, 1)) + P(-10, 1)*P(-10, 3)*P(3, 2)))/(P(-15, 2)*P(-15, 3)))'
+    structure='-1*(((-(Metric(1, 2)*P(-6, 1)*P(-6, 2)) + P(1, 2)*P(2, 1))*(-(P(-15, 2)*P(-15, 3)*P(3, 1)) + P(-10, 1)*P(-10, 3)*P(3, 2)))/(P(-15, 2)*P(-15, 3)))'
 )
 gggHTensStruc2 = Lorentz(
     name='gggHTensStruc2',
     spins=[3, 3, 3, 1],
-    structure='1*(((P(-10, 1)*P(-10, 3)*P(1, 2) - P(-6, 1)*P(-6, 2)*P(1, 3))*(-(Metric(2, 3)*P(-15, 2)*P(-15, 3)) + P(2, 3)*P(3, 2)))/(P(-10, 1)*P(-10, 3)))'
+    structure='-1*(((P(-10, 1)*P(-10, 3)*P(1, 2) - P(-6, 1)*P(-6, 2)*P(1, 3))*(-(Metric(2, 3)*P(-15, 2)*P(-15, 3)) + P(2, 3)*P(3, 2)))/(P(-10, 1)*P(-10, 3)))'
 )
 gggHTensStruc3 = Lorentz(
     name='gggHTensStruc3',
     spins=[3, 3, 3, 1],
-    structure='1*(((P(-15, 2)*P(-15, 3)*P(2, 1) - P(-6, 1)*P(-6, 2)*P(2, 3))*(-(Metric(1, 3)*P(-10, 1)*P(-10, 3)) + P(1, 3)*P(3, 1)))/(P(-15, 2)*P(-15, 3)))'
+    structure='-1*(((P(-15, 2)*P(-15, 3)*P(2, 1) - P(-6, 1)*P(-6, 2)*P(2, 3))*(-(Metric(1, 3)*P(-10, 1)*P(-10, 3)) + P(1, 3)*P(3, 1)))/(P(-15, 2)*P(-15, 3)))'
 )
 gggHTensStruc4 = Lorentz(
     name='gggHTensStruc4',
     spins=[3, 3, 3, 1],
-    structure='1*(-(Metric(1, 3)*P(-15, 2)*P(-15, 3)*P(2, 1)) + Metric(1, 3)*P(-6, 1)*P(-6, 2)*P(2, 3) + Metric(1, 2)*P(-15, 2)*P(-15, 3)*P(3, 1) + P(1, 2)*(Metric(2, 3)*P(-10, 1)*P(-10, 3) - P(2, 3)*P(3, 1)) - Metric(1, 2)*P(-10, 1)*P(-10, 3)*P(3, 2) + P(1, 3)*(-(Metric(2, 3)*P(-6, 1)*P(-6, 2)) + P(2, 1)*P(3, 2)))'
+    structure='-1*(-(Metric(1, 3)*P(-15, 2)*P(-15, 3)*P(2, 1)) + Metric(1, 3)*P(-6, 1)*P(-6, 2)*P(2, 3) + Metric(1, 2)*P(-15, 2)*P(-15, 3)*P(3, 1) + P(1, 2)*(Metric(2, 3)*P(-10, 1)*P(-10, 3) - P(2, 3)*P(3, 1)) - Metric(1, 2)*P(-10, 1)*P(-10, 3)*P(3, 2) + P(1, 3)*(-(Metric(2, 3)*P(-6, 1)*P(-6, 2)) + P(2, 1)*P(3, 2)))'
 )
 ###################################################
 # GGH-tensor structures
 ###################################################
-# we use the structure in (2.6) of 1711.11113v2
+# we use do not use the structure in (2.6) of 1711.11113v2
 ggHTensStruc1 = Lorentz(
     name='ggHTensStruc1',
     spins=[3, 3, 1],
-    structure='1/8*1/2*(Metric(1, 2) - (P(1, 2)*P(2, 1))/(P(-6, 1)*P(-6, 2)))'
+    structure='1*( Metric(1, 2)*(P(-6, 1)*P(-6, 2)) - P(1, 2)*P(2, 1))'
 )
 ###################################
 # CounterTerms Lorentz structures #

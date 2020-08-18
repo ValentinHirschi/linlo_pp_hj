@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     77276,       1935]
-NotebookOptionsPosition[     72340,       1846]
-NotebookOutlinePosition[     72704,       1862]
-CellTagsIndexPosition[     72661,       1859]
+NotebookDataLength[     80069,       2010]
+NotebookOptionsPosition[     74681,       1913]
+NotebookOutlinePosition[     75045,       1929]
+CellTagsIndexPosition[     75002,       1926]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1841,7 +1841,74 @@ Cell[BoxData[" "], "Input",
 Cell[BoxData[""], "Input",
  CellChangeTimes->{{3.8044296072087727`*^9, 
   3.804429610261311*^9}},ExpressionUUID->"841878ce-2b6e-4024-b32d-\
-2d3b1608e3b1"]
+2d3b1608e3b1"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"tensStructggH", "=", 
+  RowBox[{"contractLorentz", "[", 
+   RowBox[{
+    RowBox[{"vector", "[", 
+     RowBox[{"eps1", ",", "mu1"}], "]"}], 
+    RowBox[{"vector", "[", 
+     RowBox[{"eps2", ",", "mu2"}], "]"}], 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"g", "[", 
+       RowBox[{"mu1", ",", "mu2"}], "]"}], "-", 
+      FractionBox[
+       RowBox[{
+        RowBox[{"vector", "[", 
+         RowBox[{"p2", ",", "mu1"}], "]"}], 
+        RowBox[{"vector", "[", 
+         RowBox[{"p1", ",", "mu2"}], "]"}]}], 
+       RowBox[{"SP", "[", 
+        RowBox[{"p1", ",", "p2"}], "]"}]]}], ")"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.80664406380637*^9, 3.806644110940119*^9}, {
+  3.806644405564217*^9, 3.806644437137108*^9}},
+ CellLabel->"In[10]:=",ExpressionUUID->"48b32a1e-3faf-4857-96d7-7545a667c8a9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SP", "[", 
+   RowBox[{"eps1", ",", "eps2"}], "]"}], "-", 
+  FractionBox[
+   RowBox[{
+    RowBox[{"SP", "[", 
+     RowBox[{"eps1", ",", "p2"}], "]"}], " ", 
+    RowBox[{"SP", "[", 
+     RowBox[{"eps2", ",", "p1"}], "]"}]}], 
+   RowBox[{"SP", "[", 
+    RowBox[{"p1", ",", "p2"}], "]"}]]}]], "Output",
+ CellChangeTimes->{3.806644442763962*^9},
+ CellLabel->"Out[10]=",ExpressionUUID->"fd3d0e01-b440-4505-ab22-d8fab10833ba"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"StringReplace", "[", 
+  RowBox[{
+   RowBox[{"generateLorentzPY", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\"\<V\>\"", ",", "\"\<V\>\"", ",", "\"\<S\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", "tensStructggH", "}"}], "}"}]}], "]"}], ",", 
+   RowBox[{"\"\<gggH\>\"", "\[Rule]", "\"\<ggH\>\""}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.8066444931915197`*^9, 3.8066445576131973`*^9}},
+ CellLabel->"In[14]:=",ExpressionUUID->"79999f73-1b2b-4a58-ae0e-b137a5314e82"],
+
+Cell[BoxData[
+ RowBox[{"{", "\<\"import form_factors as ForFac\\nfrom object_library import \
+all_lorentz, Lorentz\\n\\n\\nggHTensStruc1 = Lorentz(\\nname='ggHTensStruc1',\
+\\nspins =[3, 3, 1],\\nstructure = '1*(Metric(1, 2) - (P(1, 2)*P(2, \
+1))/(P(-6, 1)*P(-6, 2)))'\\n)\\n\"\>", "}"}]], "Output",
+ CellChangeTimes->{{3.8066444939028788`*^9, 3.806644524031145*^9}, 
+   3.806644557885262*^9},
+ CellLabel->"Out[14]=",ExpressionUUID->"4d634827-ab12-4d8c-86f9-e1d52ab771ae"]
+}, Open  ]]
 }, Open  ]]
 },
 WindowSize->{1920, 1016},
@@ -1935,7 +2002,15 @@ Cell[70534, 1790, 152, 3, 38, "Input",ExpressionUUID->"5b044d1d-1e59-4a6c-8309-5
 Cell[70689, 1795, 331, 6, 38, "Input",ExpressionUUID->"0c5c219e-609e-4d06-9395-0ef0d37ee65e"],
 Cell[71023, 1803, 935, 29, 59, "Input",ExpressionUUID->"d916391c-0d0c-4e0b-9ca3-c5cda14fa51d"],
 Cell[71961, 1834, 206, 4, 38, "Input",ExpressionUUID->"5724aace-7cbc-4d09-8d10-28494fc45dc6"],
-Cell[72170, 1840, 154, 3, 38, "Input",ExpressionUUID->"841878ce-2b6e-4024-b32d-2d3b1608e3b1"]
+Cell[72170, 1840, 154, 3, 38, "Input",ExpressionUUID->"841878ce-2b6e-4024-b32d-2d3b1608e3b1"],
+Cell[CellGroupData[{
+Cell[72349, 1847, 824, 22, 59, "Input",ExpressionUUID->"48b32a1e-3faf-4857-96d7-7545a667c8a9"],
+Cell[73176, 1871, 454, 13, 65, "Output",ExpressionUUID->"fd3d0e01-b440-4505-ab22-d8fab10833ba"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[73667, 1889, 511, 11, 38, "Input",ExpressionUUID->"79999f73-1b2b-4a58-ae0e-b137a5314e82"],
+Cell[74181, 1902, 472, 7, 328, "Output",ExpressionUUID->"4d634827-ab12-4d8c-86f9-e1d52ab771ae"]
+}, Open  ]]
 }, Open  ]]
 }
 ]

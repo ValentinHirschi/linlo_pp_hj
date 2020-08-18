@@ -35,7 +35,6 @@ GGHEW3L = CouplingOrder(name = 'GGHEW3L',
                     expansion_order = -1,
                     perturbative_expansion =0)
 
-
 ZZ = CouplingOrder(name = 'ZZ',
                     hierarchy = 2,
                     expansion_order = -1,
@@ -44,4 +43,26 @@ ZZ = CouplingOrder(name = 'ZZ',
 WW = CouplingOrder(name = 'WW',
                     hierarchy = 2,
                     expansion_order = -1,
+                    perturbative_expansion =0)  
+
+# HEFT COUPLING ORDERS (Talk to Val)
+GGHEFT0L = CouplingOrder(name = 'GGHEFT0L',
+                    hierarchy = 1,
+                    expansion_order = -1,
                     perturbative_expansion =0)
+GGHEFT1LEP0 = CouplingOrder(name = 'GGHEFT1LEP0',
+                    hierarchy = 1,
+                    expansion_order = -1,
+                    perturbative_expansion =0)
+GGHEFT1LEPM1 = CouplingOrder(name = 'GGHEFT1LEPM1',
+                    hierarchy = 1,
+                    expansion_order = -1,
+                    perturbative_expansion =0)
+GGHEFT1LEPM2 = CouplingOrder(name = 'GGHEFT1LEPM2',
+                    hierarchy = 1,
+                    expansion_order = -1,
+                    perturbative_expansion =0)
+GGGHEFT = CouplingOrder(name = 'GGGHEFT',
+                    hierarchy = 1,
+                    expansion_order = -1,
+                    perturbative_expansion =0)                                                                                

@@ -853,6 +853,75 @@ LWCoupling = Parameter(name='LWCoupling',
                        value='1./(sw*cmath.sqrt(2))',
                        texname='LWCoupling')
 # ===============================================================================
+# Overall Coupling for GG->HX in infinite t-mass HEFT.
+# ===============================================================================
+CHEFT = Parameter(name='CHEFT',
+                            nature='internal',
+                            type='complex',
+                            value='-aS/(3.*cmath.pi*v)',
+                            texname='AllGGHEWCoup',
+                            lhablock='GGHEFT',
+                            lhacode=[20000])
+# gg >h NLO
+GGH_HEFT1L_EP0_RE = Parameter(name='GGH_HEFT1L_EP0_RE',
+                               nature='external',
+                               type='complex',
+                               value=20.001,
+                               texname='\\text{GGH_HEFT1L_EPS0_RE}',
+                               lhablock='GGHHEFT',
+                               lhacode=[20001])
+
+GGH_HEFT1L_EP0_IM = Parameter(name='GGH_HEFT1L_EP0_IM',
+                               nature='external',
+                               type='complex',
+                               value=20.002,
+                               texname='\\text{GGH_HEFT1L_EPS0_IM}',
+                               lhablock='GGHHEFT',
+                               lhacode=[20002])
+GGH_HEFT1L_EPM1_RE = Parameter(name='GGH_HEFT1L_EPM1_RE',
+                               nature='external',
+                               type='complex',
+                               value=20.003,
+                               texname='\\text{GGH_HEFT1L_EPS0_RE}',
+                               lhablock='GGHHEFT',
+                               lhacode=[20003])
+GGH_HEFT1L_EPM1_IM = Parameter(name='GGH_HEFT1L_EPM1_IM',
+                               nature='external',
+                               type='complex',
+                               value=20.004,
+                               texname='\\text{GGH_HEFT1L_EPS0_IM}',
+                               lhablock='GGHHEFT',
+                               lhacode=[20004])                               
+# gg>hg
+GGGH_HEFT_ForFac1 = Parameter(name='GGGH_HEFT_ForFac1',
+                               nature='external',
+                               type='complex',
+                               value=30.001,
+                               texname='\\text{GGGH_HEFT_ForFac1}',
+                               lhablock='GGGHHEFT',
+                               lhacode=[30001])     
+GGGH_HEFT_ForFac2 = Parameter(name='GGGH_HEFT_ForFac2',
+                               nature='external',
+                               type='complex',
+                               value=30.002,
+                               texname='\\text{GGGH_HEFT_ForFac2}',
+                               lhablock='GGGHHEFT',
+                               lhacode=[30002])     
+GGGH_HEFT_ForFac3 = Parameter(name='GGGH_HEFT_ForFac3',
+                               nature='external',
+                               type='complex',
+                               value=30.003,
+                               texname='\\text{GGGH_HEFT_ForFac3}',
+                               lhablock='GGGHHEFT',
+                               lhacode=[30003])     
+GGGH_HEFT_ForFac4 = Parameter(name='GGGH_HEFT_ForFac4',
+                               nature='external',
+                               type='complex',
+                               value=30.004,
+                               texname='\\text{GGGH_HEFT_ForFac4}',
+                               lhablock='GGGHHEFT',
+                               lhacode=[30004])                                                                   
+# ===============================================================================
 # Overall Coupling for GGH EW. We use 1711.1113v2 eq (6.3)
 # ===============================================================================
 # Z-exchange                           
@@ -897,7 +966,7 @@ AllGGHEWWWCoup3L = Parameter(name='AllGGHEWWWCoup3L',
 AllGGGHQCDCoup = Parameter(name='AllGGGHQCDCoup',
                            nature='internal',
                            type='complex',
-                           value='((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
+                           value='-((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
                            texname='AllGGGHQCDCoup',
                            lhablock='GGGHQCD',
                            lhacode=[66000])
@@ -905,7 +974,7 @@ AllGGGHQCDCoup = Parameter(name='AllGGGHQCDCoup',
 AllGGGHEWZZCoup = Parameter(name='AllGGGHEWZZCoup',
                             nature='internal',
                             type='complex',
-                            value='0.5*complex(0,1)*G**3*gw**3*MW/cw**4*(5./8. - (7.*sw**2)/6. + (11.*sw**4)/9.)',
+                            value='-0.5*complex(0,1)*G**3*gw**3*MW/cw**4*(5./8. - (7.*sw**2)/6. + (11.*sw**4)/9.)',
                             texname='AllGGGHEWCoup',
                             lhablock='GGGHEWZZ',
                             lhacode=[77000])
@@ -913,7 +982,7 @@ AllGGGHEWZZCoup = Parameter(name='AllGGGHEWZZCoup',
 AllGGGHEWZZCoup = Parameter(name='AllGGGHEWWWCoup',
                             nature='internal',
                             type='complex',
-                            value='0.5*complex(0,1)*G**3*gw**3*MW',
+                            value='-0.5*complex(0,1)*G**3*gw**3*MW',
                             texname='AllGGGHEWWWCoup',
                             lhablock='GGGHEWWW',
                             lhacode=[88000])

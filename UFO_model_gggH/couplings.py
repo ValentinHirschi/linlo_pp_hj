@@ -8,6 +8,44 @@ from object_library import all_couplings, Coupling
 from function_library import complexconjugate, re, im, csc, sec, acsc, asec
 
 # ======================================================================
+# Infinite HEFT
+# ======================================================================
+GGH_HEFT_0L_C1 = Coupling(name = 'GGH_HEFT_LO_C1',
+                value = '(CHEFT)*(complex(0,1))',
+                order = {'GGHEFT0L':1,"QCD":2,"QED":1})
+
+# Renormalized but NOT IR-subtracted                
+GGH_HEFT_1L_EP0_C1 = Coupling(name = 'GGH_HEFT_NLO_EP0_C1',
+                value = '(CHEFT)*aS/(4.*cmath.pi)*(GGH_HEFT1L_EP0_RE+GGH_HEFT1L_EP0_IM*complex(0,1))',
+                order = {'GGHEFT1LEP0':1,"QCD":4,"QED":1})
+
+GGH_HEFT_1L_EPM1_C1 = Coupling(name = 'GGH_HEFT_NLO_EPM1_C1',
+                value = '(CHEFT)*aS/(4.*cmath.pi)*complex(0,1)*(GGH_HEFT1L_EPM1_RE+GGH_HEFT1L_EPM1_IM*complex(0,1))',
+                order = {'GGHEFT1LEPM1':1,"QCD":4,"QED":1})
+
+# ((-I/2)*aS*CW*Nc)/(eps^2*Pi): Nc=3
+GGH_HEFT_1L_EPM2_C1 = Coupling(name = 'GGH_HEFT_NLO_EPM2_C1',
+                value = '(CHEFT)*aS/(4.*cmath.pi)*complex(0,1)*(-2*3)',
+                order = {'GGHEFT1LEPM2':1,"QCD":4,"QED":1})
+
+# my color factor is -Tr[T^a T^b T^c]+Tr[T^a T^c T^b] = 1/2 i f^abc
+# therefore I include a -1/2 i
+GGGH_HEFT_C1 = Coupling(name = 'GGGH_HEFT_C1',
+                value = '(CHEFT)*G*(-0.5.)*GGGH_HEFT_ForFac1',
+                order = {'GGGHEFT':1,"QCD":3,"QED":1})
+GGGH_HEFT_C2 = Coupling(name = 'GGGH_HEFT_C2',
+                value = '(CHEFT)*G*(-0.5.)*GGGH_HEFT_ForFac2',
+                order = {'GGGHEFT':1,"QCD":3,"QED":1})
+GGGH_HEFT_C3 = Coupling(name = 'GGGH_HEFT_C3',
+                value = '(CHEFT)*G*(-0.5.)*GGGH_HEFT_ForFac3',
+                order = {'GGGHEFT':1,"QCD":3,"QED":1})
+GGGH_HEFT_C4 = Coupling(name = 'GGGH_HEFT_C4',
+                value = '(CHEFT)*G*(-0.5.)*GGGH_HEFT_ForFac4',
+                order = {'GGGHEFT':1,"QCD":3,"QED":1})
+
+
+
+# ======================================================================
 # Effective fake coupling for the tensor in GGH EW 
 # ======================================================================
 # Z-exchange (WW-exchange) 2-loop
@@ -21,10 +59,10 @@ GGHEWWW2L_C1 = Coupling(name = 'GGHEWWW2L_C1',
 # Z-exchange (WW-exchange) 3-loop (how to put the epsilon poles?)
 GGHEWZZ3L_C1 = Coupling(name = 'GGHEWZZ3L_C1',
                 value = '(AllGGHEWZZCoup3L)*(GGHEWZZ3L_ForFac1_RE+complex(0,1)*GGHEWZZ3L_ForFac1_IM)',
-                order = {'GGHEW3L':1,"QCD":3,"QED":3,"ZZ":1})
+                order = {'GGHEW3L':1,"QCD":4,"QED":3,"ZZ":1})
 GGHEWWW3L_C1 = Coupling(name = 'GGHEWWW3L_C1',
                 value = '(AllGGHEWWWCoup3L)*(GGHEWWW3L_ForFac1_RE+complex(0,1)*GGHEWWW3L_ForFac1_IM)',
-                order = {'GGHEW3L':1,"QCD":3,"QED":3,"WW":1})
+                order = {'GGHEW3L':1,"QCD":4,"QED":3,"WW":1})
 
 
 # ======================================================================
