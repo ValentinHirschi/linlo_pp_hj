@@ -38,5 +38,55 @@
 	    "associated_coupling":"WW",
 		"fortran_cache": "gghgEW_cache.inc",
 		"gluon_number":3
+	},
+	"ggHgHEFT":{
+		"directory":"ComputationFormFacHEFT",
+		"fortran_bridge":"fortran_bridge_HEFT_ggHg.cpp",
+		"fortran_evaluation":"set_coefficient_HEFT_ggHg.f",
+		"coupling_update_function":["setGGHGHEFTCoefficients"],
+		"tensor_structures":["gggHTensStruc1","gggHTensStruc2","gggHTensStruc3","gggHTensStruc4"],
+	    "associated_coupling":"GGGHEFT",
+		"fortran_cache": "gghgHEFT_cache.inc",
+		"gluon_number":3
+	},
+	"ggHHEFT":{
+		"directory":"ComputationFormFacHEFT",
+		"fortran_bridge":"fortran_bridge_HEFT_ggH.cpp",
+		"fortran_evaluation":"set_coefficient_HEFT_ggH.f",
+		"coupling_update_function":["set1LoopGGHHEFTCoeffs"],
+		"tensor_structures":["ggHTensStruc1"],
+	    "associated_coupling":"GGHEFT",
+		"fortran_cache": "gghHEFT_cache.inc",
+		"gluon_number":2
+	},
+	"ggHHEFTEPS0":{
+		"directory":"ComputationFormFacHEFT",
+		"fortran_bridge":"fortran_bridge_HEFT_ggH.cpp",
+		"fortran_evaluation":"set_coefficient_HEFT_ggH.f",
+		"coupling_update_function":["set1LoopGGHHEFTCoeffs"],
+		"tensor_structures":["ggHTensStruc1"],
+	    "associated_coupling":"EP01L",
+		"fortran_cache": "gghHEFT_cache.inc",
+		"gluon_number":2
+	},
+	"ggHHEFTEPSM1":{
+		"directory":"ComputationFormFacHEFT",
+		"fortran_bridge":"fortran_bridge_HEFT_ggH.cpp",
+		"fortran_evaluation":"set_coefficient_HEFT_ggH.f",
+		"coupling_update_function":["set1LoopGGHHEFTCoeffs"],
+		"tensor_structures":["ggHTensStruc1"],
+	    "associated_coupling":"EPM11L",
+		"fortran_cache": "gghHEFT_cache.inc",
+		"gluon_number":2
+	},
+	"ggHHEFTEPSM2":{
+		"directory":"ComputationFormFacHEFT",
+		"fortran_bridge":"fortran_bridge_HEFT_ggH.cpp",
+		"fortran_evaluation":"set_coefficient_HEFT_ggH.f",
+		"coupling_update_function":["set1LoopGGHHEFTCoeffs"],
+		"tensor_structures":["ggHTensStruc1"],
+	    "associated_coupling":"EPM21L",
+		"fortran_cache": "gghHEFT_cache.inc",
+		"gluon_number":2
 	}
 }

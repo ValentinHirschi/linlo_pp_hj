@@ -46,19 +46,19 @@ WW = CouplingOrder(name = 'WW',
                     perturbative_expansion =0)  
 
 # HEFT COUPLING ORDERS (Talk to Val)
-GGHEFT0L = CouplingOrder(name = 'GGHEFT0L',
+GGHEFT = CouplingOrder(name = 'GGHEFT',
                     hierarchy = 1,
                     expansion_order = -1,
                     perturbative_expansion =0)
-GGHEFT1LEP0 = CouplingOrder(name = 'GGHEFT1LEP0',
+EP01L = CouplingOrder(name = 'EP01L',
                     hierarchy = 1,
                     expansion_order = -1,
                     perturbative_expansion =0)
-GGHEFT1LEPM1 = CouplingOrder(name = 'GGHEFT1LEPM1',
+EPM11L = CouplingOrder(name = 'EPM11L',
                     hierarchy = 1,
                     expansion_order = -1,
                     perturbative_expansion =0)
-GGHEFT1LEPM2 = CouplingOrder(name = 'GGHEFT1LEPM2',
+EPM21L = CouplingOrder(name = 'EPM21L',
                     hierarchy = 1,
                     expansion_order = -1,
                     perturbative_expansion =0)

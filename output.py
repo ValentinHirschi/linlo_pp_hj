@@ -171,7 +171,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         export.close()
 
         # compile into a static library
-        misc.compile(arg=['clean'],cwd = target_dir)
+        #misc.compile(arg=['clean'],cwd = target_dir)
         misc.compile(arg=[],cwd = target_dir)
         # Link to library into EXPORTDIR/libs/
         libtolink = pjoin(target_dir,new_lib)
@@ -448,7 +448,10 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                     helas_string = file.read()
             helas_string_update =''
             for coup_update in proc["coupling_update_function"]:
-                helas_string_update +='      call SETCOEFFFUNC(pg)'.replace('SETCOEFFFUNC',coup_update)+'\n'
+                if proc['gluon_number'] == 3:
+                    helas_string_update +='      call SETCOEFFFUNC(pg)'.replace('SETCOEFFFUNC',coup_update)+'\n'
+                if proc['gluon_number'] == 2:
+                    helas_string_update +='      call SETCOEFFFUNC(MDL_MH,MDL_MU_R)'.replace('SETCOEFFFUNC',coup_update)+'\n'
             # now edit the tensor structures in the helas functions
             for tens in proc["tensor_structures"]:
                 tensfile = pjoin(_helas_dir,tens+'_0.f')
