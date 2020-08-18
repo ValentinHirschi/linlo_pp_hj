@@ -111,7 +111,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing it GGVVAMP'
-             call get_gggh_HEFT_coefs_fortran(PGGG,MDL_MH,
+             call get_gggh_heft_coefs_fortran(PGGG,MDL_MH,
      &     gghgHEFTTensor)
              CALL ADD_TO_CACHE_GGHGHEFT(P,MDL_MH,
      &                         gghgHEFTTensor)

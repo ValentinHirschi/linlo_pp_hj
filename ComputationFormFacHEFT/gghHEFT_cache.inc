@@ -11,5 +11,5 @@
 	  double precision value_HEFTTensorIm(max_cache_size,2)
 	  
       data curr_cache_size/0/
-      common/GGHGLOQCD/curr_cache_size,key_MA,key_MB
+      common/GGHGLOQCD/curr_cache_size,key_MA,key_MB,
      & value_HEFTTensorRe,value_HEFTTensorIm

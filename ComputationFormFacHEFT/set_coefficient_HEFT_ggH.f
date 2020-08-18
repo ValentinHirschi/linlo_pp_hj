@@ -107,7 +107,7 @@ c             Write(*,*) 'Recomputing it GGVVAMP'
 !         Update couplings
           MDL_GGH_HEFT1L_EPM1_RE  = real(HEFTTensorRe(1) ,16)
           MDL_GGH_HEFT1L_EP0_RE  = real(HEFTTensorRe(2) ,16)
-          GGH_HEFT1L_EPM1_IM  = real(HEFTTensorIm(1) ,16)
+          MDL_GGH_HEFT1L_EPM1_IM  = real(HEFTTensorIm(1) ,16)
           MDL_GGH_HEFT1L_EP0_IM  = real(HEFTTensorIm(2) ,16)
           call COUP()
       end subroutine set1LoopGGHHEFTCoeffs

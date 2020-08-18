@@ -20,30 +20,30 @@ GGGHQCD = CouplingOrder(name='GGGHQCD',
                         expansion_order=-1,
                         perturbative_expansion=0)
 
-GGGHEW = CouplingOrder(name='GGGHEW',
-                       hierarchy=1,
-                       expansion_order=-1,
-                       perturbative_expansion=0)
+# GGGHEW = CouplingOrder(name='GGGHEW',
+#                        hierarchy=1,
+#                        expansion_order=-1,
+#                        perturbative_expansion=0)
 
-GGHEW2L = CouplingOrder(name='GGHEW2L',
-                        hierarchy=1,
-                        expansion_order=-1,
-                        perturbative_expansion=0)
+# GGHEW2L = CouplingOrder(name='GGHEW2L',
+#                         hierarchy=1,
+#                         expansion_order=-1,
+#                         perturbative_expansion=0)
 
-GGHEW3L = CouplingOrder(name='GGHEW3L',
-                        hierarchy=1,
-                        expansion_order=-1,
-                        perturbative_expansion=0)
+# GGHEW3L = CouplingOrder(name='GGHEW3L',
+#                         hierarchy=1,
+#                         expansion_order=-1,
+#                         perturbative_expansion=0)
 
-ZZ = CouplingOrder(name='ZZ',
-                   hierarchy=2,
-                   expansion_order=-1,
-                   perturbative_expansion=0)
+# ZZ = CouplingOrder(name='ZZ',
+#                    hierarchy=2,
+#                    expansion_order=-1,
+#                    perturbative_expansion=0)
 
-WW = CouplingOrder(name='WW',
-                   hierarchy=2,
-                   expansion_order=-1,
-                   perturbative_expansion=0)
+# WW = CouplingOrder(name='WW',
+#                    hierarchy=2,
+#                    expansion_order=-1,
+#                    perturbative_expansion=0)
 
 # HEFT COUPLING ORDERS (Talk to Val)
 GGHEFT = CouplingOrder(name='GGHEFT',

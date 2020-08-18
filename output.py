@@ -476,7 +476,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                     open(tensfile,'w').write('\n'.join(new_routine))                            
                 else:
                     err= 'Tensor structure '+tensfile+' not found!'
-                    raise MadGraph5Error(err)
+                    print MadGraph5Error(err)
         # compile helas DIR
         misc.compile(arg=[],cwd = _helas_dir)
         super(My_ggHg_Exporter,self).finalize(matrix_elements, history, mg5options, flaglist)
