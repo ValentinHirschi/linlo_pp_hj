@@ -92,13 +92,14 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           save HEFTTensorRe
           save HEFTTensorIm
 
-
+          mH = MDL_MH
+          muR =MU_R
 
           CALL ACCESS_CACHE_GGHHEFT(mH, muR, 
      &                      HEFTTensorRe, HEFTTensorIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
-c             Write(*,*) 'Recomputing it GGVVAMP'
+             Write(*,*) 'Recomputing it'
              call get_ggh_heft_coefs_fortran(mH,muR,
      &     HEFTTensorRe,HEFTTensorIm)
              CALL ADD_TO_CACHE_GGHHEFT(mH, muR, 

@@ -20,7 +20,11 @@ extern"C" void get_ggh_heft_coefs_fortran_(
 	double b0, Nf, Nc;
 	Nc =3;
 	Nf=5;
+	// For testing vs mg5 (no renormailization)
+	//b0=0.;
+	
 	b0 = (11*Nc)/3. - (2*Nf)/3.;						
+	
 	// 1/eps-pole
 	heftTensorRe[0] = -b0 + 2*Nc*log(pow(massHiggs,2)/pow(muR,2));
 	heftTensorIm[0] = -2*Nc*M_PI;

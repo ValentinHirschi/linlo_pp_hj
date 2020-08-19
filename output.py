@@ -439,9 +439,9 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         _template_dir = pjoin(_plugin_path,'Templates')
         for proc in self.relevant_processes.values():
             if proc['gluon_number'] == 2:
-                with open(pjoin(_template_dir,'gg_coupling_update.f'),'r') as file:
-                    helas_def ='\n      double precision pg(0:3,2)'
-                    helas_string = file.read()
+                # with open(pjoin(_template_dir,'gg_coupling_update.f'),'r') as file:
+                helas_def ='\n      double precision mH, muR'
+                helas_string = '\n'#file.read()
             if proc['gluon_number'] == 3:
                 with open(pjoin(_template_dir,'ggg_coupling_update.f'),'r') as file:
                     helas_def ='\n      double precision pg(0:3,3)'
@@ -451,7 +451,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                 if proc['gluon_number'] == 3:
                     helas_string_update +='      call SETCOEFFFUNC(pg)'.replace('SETCOEFFFUNC',coup_update)+'\n'
                 if proc['gluon_number'] == 2:
-                    helas_string_update +='      call SETCOEFFFUNC(MDL_MH,MDL_MU_R)'.replace('SETCOEFFFUNC',coup_update)+'\n'
+                    helas_string_update +='      call SETCOEFFFUNC(mH,muR)'.replace('SETCOEFFFUNC',coup_update)+'\n'
             # now edit the tensor structures in the helas functions
             for tens in proc["tensor_structures"]:
                 tensfile = pjoin(_helas_dir,tens+'_0.f')
@@ -460,11 +460,11 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                     appended1 = False
                     appended2 = False
                     appended3 = False
-                    if 'pg(0:3,' in open(tensfile,'r').read():
+                    if 'pg(0:3,3)' in open(tensfile,'r').read() or 'muR' in open(tensfile,'r').read():
                         appended3=True
 
                     for line in open(tensfile,'r').read().split('\n'):
-                        if line.strip().startswith('P1(0) =') and appended1==False and appended3==False:
+                        if line.strip().startswith('P1(0)') and appended1==False and appended3==False:
                             appended1 = True
                             new_routine.append(helas_def)
                         if line.strip().startswith('TMP') and appended2==False:
@@ -479,5 +479,19 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                     print MadGraph5Error(err)
         # compile helas DIR
         misc.compile(arg=[],cwd = _helas_dir)
+        # FIX 2>1 kinematics
+        with open(pjoin(_plugin_path,_tmp_dir,'fix_2_to_1_kinematics.f'),'r') as file:
+            fix_check_sa = file.read()
+        with open(pjoin(self.dir_path, 'SubProcesses','check_sa.f'),'r+') as file:
+            lines = file.readlines()
+            for i, line in enumerate(lines):
+                if line.strip().startswith('CALL GET_MOMENTA(SQRTS,PMASS,P)'):
+                    lines[i] = fix_check_sa + '\n'
+            file.seek(0)
+            for line in lines:
+                file.write(line)
+
+
+
         super(My_ggHg_Exporter,self).finalize(matrix_elements, history, mg5options, flaglist)
            

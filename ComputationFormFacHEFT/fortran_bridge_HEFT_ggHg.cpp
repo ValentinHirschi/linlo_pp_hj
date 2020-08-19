@@ -36,9 +36,9 @@ extern"C" void get_gggh_heft_coefs_fortran_(const double *pInput,
 
     
 
-	gghgHEFTTensor[0]=(2*(mmH - 3*s - t))/(s*t);
-	gghgHEFTTensor[1]=0;
-	gghgHEFTTensor[2]=-2/s + 2/t;
-	gghgHEFTTensor[3]=4/(-mmH + s + t);
+	gghgHEFTTensor[0]=-4/t;
+	gghgHEFTTensor[1]=4/s;
+	gghgHEFTTensor[2]=-4/s;
+	gghgHEFTTensor[3]=(-4*(pow(s,2) + s*t + pow(t,2) - mmH*(s + t)))/(s*t*(-mmH + s + t));
 
 }

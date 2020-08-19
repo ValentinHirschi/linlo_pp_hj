@@ -64,19 +64,19 @@ GGHHEFT1LEP0 = Vertex(name = 'GGHHEFT1LEP0',
                 particles = [ P.G, P.G, P.H ],
                 color = [ 'Identity(1,2)' ],
                 lorentz = [ L.ggHTensStruc1],
-                couplings = {(0,0):C.GGH_HEFT_1L_EP0_C1}
+                couplings = {(0,0):C.GGH_EFT_1L_EP0}
                 )
 GGHHEFT1LEPM1 = Vertex(name = 'GHHEFT1LEPM1',
                 particles = [ P.G, P.G, P.H ],
                 color = [ 'Identity(1,2)' ],
                 lorentz = [ L.ggHTensStruc1],
-                couplings = {(0,0):C.GGH_HEFT_1L_EPM1_C1}
+                couplings = {(0,0):C.GGH_EFT_1L_EPM1}
                 )
 GGHHEFT1LEPM2 = Vertex(name = 'GGHHEFT1LEPM2',
                 particles = [ P.G, P.G, P.H ],
                 color = [ 'Identity(1,2)' ],
                 lorentz = [ L.ggHTensStruc1],
-                couplings = {(0,0):C.GGH_HEFT_1L_EPM2_C1}
+                couplings = {(0,0):C.GGH_EFT_1L_EPM2}
                 )                                
 
 # ======================================================================
