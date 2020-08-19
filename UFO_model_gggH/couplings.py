@@ -11,22 +11,22 @@ from function_library import complexconjugate, re, im, csc, sec, acsc, asec
 # Infinite HEFT
 # ======================================================================
 GGH_HEFT_0L_C1 = Coupling(name = 'GGH_HEFT_LO_C1',
-                value = '(CHEFT)*(complex(0,1))',
+                value = '(CHEFT)*(complex(0,1))*GGH_HEFT_LO',
                 order = {'GGHEFT':1,"QCD":2,"QED":1})
 
 # Renormalized but NOT IR-subtracted                
 GGH_EFT_1L_EP0 = Coupling(name = 'GGH_EFT_1L_EP0',
                 value = '(CHEFT)*aS/(4.*cmath.pi)*(GGH_HEFT1L_EP0_RE+GGH_HEFT1L_EP0_IM*complex(0,1))',
-                order = {'GGHEFT':1,"QCD":4,"QED":1,"EP01L":1})
+                order = {'GGHEFT':1,"QCD":4,"QED":1})
 
 GGH_EFT_1L_EPM1 = Coupling(name = 'GGH_EFT_1L_EPM1',
                 value = '(CHEFT)*aS/(4.*cmath.pi)*complex(0,1)*(GGH_HEFT1L_EPM1_RE+GGH_HEFT1L_EPM1_IM*complex(0,1))',
-                order = {'GGHEFT':1,"QCD":4,"QED":1,"EPM11L":1})
+                order = {'GGHEFT':1,"QCD":4,"QED":1})
 
 # ((-I/2)*aS*CHeft*Nc)/(eps^2*Pi) Nc=3
 GGH_EFT_1L_EPM2 = Coupling(name = 'GGH_EFT_1L_EPM2',
-                value = '(CHEFT)*aS/(4.*cmath.pi)*complex(0,1)*(-2*3)',
-                order = {'GGHEFT':1,"QCD":4,"QED":1,"EPM21L":1})
+                value = '(CHEFT)*aS/(4.*cmath.pi)*complex(0,1)*(GGH_HEFT1L_EPM2_RE)',
+                order = {'GGHEFT':1,"QCD":4,"QED":1})
 
 # my color factor is -Tr[T^a T^b T^c]+Tr[T^a T^c T^b] = 1/2 i f^abc
 # therefore I include a -1/2 i
