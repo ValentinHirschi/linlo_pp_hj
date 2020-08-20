@@ -16,7 +16,7 @@ GGH_HEFT_0L_C1 = Coupling(name = 'GGH_HEFT_LO_C1',
 
 # Renormalized but NOT IR-subtracted                
 GGH_EFT_1L_EP0 = Coupling(name = 'GGH_EFT_1L_EP0',
-                value = '(CHEFT)*aS/(4.*cmath.pi)*(GGH_HEFT1L_EP0_RE+GGH_HEFT1L_EP0_IM*complex(0,1))',
+                value = '(CHEFT)*aS/(4.*cmath.pi)*complex(0,1)*(GGH_HEFT1L_EP0_RE+GGH_HEFT1L_EP0_IM*complex(0,1))',
                 order = {'GGHEFT':1,"QCD":4,"QED":1})
 
 GGH_EFT_1L_EPM1 = Coupling(name = 'GGH_EFT_1L_EPM1',

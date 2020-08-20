@@ -31,7 +31,8 @@ extern"C" void get_ggh_heft_coefs_fortran_(
 	heftTensorRe[1] = -b0 + 2*Nc*log(pow(massHiggs,2)/pow(muR,2));
 	heftTensorIm[1] = -2*Nc*M_PI;
 	//eps^0
-	heftTensorRe[2] = 11 + (7*Nc*pow(M_PI,2))/6. - Nc*pow(log(pow(massHiggs,2)/pow(muR,2)),2);
+	heftTensorRe[2] = 11 + Nc*pow(M_PI,2) - Nc*pow(log(pow(massHiggs,2)/pow(muR,2)),2);
+	// loop asMSBAR 11 + (7*Nc*pow(M_PI,2))/6. - Nc*pow(log(pow(massHiggs,2)/pow(muR,2)),2);
 	
 	heftTensorIm[2] = 2*Nc*M_PI*log(pow(massHiggs,2)/pow(muR,2));
 

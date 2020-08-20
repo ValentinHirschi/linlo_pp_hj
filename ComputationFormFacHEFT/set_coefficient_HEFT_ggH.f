@@ -141,8 +141,8 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
               enddo
             endif
             if (int(nloops).NE.0) THEN
-              HEFTLO = 1.0
-              ! HEFTLO = 0
+               HEFTLO = 1.0
+              !  HEFTLO = 0
               call get_ggh_heft_coefs_fortran(mH,muR,
      &                    HEFTTensorRe,HEFTTensorIm)
               ! WRITE(*,*) "i GOT FROM C++"
@@ -184,7 +184,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           endif
 !         Update couplings
           MDL_GGH_HEFT_LO = HEFTLO
-          ! write(*,*) "before update", MDL_GGH_HEFT1L_EP0_RE, MDL_GGH_HEFT1L_EP0_IM 
+          !  write(*,*) "before update", MDL_GGH_HEFT1L_EP0_RE, MDL_GGH_HEFT1L_EP0_IM 
           
           MDL_GGH_HEFT1L_EPM2_RE  = real(HEFTTensorRe(1) ,16)
           MDL_GGH_HEFT1L_EPM1_RE  = real(HEFTTensorRe(2) ,16)
@@ -193,5 +193,5 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           MDL_GGH_HEFT1L_EPM1_IM  = real(HEFTTensorIm(2) ,16)
           MDL_GGH_HEFT1L_EP0_IM  = real(HEFTTensorIm(3) ,16)
           call COUP()
-          !write(*,*) "after update", MDL_GGH_HEFT1L_EP0_RE, MDL_GGH_HEFT1L_EP0_IM 
+          ! write(*,*) "after update", MDL_GGH_HEFT1L_EP0_RE, MDL_GGH_HEFT1L_EP0_IM 
         end subroutine set1LoopGGHHEFTCoeffs
