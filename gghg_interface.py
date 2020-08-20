@@ -86,7 +86,7 @@ class GGHGInterface(master_interface.MasterCmd, cmd.CmdShell):
         
         logger.info("Loading default model for GGHG: PLUGIN/higgsew/UFO_model_gggH")
         self.check_file_integrity()
-        self.exec_cmd('import model PLUGIN/higgsew/UFO_model_gggH', printcmd=False, precmd=True)
+        self.exec_cmd('import model ' + pjoin(_plugin_path,'UFO_model_gggH'), printcmd=False, precmd=True)
         logger.info("The LO-QCD process has the effective coupling GGGHQCD")
         logger.info("Run e.g.: ")
         logger.info("   generate g g > H g GGGHQCD^2==2")
