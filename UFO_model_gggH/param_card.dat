@@ -115,13 +115,6 @@ Block GGGHQCD
   66008 6.600800e+01 # GGGHQCD_ForFac4_IM 
 
 ###################################
-## INFORMATION FOR GGHEFT
-###################################
-Block GGHEFT 
-  19998 1.000000e+00 # n_loops_HEFT 
-  19999 1.000000e+00 # eps_order_HEFT 
-
-###################################
 ## INFORMATION FOR GGHEWWW
 ###################################
 Block GGHEWWW 
@@ -143,10 +136,14 @@ Block GGHEWZZ
 ## INFORMATION FOR GGHHEFT
 ###################################
 Block GGHHEFT 
+  19998 1.000000e+00 # n_loops_HEFT 
+  19999 0.000000e+00 # eps_order_HEFT 
   20001 2.000100e+01 # GGH_HEFT1L_EP0_RE 
   20002 2.000200e+01 # GGH_HEFT1L_EP0_IM 
   20003 2.000300e+01 # GGH_HEFT1L_EPM1_RE 
   20004 2.000400e+01 # GGH_HEFT1L_EPM1_IM 
+  20005 2.000500e+01 # GGH_HEFT1L_EPM2_RE 
+  20006 2.000600e+01 # GGH_HEFT_LO 
 
 ###################################
 ## INFORMATION FOR LOOP

@@ -8,11 +8,11 @@
 	  double precision key_MB(max_cache_size)
 	  double precision key_NLOOPS(max_cache_size)
 	  double precision key_EPS(max_cache_size)
-	  double precision value_HEFTTLO(max_cache_size)
+	  double precision value_HEFTLO(max_cache_size)
 	  double precision value_HEFTTensorRe(max_cache_size,3)
 	  double precision value_HEFTTensorIm(max_cache_size,3)
-	  
+
+
       data curr_cache_size/0/
-      common/GGHHEFT/curr_cache_size,key_MA,key_MB,
-	 & key_NLOOPS, key_EPS, value_HEFTTLO
-     & value_HEFTTensorRe,value_HEFTTensorIm
+      common/GGHGHEFT/curr_cache_size,key_MA,key_MB,
+     & key_NLOOPS,key_EPS,value_HEFTLO,value_HEFTTensorRe,value_HEFTTensorIm

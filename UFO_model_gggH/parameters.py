@@ -861,16 +861,16 @@ n_loops_HEFT = Parameter(name='n_loops_HEFT',
                          type='real',
                          value=1.0,
                          texname='\\text{n_loops_HEFT}',
-                         lhablock='GGHEFT',
+                         lhablock='GGHHEFT',
                          lhacode=[19998])
 
 # gg >h epsorder allows for selection of eps pole in NLO
 eps_order_HEFT = Parameter(name='eps_order_HEFT',
                            nature='external',
                            type='real',
-                           value=1.0,
+                           value=0.0,
                            texname='\\text{eps_order_HEFT}',
-                           lhablock='GGHEFT',
+                           lhablock='GGHHEFT',
                            lhacode=[19999])
 
 # wilson coefficient for infinite top heft
