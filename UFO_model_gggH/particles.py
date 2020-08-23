@@ -316,16 +316,16 @@ G__minus__ = G__plus__.anti()
 # Wavefunction renormalization
 
 b.loop_particles = [[[5,21]]]
-b.counterterm = {(1,0,0,0,0,0,0):CTParam.bWcft_UV.value}
+b.counterterm = {(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0):CTParam.bWcft_UV.value}
 
 c.loop_particles = [[[4,21]]]
-c.counterterm = {(1,0,0,0,0,0,0):CTParam.cWcft_UV.value}
+c.counterterm = {(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0):CTParam.cWcft_UV.value}
 
 t.loop_particles = [[[6,21]]]
-t.counterterm = {(1,0,0,0,0,0,0):CTParam.tWcft_UV.value}
+t.counterterm = {(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0):CTParam.tWcft_UV.value}
 
 G.loop_particles = [[[4]],[[5]],[[6]]]
-G.counterterm = {(1,0,0,0,0,0,0):CTParam.GWcft_UV_c.value,(1,0,0,0,0,0,1):CTParam.GWcft_UV_b.value,(1,0,0,0,0,0,2):CTParam.GWcft_UV_t.value}
+G.counterterm = {(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0):CTParam.GWcft_UV_c.value,(1,0,0,0,0,0,0,0,0,0,0,0,0,0,1):CTParam.GWcft_UV_b.value,(1,0,0,0,0,0,0,0,0,0,0,0,0,0,2):CTParam.GWcft_UV_t.value}
 
 # Set counterterms values
 

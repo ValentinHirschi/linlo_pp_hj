@@ -51,25 +51,23 @@ GGGH_HEFT_C4 = Coupling(name = 'GGGH_HEFT_C4',
 # Z-exchange (WW-exchange) 2-loop
 GGHEWZZ2L_C1 = Coupling(name = 'GGHEWZZ2L_C1',
                 value = '(AllGGHEWZZCoup2L)*(GGHEWZZ2L_ForFac1_RE+complex(0,1)*GGHEWZZ2L_ForFac1_IM)',
-                order = {#'GGHEW2L':1,
-                "QCD":2,"QED":3#,"ZZ":1
-                })
+                order = {'GGHEW2L':1,"QCD":2,"QED":3,"ZZ":1})
 GGHEWWW2L_C1 = Coupling(name = 'GGHEWWW2L_C1',
                 value = '(AllGGHEWWWCoup2L)*(GGHEWWW2L_ForFac1_RE+complex(0,1)*GGHEWWW2L_ForFac1_IM)',
-                order = {#'GGHEW2L':1,
-                "QCD":2,"QED":3#,"WW":1
+                order = {'GGHEW2L':1,
+                "QCD":2,"QED":3,"WW":1
                 })
 
 # Z-exchange (WW-exchange) 3-loop (how to put the epsilon poles?)
 GGHEWZZ3L_C1 = Coupling(name = 'GGHEWZZ3L_C1',
                 value = '(AllGGHEWZZCoup3L)*(GGHEWZZ3L_ForFac1_RE+complex(0,1)*GGHEWZZ3L_ForFac1_IM)',
-                order = {#'GGHEW3L':1,
-                "QCD":4,"QED":3#,"ZZ":1
+                order = {'GGHEW3L':1,
+                "QCD":4,"QED":3,"ZZ":1
                 })
 GGHEWWW3L_C1 = Coupling(name = 'GGHEWWW3L_C1',
                 value = '(AllGGHEWWWCoup3L)*(GGHEWWW3L_ForFac1_RE+complex(0,1)*GGHEWWW3L_ForFac1_IM)',
-                order = {#'GGHEW3L':1,
-                "QCD":4,"QED":3#,"WW":1
+                order = {'GGHEW3L':1,
+                "QCD":4,"QED":3,"WW":1
                 })
 
 
@@ -106,26 +104,26 @@ GGGHQCD_C4 = Coupling(name = 'GGGHQCD_C4',
 
 GGGHEWZZ_C1 = Coupling(name = 'GGGHEWZZ_C1',
                 value = '(AllGGGHEWZZCoup)*(GGGHEWZZ_ForFac1_RE+complex(0,1)*GGGHEWZZ_ForFac1_IM)',
-                order = {#'GGGHEW':1,
-                "QCD":3,"QED":3#,"ZZ":1
+                order = {'GGGHEW':1,
+                "QCD":3,"QED":3,"ZZ":1
                 })
 
 GGGHEWZZ_C2 = Coupling(name = 'GGGHEWZZ_C2',
                 value = '(AllGGGHEWZZCoup)*(GGGHEWZZ_ForFac2_RE+complex(0,1)*GGGHEWZZ_ForFac2_IM)',
-                order = {#'GGGHEW':1,
-                "QCD":3,"QED":3#,"ZZ":1
+                order = {'GGGHEW':1,
+                "QCD":3,"QED":3,"ZZ":1
                 })
 
 GGGHEWZZ_C3 = Coupling(name = 'GGGHEWZZ_C3',
                 value = '(AllGGGHEWZZCoup)*(GGGHEWZZ_ForFac3_RE+complex(0,1)*GGGHEWZZ_ForFac3_IM)',
-                order = {#'GGGHEW':1,
-                "QCD":3,"QED":3#,"ZZ":1
+                order = {'GGGHEW':1,
+                "QCD":3,"QED":3,"ZZ":1
                 })
 
 GGGHEWZZ_C4 = Coupling(name = 'GGGHEWZZ_C4',
                 value = '(AllGGGHEWZZCoup)*(GGGHEWZZ_ForFac4_RE+complex(0,1)*GGGHEWZZ_ForFac4_IM)',
-                order = {#'GGGHEW':1,
-                "QCD":3,"QED":3#,"ZZ":1
+                order = {'GGGHEW':1,
+                "QCD":3,"QED":3,"ZZ":1
                 })
 
 
@@ -138,26 +136,26 @@ GGGHEWZZ_C4 = Coupling(name = 'GGGHEWZZ_C4',
 
 GGGHEWWW_C1 = Coupling(name = 'GGGHEWWW_C1',
                 value = '(AllGGGHEWWWCoup)*(GGGHEWWW_ForFac1_RE+complex(0,1)*GGGHEWWW_ForFac1_IM)',
-                order = {#'GGGHEW':1,
-                "QCD":3,"QED":3#,"WW":1
+                order = {'GGGHEW':1,
+                "QCD":3,"QED":3,"WW":1
                 })
 
 GGGHEWWW_C2 = Coupling(name = 'GGGHEWWW_C2',
                 value = '(AllGGGHEWWWCoup)*(GGGHEWWW_ForFac2_RE+complex(0,1)*GGGHEWWW_ForFac2_IM)',
-                order = {#'GGGHEW':1,
-                "QCD":3,"QED":3#,"WW":1
+                order = {'GGGHEW':1,
+                "QCD":3,"QED":3,"WW":1
                 })
 
 GGGHEWWW_C3 = Coupling(name = 'GGGHEWWW_C3',
                 value = '(AllGGGHEWWWCoup)*(GGGHEWWW_ForFac3_RE+complex(0,1)*GGGHEWWW_ForFac3_IM)',
-                order = {#'GGGHEW':1,
-                "QCD":3,"QED":3#,"WW":1
+                order = {'GGGHEW':1,
+                "QCD":3,"QED":3,"WW":1
                 })
 
 GGGHEWWW_C4 = Coupling(name = 'GGGHEWWW_C4',
                 value = '(AllGGGHEWWWCoup)*(GGGHEWWW_ForFac4_RE+complex(0,1)*GGGHEWWW_ForFac4_IM)',
-                order = {#'GGGHEW':1,
-                "QCD":3,"QED":3#,"WW":1
+                order = {'GGGHEW':1,
+                "QCD":3,"QED":3,"WW":1
                 })
 
 
