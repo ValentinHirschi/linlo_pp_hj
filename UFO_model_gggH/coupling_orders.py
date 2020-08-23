@@ -27,7 +27,7 @@ GGGHEW = CouplingOrder(name='GGGHEW',
 
 
 
-GGHEW = CouplingOrder(name='GGHEW3L',
+GGHEW = CouplingOrder(name='GGHEW',
                         hierarchy=1,
                         expansion_order=-1,
                         perturbative_expansion=0)
@@ -42,7 +42,7 @@ WW = CouplingOrder(name='WW',
                    expansion_order=-1,
                    perturbative_expansion=0)
 
-# HEFT COUPLING ORDERS 
+# HEFT COUPLING ORDERS
 GGHEFT = CouplingOrder(name='GGHEFT',
                        hierarchy=1,
                        expansion_order=-1,
