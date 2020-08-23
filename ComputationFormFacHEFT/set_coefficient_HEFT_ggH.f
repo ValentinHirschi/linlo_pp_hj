@@ -80,8 +80,8 @@ C Cache
           include 'gghHEFT_cache.inc'
 
           cache_index = MOD(curr_cache_size,max_cache_size)+1
-c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
-          curr_cache_size = curr_cache_size + 1
+          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
+          curr_cache_size = MIN(curr_cache_size + 1,max_cache_size)
           key_MA(cache_index)=pmassA
           key_MB(cache_index)=pmassB
           key_NLOOPS = nloops

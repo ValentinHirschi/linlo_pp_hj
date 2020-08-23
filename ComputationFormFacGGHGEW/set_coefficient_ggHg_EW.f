@@ -81,7 +81,7 @@ C Cache
  
           cache_index = MOD(curr_cache_size,max_cache_size)+1
 c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
-          curr_cache_size = curr_cache_size + 1          
+          curr_cache_size = MIN(curr_cache_size + 1,max_cache_size)         
           do i=0,3
             do j=1,3
               key_P(cache_index,i,j) = P(i,j)

@@ -77,7 +77,7 @@ C Cache
 
           cache_index = MOD(curr_cache_size,max_cache_size)+1
 c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
-          curr_cache_size = curr_cache_size + 1
+          curr_cache_size = MIN(curr_cache_size + 1,max_cache_size)
           key_MUR(cache_index)=mur
           key_NLOOPSEW(cache_index)=nloops
           key_EPSEW = eps
