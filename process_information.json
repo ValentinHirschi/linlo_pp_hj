@@ -42,7 +42,7 @@
 	"ggHEW":{
 		"directory":"ComputationFormFacEWVirtuals",
 		"fortran_bridge":"fortran_bridge_EW_ggH.cpp",
-		"fortran_evaluation":"set_coefficient_ggH_EW.f",
+		"fortran_evaluation":"set_coefficient_EW_ggH.f",
 		"coupling_update_function":["setGGHEW"],
 		"tensor_structures":["ggHTensStruc1"],
 	    "associated_coupling":"GGHEW",
@@ -52,7 +52,7 @@
 	"ggHEWZZ":{
 		"directory":"ComputationFormFacEWVirtuals",
 		"fortran_bridge":"fortran_bridge_EW_ggH.cpp",
-		"fortran_evaluation":"set_coefficient_ggH_EW.f",
+		"fortran_evaluation":"set_coefficient_EW_ggH.f",
 		"coupling_update_function":["setGGHEWZZ"],
 		"tensor_structures":["ggHTensStruc1"],
 	    "associated_coupling":"ZZ",
@@ -62,7 +62,7 @@
 	"ggHEWWW":{
 		"directory":"ComputationFormFacEWVirtuals",
 		"fortran_bridge":"fortran_bridge_EW_ggH.cpp",
-		"fortran_evaluation":"set_coefficient_ggH_EW.f",
+		"fortran_evaluation":"set_coefficient_EW_ggH.f",
 		"coupling_update_function":["setGGHEWWW"],
 		"tensor_structures":["ggHTensStruc1"],
 	    "associated_coupling":"WW",
