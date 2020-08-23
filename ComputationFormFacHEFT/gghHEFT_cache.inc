@@ -14,5 +14,5 @@
 
 
       data curr_cache_size/0/
-      common/GGHGHEFT/curr_cache_size,key_MA,key_MB,
+      common/GGHHEFT/curr_cache_size,key_MA,key_MB,
      & key_NLOOPS,key_EPS,value_HEFTLO,value_HEFTTensorRe,value_HEFTTensorIm

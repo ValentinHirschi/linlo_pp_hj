@@ -51,22 +51,22 @@ GGGH_HEFT_C4 = Coupling(name = 'GGGH_HEFT_C4',
 # Z-exchange (WW-exchange) 2-loop
 GGHEWZZ2L_C1 = Coupling(name = 'GGHEWZZ2L_C1',
                 value = '(AllGGHEWZZCoup2L)*(GGHEWZZ2L_ForFac1_RE+complex(0,1)*GGHEWZZ2L_ForFac1_IM)',
-                order = {'GGHEW2L':1,"QCD":2,"QED":3,"ZZ":1})
+                order = {'GGHEW':1,"QCD":2,"QED":3,"ZZ":1})
 GGHEWWW2L_C1 = Coupling(name = 'GGHEWWW2L_C1',
                 value = '(AllGGHEWWWCoup2L)*(GGHEWWW2L_ForFac1_RE+complex(0,1)*GGHEWWW2L_ForFac1_IM)',
-                order = {'GGHEW2L':1,
+                order = {'GGHEW':1,
                 "QCD":2,"QED":3,"WW":1
                 })
 
 # Z-exchange (WW-exchange) 3-loop (how to put the epsilon poles?)
 GGHEWZZ3L_C1 = Coupling(name = 'GGHEWZZ3L_C1',
                 value = '(AllGGHEWZZCoup3L)*(GGHEWZZ3L_ForFac1_RE+complex(0,1)*GGHEWZZ3L_ForFac1_IM)',
-                order = {'GGHEW3L':1,
+                order = {'GGHEW':1,
                 "QCD":4,"QED":3,"ZZ":1
                 })
 GGHEWWW3L_C1 = Coupling(name = 'GGHEWWW3L_C1',
                 value = '(AllGGHEWWWCoup3L)*(GGHEWWW3L_ForFac1_RE+complex(0,1)*GGHEWWW3L_ForFac1_IM)',
-                order = {'GGHEW3L':1,
+                order = {'GGHEW':1,
                 "QCD":4,"QED":3,"WW":1
                 })
 

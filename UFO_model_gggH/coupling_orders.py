@@ -25,12 +25,9 @@ GGGHEW = CouplingOrder(name='GGGHEW',
                        expansion_order=-1,
                        perturbative_expansion=0)
 
-GGHEW2L = CouplingOrder(name='GGHEW2L',
-                        hierarchy=1,
-                        expansion_order=-1,
-                        perturbative_expansion=0)
 
-GGHEW3L = CouplingOrder(name='GGHEW3L',
+
+GGHEW = CouplingOrder(name='GGHEW3L',
                         hierarchy=1,
                         expansion_order=-1,
                         perturbative_expansion=0)

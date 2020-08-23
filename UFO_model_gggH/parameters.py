@@ -1024,6 +1024,22 @@ AllGGGHEWZZCoup = Parameter(name='AllGGGHEWWWCoup',
 # ===============================================================================
 # Form Factors for ggH
 # ===============================================================================
+n_loops_EW = Parameter(name='n_loops_EW',
+                        nature='external',
+                        type='real',
+                        value=2,
+                        texname='\\text{n_loops_EW}',
+                        lhablock='GGHEW',
+                        lhacode=[22011])
+                        
+eps_order_EW=Parameter(name='eps_order_EW',
+                        nature='external',
+                        type='real',
+                        value=1,
+                        texname='\\text{eps_order_EW}',
+                        lhablock='GGHEW',
+                        lhacode=[22022])                        
+
 # 2-Loop
 # Z-exchange
 GGHEWZZ2L_ForFac1_RE = Parameter(name='GGHEWZZ2L_ForFac1_RE',

@@ -13,7 +13,7 @@
 		"directory":"ComputationFormFacGGHGEW",
 		"fortran_bridge":"fortran_bridge_ggHg_EW.cpp",
 		"fortran_evaluation":"set_coefficient_ggHg_EW.f",
-		"coupling_update_function":["set2LoopGGHGEWWWCoefficients","set2LoopGGHGEWZZCoefficients"],
+		"coupling_update_function":["setGGHGEW"],
 		"tensor_structures":["gggHTensStruc1","gggHTensStruc2","gggHTensStruc3","gggHTensStruc4"],
 	    "associated_coupling":"GGGHEW",
 		"fortran_cache": "gghgEW_cache.inc",
@@ -23,7 +23,7 @@
 		"directory":"ComputationFormFacGGHGEW",
 		"fortran_bridge":"fortran_bridge_ggHg_EW.cpp",
 		"fortran_evaluation":"set_coefficient_ggHg_EW.f",
-		"coupling_update_function":["set2LoopGGHGEWZZCoefficients"],
+		"coupling_update_function":["setGGHGEWZZ"],
 		"tensor_structures":["gggHTensStruc1","gggHTensStruc2","gggHTensStruc3","gggHTensStruc4"],
 	    "associated_coupling":"ZZ",
 		"fortran_cache": "gghgEW_cache.inc",
@@ -33,12 +33,43 @@
 		"directory":"ComputationFormFacGGHGEW",
 		"fortran_bridge":"fortran_bridge_ggHg_EW.cpp",
 		"fortran_evaluation":"set_coefficient_ggHg_EW.f",
-		"coupling_update_function":["set2LoopGGHGEWWWCoefficients"],
+		"coupling_update_function":["setGGHGEWWW"],
 		"tensor_structures":["gggHTensStruc1","gggHTensStruc2","gggHTensStruc3","gggHTensStruc4"],
 	    "associated_coupling":"WW",
 		"fortran_cache": "gghgEW_cache.inc",
 		"gluon_number":3
 	},
+	"ggHEW":{
+		"directory":"ComputationFormFacEWVirtuals",
+		"fortran_bridge":"fortran_bridge_EW_ggH.cpp",
+		"fortran_evaluation":"set_coefficient_ggH_EW.f",
+		"coupling_update_function":["setGGHEW"],
+		"tensor_structures":["ggHTensStruc1"],
+	    "associated_coupling":"GGHEW",
+		"fortran_cache": "gghEW_cache.inc",
+		"gluon_number":2
+	},
+	"ggHEWZZ":{
+		"directory":"ComputationFormFacEWVirtuals",
+		"fortran_bridge":"fortran_bridge_EW_ggH.cpp",
+		"fortran_evaluation":"set_coefficient_ggH_EW.f",
+		"coupling_update_function":["setGGHEWZZ"],
+		"tensor_structures":["ggHTensStruc1"],
+	    "associated_coupling":"ZZ",
+		"fortran_cache": "gghEW_cache.inc",
+		"gluon_number":2
+	},
+	"ggHEWWW":{
+		"directory":"ComputationFormFacEWVirtuals",
+		"fortran_bridge":"fortran_bridge_EW_ggH.cpp",
+		"fortran_evaluation":"set_coefficient_ggH_EW.f",
+		"coupling_update_function":["setGGHEWWW"],
+		"tensor_structures":["ggHTensStruc1"],
+	    "associated_coupling":"WW",
+		"fortran_cache": "gghEW_cache.inc",
+		"gluon_number":2
+	},
+
 	"ggHgHEFT":{
 		"directory":"ComputationFormFacHEFT",
 		"fortran_bridge":"fortran_bridge_HEFT_ggHg.cpp",

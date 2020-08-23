@@ -63,7 +63,7 @@ C Cache
             exit SEARCHLOOP
           enddo SEARCHLOOP
        
-      end subroutine      
+      end subroutine ACCESS_CACHE_GGHGEW     
 
       subroutine ADD_TO_CACHE_GGHGEW(p, pmassA, pmassB, 
      &    ewTwoLoopTensorRe, ewTwoLoopTensorIm)
@@ -94,7 +94,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
             value_ewTwoLoopTensorIm(cache_index,i)=ewTwoLoopTensorIm(i)
           enddo
 
-      end subroutine      
+      end subroutine ADD_TO_CACHE_GGHGEW   
 
 
 
@@ -184,3 +184,86 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
           MDL_GGGHEWWW_ForFac4_IM  = real(ewTwoLoopTensorIm(4) ,16)
           call COUP()
       end subroutine set2LoopGGHGEWWWCoefficients
+
+      subroutine setGGHGEWWW(P)
+        implicit none
+        include 'coupl.inc'
+        include 'input.inc'
+        double precision P(0:3,3)
+        ! Set all relevant couplings to 0
+        MDL_GGGHEWZZ_ForFac1_RE  = 0
+        MDL_GGGHEWZZ_ForFac2_RE  = 0
+        MDL_GGGHEWZZ_ForFac3_RE  = 0
+        MDL_GGGHEWZZ_ForFac4_RE  = 0
+        MDL_GGGHEWZZ_ForFac1_IM  = 0
+        MDL_GGGHEWZZ_ForFac2_IM  = 0
+        MDL_GGGHEWZZ_ForFac3_IM  = 0
+        MDL_GGGHEWZZ_ForFac4_IM  = 0
+        MDL_GGGHEWWW_ForFac1_RE  = 0
+        MDL_GGGHEWWW_ForFac2_RE  = 0
+        MDL_GGGHEWWW_ForFac3_RE  = 0
+        MDL_GGGHEWWW_ForFac4_RE  = 0
+        MDL_GGGHEWWW_ForFac1_IM  = 0
+        MDL_GGGHEWWW_ForFac2_IM  = 0
+        MDL_GGGHEWWW_ForFac3_IM  = 0
+        MDL_GGGHEWWW_ForFac4_IM  = 0
+        CALL COUP()
+        ! update the WW couplings
+        set2LoopGGHGEWWWCoefficients(P)
+      end subroutine setGGHGEWWW
+
+      subroutine setGGHGEWZZ(P)
+        implicit none
+        include 'coupl.inc'
+        include 'input.inc'
+        double precision P(0:3,3)
+        ! Set all relevant couplings to 0
+        MDL_GGGHEWZZ_ForFac1_RE  = 0
+        MDL_GGGHEWZZ_ForFac2_RE  = 0
+        MDL_GGGHEWZZ_ForFac3_RE  = 0
+        MDL_GGGHEWZZ_ForFac4_RE  = 0
+        MDL_GGGHEWZZ_ForFac1_IM  = 0
+        MDL_GGGHEWZZ_ForFac2_IM  = 0
+        MDL_GGGHEWZZ_ForFac3_IM  = 0
+        MDL_GGGHEWZZ_ForFac4_IM  = 0
+        MDL_GGGHEWWW_ForFac1_RE  = 0
+        MDL_GGGHEWWW_ForFac2_RE  = 0
+        MDL_GGGHEWWW_ForFac3_RE  = 0
+        MDL_GGGHEWWW_ForFac4_RE  = 0
+        MDL_GGGHEWWW_ForFac1_IM  = 0
+        MDL_GGGHEWWW_ForFac2_IM  = 0
+        MDL_GGGHEWWW_ForFac3_IM  = 0
+        MDL_GGGHEWWW_ForFac4_IM  = 0
+        CALL COUP()
+        ! update the ZZ couplings
+        set2LoopGGHGEWZZCoefficients(P)
+      end subroutine setGGHGEWZZ
+      
+      subroutine setGGHGEW(P)
+        implicit none
+        include 'coupl.inc'
+        include 'input.inc'
+        double precision P(0:3,3)
+        ! Set all relevant couplings to 0
+        MDL_GGGHEWZZ_ForFac1_RE  = 0
+        MDL_GGGHEWZZ_ForFac2_RE  = 0
+        MDL_GGGHEWZZ_ForFac3_RE  = 0
+        MDL_GGGHEWZZ_ForFac4_RE  = 0
+        MDL_GGGHEWZZ_ForFac1_IM  = 0
+        MDL_GGGHEWZZ_ForFac2_IM  = 0
+        MDL_GGGHEWZZ_ForFac3_IM  = 0
+        MDL_GGGHEWZZ_ForFac4_IM  = 0
+        MDL_GGGHEWWW_ForFac1_RE  = 0
+        MDL_GGGHEWWW_ForFac2_RE  = 0
+        MDL_GGGHEWWW_ForFac3_RE  = 0
+        MDL_GGGHEWWW_ForFac4_RE  = 0
+        MDL_GGGHEWWW_ForFac1_IM  = 0
+        MDL_GGGHEWWW_ForFac2_IM  = 0
+        MDL_GGGHEWWW_ForFac3_IM  = 0
+        MDL_GGGHEWWW_ForFac4_IM  = 0
+        CALL COUP()
+        ! update the ALL couplings
+        set2LoopGGHGEWZZCoefficients(P)
+        set2LoopGGHGEWWCoefficients(P)
+      end subroutine setGGHGEW
+
