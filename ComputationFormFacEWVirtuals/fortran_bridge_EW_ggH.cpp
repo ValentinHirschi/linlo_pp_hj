@@ -11,7 +11,7 @@ using namespace std;
 
 
 
-extern"C" void get_ggh_EW_coefs_fortran_(
+extern"C" void get_ggh_ew_coefs_fortran_(
 		                const double &	massHiggs,
 						const double & massW,
 						const double & massZ,
@@ -33,13 +33,16 @@ extern"C" void get_ggh_EW_coefs_fortran_(
 	mH=125.09; 
 	mW=80.385; 
 	mZ = 91.1876;
-	recomp =true;
+	recomp =false;
 
-	if (abs(massHiggs-mH)/massHiggs>allow_dev && abs(massW-mW)/massW>allow_dev && abs(massZ-mZ)/massZ>allow_dev){
+	if (abs(massHiggs-mH)/massHiggs>allow_dev || abs(massW-mW)/massW>allow_dev || abs(massZ-mZ)/massZ>allow_dev){
 		recomp=true;
 	}
 	if (recomp){
-		throw std::invalid_argument( "A boson mass does not match within the allowed deviation of: "+ std::to_string(allow_dev));
+		throw std::invalid_argument( "A boson mass does not match within the allowed deviation of: "+ std::to_string(allow_dev)
+		+"\n\tDeviation for Higgs-mass "+ std::to_string(abs(massHiggs-mH)/massHiggs)
+		+"\n\tDeviation for Z-mass "+ std::to_string(abs(massW-mW)/massW)
+		+"\n\tDeviation for W-mass "+ std::to_string(abs(massZ-mZ)/massZ));
 	}
 	// The arrays are [value_for_Z, value_for_W]
 	if (n_loops_EW==2){

@@ -54,7 +54,7 @@ class GGHGInterface(master_interface.MasterCmd, cmd.CmdShell):
                     if os.path.exists(pjoin(_plugin_path,procs[proc]['directory'],value)):
                         logger.info(value + " exists")
                     else:
-                        err =value + " does not exist. \n Verify entries in " + pjoin(_plugin_path,'process_information.json')
+                        err =pjoin(_plugin_path,procs[proc]['directory'],value) + " does not exist. \n Verify entries in " + pjoin(_plugin_path,'process_information.json')
                         raise MadGraph5Error(err) 
 
 

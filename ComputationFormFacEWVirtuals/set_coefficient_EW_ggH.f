@@ -79,8 +79,7 @@ C Cache
 c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           curr_cache_size = curr_cache_size + 1
           key_MUR(cache_index)=mur
-          key_MB(cache_index)=pmassB
-          key_NLOOPSEW = nloops
+          key_NLOOPSEW(cache_index)=nloops
           key_EPSEW = eps
           
           do i=1,2
@@ -133,7 +132,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &            FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
-             CALL get_ggh_heft_coefs_fortran(
+             CALL get_ggh_ew_coefs_fortran(
      &         mH,mW,mZ,muR,int(nloops),int(eps),
      &         EWLORe,EWLOIm,EWNLORe,EWNLOIm) 
              CALL ADD_TO_CACHE_GGHEW(muR,nloops,eps,
@@ -197,7 +196,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &            FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
-             CALL get_ggh_heft_coefs_fortran(
+             CALL get_ggh_ew_coefs_fortran(
      &         mH,mW,mZ,muR,int(nloops),int(eps),
      &         EWLORe,EWLOIm,EWNLORe,EWNLOIm) 
              CALL ADD_TO_CACHE_GGHEW(muR,nloops,eps,
@@ -257,7 +256,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &            FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
-             CALL get_ggh_heft_coefs_fortran(
+             CALL get_ggh_ew_coefs_fortran(
      &         mH,mW,mZ,muR,int(nloops),int(eps),
      &         EWLORe,EWLOIm,EWNLORe,EWNLOIm) 
              CALL ADD_TO_CACHE_GGHEW(muR,nloops,eps,
