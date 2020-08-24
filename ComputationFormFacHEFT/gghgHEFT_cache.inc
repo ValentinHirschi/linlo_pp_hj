@@ -1,15 +1,15 @@
-      integer max_cache_size
-	  parameter (max_cache_size=1000)
-      double precision cache_tolerance
-	  parameter (cache_tolerance=1.0d-13)
+      integer max_cache_gghg
+	  parameter (max_cache_gghg=1000)
+      double precision tol_gghg
+	  parameter (tol_gghg=1.0d-13)
 
-	  integer curr_cache_size
-	  double precision key_P(max_cache_size,0:3,3)
-	  double precision key_MA(max_cache_size)
+	  integer curr_cache_gghg
+	  double precision key_Pgghg(max_cache_gghg,0:3,3)
+	  double precision key_Mgghg(max_cache_gghg)
 
-	  double precision value_gghgHEFTTensor(max_cache_size,4)
+	  double precision value_gghgHEFTTensor(max_cache_gghg,4)
 
 	  
-      data curr_cache_size/0/
-      common/GGHGHEFT/curr_cache_size,key_P,key_MA,
+      data curr_cache_gghg/0/
+      common/GGHGHEFT/curr_cache_gghg,key_Pgghg,key_Mgghg,
      & value_gghgHEFTTensor

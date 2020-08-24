@@ -1,16 +1,16 @@
-      integer max_cache_size
-	  parameter (max_cache_size=1000)
-      double precision cache_tolerance
-	  parameter (cache_tolerance=1.0d-13)
+      integer max_cache_EWREALs
+	  parameter (max_cache_EWREALs=1000)
+      double precision tol_EWREALS
+	  parameter (tol_EWREALS=1.0d-13)
 
 	  integer curr_cache_size
-	  double precision key_P(max_cache_size,0:3,3)
-	  double precision key_MA(max_cache_size)
-	  double precision key_MB(max_cache_size)
+	  double precision key_Pewreals(max_cache_EWREALs,0:3,3)
+	  double precision key_MAewreals(max_cache_EWREALs)
+	  double precision key_MBewreals(max_cache_EWREALs)
 
-	  double precision value_ewTwoLoopTensorIm(max_cache_size,4)
-	  double precision value_ewTwoLoopTensorRe(max_cache_size,4)
+	  double precision value_ewrealsIm(max_cache_EWREALs,4)
+	  double precision value_ewrealsRe(max_cache_EWREALs,4)
 	  
       data curr_cache_size/0/
-      common/GGHGEW/curr_cache_size,key_P,key_MA,key_MB,
-     & value_ewTwoLoopTensorRe,value_ewTwoLoopTensorIm
+      common/GGHGEW/curr_cache_size,key_Pewreals,key_MAewreals,
+     & key_MBewreals,value_ewrealsRe,value_ewrealsIm

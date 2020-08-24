@@ -2,8 +2,8 @@
             implicit none
 C Cache
             include 'gghgHEFT_cache.inc'
-c          write(*,*) 'EMPTYING CACHE! ',curr_cache_size
-            curr_cache_size = 0
+c          write(*,*) 'EMPTYING CACHE! ',curr_cache_gghg
+            curr_cache_gghg = 0
 
       end subroutine
 C      
@@ -24,23 +24,17 @@ C Cache
                    
           FOUNDIT = .False.
        
-          SEARCHLOOP : do cache_index=1,curr_cache_size
-            if (.NOT.( ( ( abs(pmassA+key_MA(cache_index)).eq.0.0d0 ).and.
-     &           ( ( abs(pmassA-key_MA(cache_index))/
-     &               abs(pmassA+key_MA(cache_index)) )
-     &               .lt.cache_tolerance ) ) .or.
-     &           ( abs(pmassA-key_MA(cache_index)) .lt. cache_tolerance ) ) 
-     &         ) then
+          SEARCHLOOP : do cache_index=1,curr_cache_gghg
+            if 
+     &      ( abs(pmassA-key_Mgghg(cache_index)) .lt. tol_gghg ) 
+     &      then
               cycle SEARCHLOOP
             endif
             do i=0,3
               do j=1,3
-                if (.NOT.( ( ( abs(P(i,j)+key_P(cache_index,i,j)).gt.0.0d0 ).and.
-     &           ( ( abs(P(i,j)-key_P(cache_index,i,j))/
-     &               abs(P(i,j)+key_P(cache_index,i,j)) )
-     &               .lt.cache_tolerance ) ) .or.
-     &           ( abs(P(i,j)-key_P(cache_index,i,j)) .lt. cache_tolerance ) )
-     &         ) then
+                if 
+     &    ( abs(P(i,j)-key_Pgghg(cache_index,i,j)) .lt. tol_gghg ) 
+     &       then
                   cycle SEARCHLOOP
                 endif
               enddo
@@ -69,15 +63,15 @@ C Local
 C Cache
           include 'gghgHEFT_cache.inc'
  
-          cache_index = MOD(curr_cache_size,max_cache_size)+1
+          cache_index = MOD(curr_cache_gghg,max_cache_gghg)+1
 c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
-          curr_cache_size = MIN(curr_cache_size + 1,max_cache_size)         
+          curr_cache_gghg = MIN(curr_cache_gghg + 1,max_cache_gghg)         
           do i=0,3
             do j=1,3
-              key_P(cache_index,i,j) = P(i,j)
+              key_Pgghg(cache_index,i,j) = P(i,j)
             enddo
           enddo
-          key_MA(cache_index)=pmassA
+          key_Mgghg(cache_index)=pmassA
           
           do i=1,4
             value_gghgHEFTTensor(cache_index,i)=gghgHEFTTensor(i)

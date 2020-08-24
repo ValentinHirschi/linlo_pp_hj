@@ -8,14 +8,14 @@ c          write(*,*) 'EMPTYING CACHE! ',curr_cache_size
       end subroutine
 C
       subroutine ACCESS_CACHE_GGHHEFT(pmassA, pmassB, nloops, eps,
-     &    HEFTLO, HEFTTensorRe, HEFTTensorIm,
+     &    HEFTLO, HEFTNLORe, HEFTNLOIm,
      &    FOUNDIT)
 
           implicit none
 C Arguments
           double precision pmassA, pmassB, nloops, eps, HEFTLO
-          double precision HEFTTensorRe(3)
-          double precision HEFTTensorIm(3)
+          double precision HEFTNLORe(3)
+          double precision HEFTNLOIm(3)
           logical FOUNDIT
           
 C Local
@@ -26,39 +26,33 @@ C Cache
           FOUNDIT = .False.
 
           SEARCHLOOP : do cache_index=1,curr_cache_size
-            if (.NOT.( ( ( abs(pmassA+key_MA(cache_index)).eq.0.0d0 ).and.
-     &           ( ( abs(pmassA-key_MA(cache_index))/
-     &               abs(pmassA+key_MA(cache_index)) )
-     &               .lt.cache_tolerance ) ) .or.
-     &           ( abs(pmassA-key_MA(cache_index)) .lt. cache_tolerance ) )
+            if (
+     &    (abs(pmassA-key_MA_GGH(cache_index)) .lt. cache_tol_ggH_heft) 
      &         ) then
               cycle SEARCHLOOP
             endif
-            if (.NOT.( ( ( abs(pmassB+key_MB(cache_index)).gt.0.0d0 ).and.
-     &           ( ( abs(pmassB-key_MB(cache_index))/
-     &               abs(pmassB+key_MB(cache_index)) )
-     &               .lt.cache_tolerance ) ) .or.
-     &           ( abs(pmassB-key_MB(cache_index)) .lt. cache_tolerance ) )
+            if (
+     &    (abs(pmassB-key_MB_GGH(cache_index)) .lt. cache_tol_ggH_heft) 
      &         ) then
              cycle SEARCHLOOP
             endif
             ! cycle loops
             if (
-     &       ( abs(nloops-key_NLOOPS(cache_index)) .lt. cache_tolerance )
+     &   (abs(nloops-key_NLOOPS(cache_index)) .lt. cache_tol_ggH_heft)
      &         ) then
              cycle SEARCHLOOP
             endif
             ! cycle epsorders
             if (
-     &       ( abs(eps-key_EPS(cache_index)) .lt. cache_tolerance )
+     &   ( abs(eps-key_EPS(cache_index)) .lt. cache_tol_ggH_heft )
      &         ) then
              cycle SEARCHLOOP
             endif
             FOUNDIT = .True.
             write(*,*) 'RECYCLED A CALL! ',cache_index
             do i=1,3
-              HEFTTensorRe(i) = value_HEFTTensorRe(cache_index,i)
-              HEFTTensorIm(i) = value_HEFTTensorIm(cache_index,i)
+              HEFTNLORe(i) = value_HEFTNLORe(cache_index,i)
+              HEFTNLOIm(i) = value_HEFTNLOIm(cache_index,i)
             enddo
             HEFTLO = value_HEFTLO(cache_index)
             exit SEARCHLOOP
@@ -68,28 +62,28 @@ C Cache
 
       subroutine ADD_TO_CACHE_GGHHEFT(pmassA, pmassB,
      &    nloops, eps, HEFTLO,
-     &    HEFTTensorRe, HEFTTensorIm)
+     &    HEFTNLORe, HEFTNLOIm)
           implicit none
 C Arguments
           double precision pmassA, pmassB, nloops, eps, HEFTLO
-          double precision HEFTTensorRe(3)
-          double precision HEFTTensorIm(3)
+          double precision HEFTNLORe(3)
+          double precision HEFTNLOIm(3)
 C Local
           integer i,j,cache_index
 C Cache
           include 'gghHEFT_cache.inc'
 
-          cache_index = MOD(curr_cache_size,max_cache_size)+1
+          cache_index = MOD(curr_cache_size,max_cache_ggH_heft)+1
           write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
-          curr_cache_size = MIN(curr_cache_size + 1,max_cache_size)
-          key_MA(cache_index)=pmassA
-          key_MB(cache_index)=pmassB
+          curr_cache_size = MIN(curr_cache_size + 1,max_cache_ggH_heft)
+          key_MA_GGH(cache_index)=pmassA
+          key_MB_GGH(cache_index)=pmassB
           key_NLOOPS = nloops
           key_EPS = eps
           value_HEFTLO(cache_index) = HEFTLO
           do i=1,3
-            value_HEFTTensorRe(cache_index,i)=HEFTTensorRe(i)
-            value_HEFTTensorIm(cache_index,i)=HEFTTensorIm(i)
+            value_HEFTNLORe(cache_index,i)=HEFTNLORe(i)
+            value_HEFTNLOIm(cache_index,i)=HEFTNLOIm(i)
           enddo
 
       end subroutine
@@ -100,16 +94,16 @@ C Cache
           implicit none
           include 'coupl.inc'
           include 'input.inc'
-          double precision HEFTTensorRe(3)
-          double precision HEFTTensorIm(3)
+          double precision HEFTNLORe(3)
+          double precision HEFTNLOIm(3)
           double precision mH , nloops
           double precision muR, eps
           double precision HEFTLO
           logical FOUNDIT
           integer i, j
           ! ask val why we save
-          save HEFTTensorRe
-          save HEFTTensorIm
+          save HEFTNLORe
+          save HEFTNLOIm
           save HEFTLO
 
           mH = MDL_MH
@@ -118,7 +112,7 @@ C Cache
           eps = MDL_eps_order_HEFT
 
           CALL ACCESS_CACHE_GGHHEFT(mH, muR,nloops,eps,HEFTLO,
-     &                      HEFTTensorRe, HEFTTensorIm,
+     &                      HEFTNLORe, HEFTNLOIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
@@ -136,62 +130,62 @@ C Cache
               HEFTLO =1.0  
               do i=1,3
                 ! set NLO to 0
-                HEFTTensorRe(i) = 0
-                HEFTTensorIm(i) = 0
+                HEFTNLORe(i) = 0
+                HEFTNLOIm(i) = 0
               enddo
             endif
             if (int(nloops).NE.0) THEN
                HEFTLO = 1.0
               !  HEFTLO = 0
               call get_ggh_heft_coefs_fortran(mH,muR,
-     &                    HEFTTensorRe,HEFTTensorIm)
+     &                    HEFTNLORe,HEFTNLOIm)
               ! WRITE(*,*) "i GOT FROM C++"
               ! do i=1,3
-              !   write(*,*) "Re", i, HEFTTensorRe(i)
-              !   write(*,*) "Im", i, HEFTTensorIm(i)
+              !   write(*,*) "Re", i, HEFTNLORe(i)
+              !   write(*,*) "Im", i, HEFTNLOIm(i)
               ! enddo
               if (int(eps).EQ.0) THEN
                 ! set poles to 0
                 do i=1,2
-                  HEFTTensorRe(i) =0
-                  HEFTTensorIm(i) =0
+                  HEFTNLORe(i) =0
+                  HEFTNLOIm(i) =0
                 enddo
               endif
               if (int(eps).EQ.-1) THEN
                 ! set poles 1/eps^2 and eps^0 to 0
-                  HEFTTensorRe(1) =0
-                  HEFTTensorIm(1) =0
-                  HEFTTensorRe(3) =0
-                  HEFTTensorIm(3) =0                
+                  HEFTNLORe(1) =0
+                  HEFTNLOIm(1) =0
+                  HEFTNLORe(3) =0
+                  HEFTNLOIm(3) =0                
               endif
               if (int(eps).EQ.-2) THEN
                 ! set poles 1/eps and eps^0 to 0
-                  HEFTTensorRe(2) =0
-                  HEFTTensorIm(2) =0
-                  HEFTTensorRe(3) =0
-                  HEFTTensorIm(3) =0                
+                  HEFTNLORe(2) =0
+                  HEFTNLOIm(2) =0
+                  HEFTNLORe(3) =0
+                  HEFTNLOIm(3) =0                
               endif
             endif
             ! write(*,*) "I SET STUFF TO 0"
             ! do i=1,3
-            !   write(*,*) "Re", i, HEFTTensorRe(i)
-            !   write(*,*) "Im", i, HEFTTensorIm(i)
+            !   write(*,*) "Re", i, HEFTNLORe(i)
+            !   write(*,*) "Im", i, HEFTNLOIm(i)
             ! enddo
           ! NOW WE UPDATE
           
              CALL ADD_TO_CACHE_GGHHEFT(mH,muR,nloops,eps,
-     &                    HEFTLO, HEFTTensorRe, HEFTTensorIm)
+     &                    HEFTLO, HEFTNLORe, HEFTNLOIm)
           endif
 !         Update couplings
           MDL_GGH_HEFT_LO = HEFTLO
           !  write(*,*) "before update", MDL_GGH_HEFT1L_EP0_RE, MDL_GGH_HEFT1L_EP0_IM 
           
-          MDL_GGH_HEFT1L_EPM2_RE  = real(HEFTTensorRe(1) ,16)
-          MDL_GGH_HEFT1L_EPM1_RE  = real(HEFTTensorRe(2) ,16)
-          MDL_GGH_HEFT1L_EP0_RE  = real(HEFTTensorRe(3) ,16)
+          MDL_GGH_HEFT1L_EPM2_RE  = real(HEFTNLORe(1) ,16)
+          MDL_GGH_HEFT1L_EPM1_RE  = real(HEFTNLORe(2) ,16)
+          MDL_GGH_HEFT1L_EP0_RE  = real(HEFTNLORe(3) ,16)
           ! eps^-2 is pure real
-          MDL_GGH_HEFT1L_EPM1_IM  = real(HEFTTensorIm(2) ,16)
-          MDL_GGH_HEFT1L_EP0_IM  = real(HEFTTensorIm(3) ,16)
+          MDL_GGH_HEFT1L_EPM1_IM  = real(HEFTNLOIm(2) ,16)
+          MDL_GGH_HEFT1L_EP0_IM  = real(HEFTNLOIm(3) ,16)
           call COUP()
           ! write(*,*) "after update", MDL_GGH_HEFT1L_EP0_RE, MDL_GGH_HEFT1L_EP0_IM 
         end subroutine set1LoopGGHHEFTCoeffs

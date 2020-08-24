@@ -8,7 +8,7 @@ c          write(*,*) 'EMPTYING CACHE! ',curr_cache_size
       end subroutine
 C      
       subroutine ACCESS_CACHE_GGHGEW(p, pmassA, pmassB, 
-     &    ewTwoLoopTensorRe, ewTwoLoopTensorIm,
+     &    ewrealsRe, ewrealsIm,
      &    FOUNDIT)
             
           implicit none
@@ -16,8 +16,8 @@ C Arguments
           double precision P(0:3,3)
           double precision pmassA, pmassB
           logical FOUNDIT
-          double precision ewTwoLoopTensorRe(4)
-          double precision ewTwoLoopTensorIm(4)
+          double precision ewrealsRe(4)
+          double precision ewrealsIm(4)
 C Local
           integer i,j, cache_index
 C Cache
@@ -26,29 +26,20 @@ C Cache
           FOUNDIT = .False.
        
           SEARCHLOOP : do cache_index=1,curr_cache_size
-            if (.NOT.( ( ( abs(pmassA+key_MA(cache_index)).eq.0.0d0 ).and.
-     &           ( ( abs(pmassA-key_MA(cache_index))/
-     &               abs(pmassA+key_MA(cache_index)) )
-     &               .lt.cache_tolerance ) ) .or.
-     &           ( abs(pmassA-key_MA(cache_index)) .lt. cache_tolerance ) ) 
+            if (
+     &      ( abs(pmassA-key_MAewreals(cache_index)) .lt. tol_EWREALS ) 
      &         ) then
               cycle SEARCHLOOP
             endif
-            if (.NOT.( ( ( abs(pmassB+key_MB(cache_index)).gt.0.0d0 ).and.
-     &           ( ( abs(pmassB-key_MB(cache_index))/
-     &               abs(pmassB+key_MB(cache_index)) )
-     &               .lt.cache_tolerance ) ) .or.
-     &           ( abs(pmassB-key_MB(cache_index)) .lt. cache_tolerance ) )
+            if (
+     &      ( abs(pmassB-key_MBewreals(cache_index)) .lt. tol_EWREALS ) 
      &         ) then
              cycle SEARCHLOOP
             endif
             do i=0,3
               do j=1,3
-                if (.NOT.( ( ( abs(P(i,j)+key_P(cache_index,i,j)).gt.0.0d0 ).and.
-     &           ( ( abs(P(i,j)-key_P(cache_index,i,j))/
-     &               abs(P(i,j)+key_P(cache_index,i,j)) )
-     &               .lt.cache_tolerance ) ) .or.
-     &           ( abs(P(i,j)-key_P(cache_index,i,j)) .lt. cache_tolerance ) )
+                if (
+     &     (abs(P(i,j)-key_Pewreals(cache_index,i,j)) .lt. tol_EWREALS) 
      &         ) then
                   cycle SEARCHLOOP
                 endif
@@ -57,8 +48,8 @@ C Cache
             FOUNDIT = .True.
             ! write(*,*) 'RECYCLED A CALL! ',cache_index
             do i=1,4
-              ewTwoLoopTensorRe(i) = value_ewTwoLoopTensorRe(cache_index,i)
-              ewTwoLoopTensorIm(i) = value_ewTwoLoopTensorIm(cache_index,i)
+              ewrealsRe(i) = value_ewrealsRe(cache_index,i)
+              ewrealsIm(i) = value_ewrealsIm(cache_index,i)
             enddo
             exit SEARCHLOOP
           enddo SEARCHLOOP
@@ -66,32 +57,32 @@ C Cache
       end subroutine ACCESS_CACHE_GGHGEW     
 
       subroutine ADD_TO_CACHE_GGHGEW(p, pmassA, pmassB, 
-     &    ewTwoLoopTensorRe, ewTwoLoopTensorIm)
+     &    ewrealsRe, ewrealsIm)
           implicit none
 C Arguments
 C We only consider the gluon momenta
           double precision P(0:3,3)
           double precision pmassA, pmassB
-          double precision ewTwoLoopTensorRe(4)
-          double precision ewTwoLoopTensorIm(4)
+          double precision ewrealsRe(4)
+          double precision ewrealsIm(4)
 C Local
           integer i,j,cache_index
 C Cache
           include 'gghgEW_cache.inc'
  
-          cache_index = MOD(curr_cache_size,max_cache_size)+1
+          cache_index = MOD(curr_cache_size,max_cache_EWREALs)+1
 c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
-          curr_cache_size = MIN(curr_cache_size + 1,max_cache_size)         
+          curr_cache_size = MIN(curr_cache_size + 1,max_cache_EWREALs)         
           do i=0,3
             do j=1,3
-              key_P(cache_index,i,j) = P(i,j)
+              key_Pewreals(cache_index,i,j) = P(i,j)
             enddo
           enddo
-          key_MA(cache_index)=pmassA
-          key_MB(cache_index)=pmassB
+          key_MAewreals(cache_index)=pmassA
+          key_MBewreals(cache_index)=pmassB
           do i=1,4
-            value_ewTwoLoopTensorRe(cache_index,i)=ewTwoLoopTensorRe(i)
-            value_ewTwoLoopTensorIm(cache_index,i)=ewTwoLoopTensorIm(i)
+            value_ewrealsRe(cache_index,i)=ewrealsRe(i)
+            value_ewrealsIm(cache_index,i)=ewrealsIm(i)
           enddo
 
       end subroutine ADD_TO_CACHE_GGHGEW   
@@ -104,13 +95,13 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           include 'input.inc'
           double precision P(0:3,3)
           double precision PGGG(12)
-          double precision ewTwoLoopTensorRe(4) 
-          double precision ewTwoLoopTensorIm(4)
+          double precision ewrealsRe(4) 
+          double precision ewrealsIm(4)
           logical FOUNDIT
           integer i, j
           ! ask val why we save
-          save ewTwoLoopTensorRe
-          save ewTwoLoopTensorIm
+          save ewrealsRe
+          save ewrealsIm
           ! We parse PGGG to the C routine
           do i=1,3
             do j=0,3
@@ -120,24 +111,24 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
 
 
           CALL ACCESS_CACHE_GGHGEW(P, MDL_MH, MDL_MZ, 
-     &                      ewTwoLoopTensorRe, ewTwoLoopTensorIm,
+     &                      ewrealsRe, ewrealsIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
              call get_gggh_tensor_coefs_ew(PGGG,MDL_MH,MDL_MZ,
-     &     ewTwoLoopTensorRe,ewTwoLoopTensorIm)
+     &     ewrealsRe,ewrealsIm)
              CALL ADD_TO_CACHE_GGHGEW(P,MDL_MH, MDL_MZ, 
-     &                         ewTwoLoopTensorRe, ewTwoLoopTensorIm)
+     &                         ewrealsRe, ewrealsIm)
           endif     
 !         Update couplings
-          MDL_GGGHEWZZ_ForFac1_RE  = real(ewTwoLoopTensorRe(1) ,16)
-          MDL_GGGHEWZZ_ForFac2_RE  = real(ewTwoLoopTensorRe(2) ,16)
-          MDL_GGGHEWZZ_ForFac3_RE  = real(ewTwoLoopTensorRe(3) ,16)
-          MDL_GGGHEWZZ_ForFac4_RE  = real(ewTwoLoopTensorRe(4) ,16)
-          MDL_GGGHEWZZ_ForFac1_IM  = real(ewTwoLoopTensorIm(1) ,16)
-          MDL_GGGHEWZZ_ForFac2_IM  = real(ewTwoLoopTensorIm(2) ,16)
-          MDL_GGGHEWZZ_ForFac3_IM  = real(ewTwoLoopTensorIm(3) ,16)
-          MDL_GGGHEWZZ_ForFac4_IM  = real(ewTwoLoopTensorIm(4) ,16)
+          MDL_GGGHEWZZ_ForFac1_RE  = real(ewrealsRe(1) ,16)
+          MDL_GGGHEWZZ_ForFac2_RE  = real(ewrealsRe(2) ,16)
+          MDL_GGGHEWZZ_ForFac3_RE  = real(ewrealsRe(3) ,16)
+          MDL_GGGHEWZZ_ForFac4_RE  = real(ewrealsRe(4) ,16)
+          MDL_GGGHEWZZ_ForFac1_IM  = real(ewrealsIm(1) ,16)
+          MDL_GGGHEWZZ_ForFac2_IM  = real(ewrealsIm(2) ,16)
+          MDL_GGGHEWZZ_ForFac3_IM  = real(ewrealsIm(3) ,16)
+          MDL_GGGHEWZZ_ForFac4_IM  = real(ewrealsIm(4) ,16)
           call COUP()
       end subroutine set2LoopGGHGEWZZCoefficients
 
@@ -148,13 +139,13 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
           include 'input.inc'
           double precision P(0:3,3)
           double precision PGGG(12)
-          double precision ewTwoLoopTensorRe(4) 
-          double precision ewTwoLoopTensorIm(4)
+          double precision ewrealsRe(4) 
+          double precision ewrealsIm(4)
           logical FOUNDIT
           integer i, j
           ! ask val why we save
-          save ewTwoLoopTensorRe
-          save ewTwoLoopTensorIm
+          save ewrealsRe
+          save ewrealsIm
           ! We parse PGGG to the C routine
           do i=1,3
             do j=0,3
@@ -164,24 +155,24 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
 
 
           CALL ACCESS_CACHE_GGHGEW(P, MDL_MH, MDL_MW, 
-     &                      ewTwoLoopTensorRe, ewTwoLoopTensorIm,
+     &                      ewrealsRe, ewrealsIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
             call get_gggh_tensor_coefs_ew(PGGG,MDL_MH,MDL_MW,
-     &     ewTwoLoopTensorRe,ewTwoLoopTensorIm)
+     &     ewrealsRe,ewrealsIm)
             CALL ADD_TO_CACHE_GGHGEW(P,MDL_MH, MDL_MW, 
-     &                         ewTwoLoopTensorRe, ewTwoLoopTensorIm)
+     &                         ewrealsRe, ewrealsIm)
           endif     
   !         Update couplings
-          MDL_GGGHEWWW_ForFac1_RE  = real(ewTwoLoopTensorRe(1) ,16)
-          MDL_GGGHEWWW_ForFac2_RE  = real(ewTwoLoopTensorRe(2) ,16)
-          MDL_GGGHEWWW_ForFac3_RE  = real(ewTwoLoopTensorRe(3) ,16)
-          MDL_GGGHEWWW_ForFac4_RE  = real(ewTwoLoopTensorRe(4) ,16)
-          MDL_GGGHEWWW_ForFac1_IM  = real(ewTwoLoopTensorIm(1) ,16)
-          MDL_GGGHEWWW_ForFac2_IM  = real(ewTwoLoopTensorIm(2) ,16)
-          MDL_GGGHEWWW_ForFac3_IM  = real(ewTwoLoopTensorIm(3) ,16)
-          MDL_GGGHEWWW_ForFac4_IM  = real(ewTwoLoopTensorIm(4) ,16)
+          MDL_GGGHEWWW_ForFac1_RE  = real(ewrealsRe(1) ,16)
+          MDL_GGGHEWWW_ForFac2_RE  = real(ewrealsRe(2) ,16)
+          MDL_GGGHEWWW_ForFac3_RE  = real(ewrealsRe(3) ,16)
+          MDL_GGGHEWWW_ForFac4_RE  = real(ewrealsRe(4) ,16)
+          MDL_GGGHEWWW_ForFac1_IM  = real(ewrealsIm(1) ,16)
+          MDL_GGGHEWWW_ForFac2_IM  = real(ewrealsIm(2) ,16)
+          MDL_GGGHEWWW_ForFac3_IM  = real(ewrealsIm(3) ,16)
+          MDL_GGGHEWWW_ForFac4_IM  = real(ewrealsIm(4) ,16)
           call COUP()
       end subroutine set2LoopGGHGEWWWCoefficients
 

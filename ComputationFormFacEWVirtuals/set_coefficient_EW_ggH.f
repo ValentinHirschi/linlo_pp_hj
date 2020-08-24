@@ -2,8 +2,8 @@
             implicit none
 C Cache
             include 'gghEW_cache.inc'
-c          write(*,*) 'EMPTYING CACHE! ',curr_cache_size
-            curr_cache_size = 0
+c          write(*,*) 'EMPTYING CACHE! ',curr_size_ewvirt
+            curr_size_ewvirt = 0
 
       end subroutine
 C
@@ -27,24 +27,21 @@ C Cache
 
           FOUNDIT = .False.
 
-          SEARCHLOOP : do cache_index=1,curr_cache_size
-            if (.NOT.( ( ( abs(mur+key_MUR(cache_index)).eq.0.0d0 ).and.
-     &           ( ( abs(mur-key_MUR(cache_index))/
-     &               abs(mur+key_MUR(cache_index)) )
-     &               .lt.cache_tolerance ) ) .or.
-     &           ( abs(mur-key_MUR(cache_index)) .lt. cache_tolerance ) )
+          SEARCHLOOP : do cache_index=1,curr_size_ewvirt
+            if (
+     &           ( abs(mur-key_MUR(cache_index)) .lt. tol_ewvirt ) 
      &         ) then
               cycle SEARCHLOOP
             endif
             ! cycle loops
             if (
-     &       ( abs(nloops-key_NLOOPSEW(cache_index)) .lt. cache_tolerance )
+     &       ( abs(nloops-key_NLOOPSEW(cache_index)) .lt. tol_ewvirt )
      &         ) then
              cycle SEARCHLOOP
             endif
             ! cycle epsorders
             if (
-     &       ( abs(eps-key_EPSEW(cache_index)) .lt. cache_tolerance )
+     &       ( abs(eps-key_EPSEW(cache_index)) .lt. tol_ewvirt )
      &         ) then
              cycle SEARCHLOOP
             endif
@@ -75,9 +72,9 @@ C Local
 C Cache
           include 'gghEW_cache.inc'
 
-          cache_index = MOD(curr_cache_size,max_cache_size)+1
+          cache_index = MOD(curr_size_ewvirt,max_cache_ewvirt)+1
 c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
-          curr_cache_size = MIN(curr_cache_size + 1,max_cache_size)
+          curr_size_ewvirt = MIN(curr_size_ewvirt + 1,max_cache_ewvirt)
           key_MUR(cache_index)=mur
           key_NLOOPSEW(cache_index)=nloops
           key_EPSEW = eps
