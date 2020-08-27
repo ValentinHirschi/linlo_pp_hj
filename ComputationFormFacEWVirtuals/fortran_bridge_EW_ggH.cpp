@@ -56,19 +56,19 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 	//The prefactors from the normalization of the 2L: E^(2 I eps \[Pi]) (4 \[Pi])^(2 eps) Gamma[1+eps]^2
 	prefaceps1Re = -2*euler_gamma + 2*log(4*M_PI);
 	prefaceps1Im = 2*M_PI;
-	prefaceps2Re = (-11*power(M_PI,2))/6. + 2*power(euler_gamma - log(4*M_PI),2);
+	prefaceps2Re = (-11*pow(M_PI,2))/6. + 2*pow(euler_gamma - log(4*M_PI),2);
 	prefaceps2Im = 4*M_PI*(-euler_gamma + log(4*M_PI));
 
 	// catani (E^(eps (euler_gamma+I \[M_PI])) (CA+beta0 eps))/(eps^3 Gamma[-eps])
 	prefacI1EpsM2 = -CA;
 	prefacI1EpsM1Re= -beta0;
 	prefacI1EpsM1Im= -CA*M_PI;
-	prefacI1Eps0Re= (7*CA*power(M_PI,2))/12.;
+	prefacI1Eps0Re= (7*CA*pow(M_PI,2))/12.;
 	prefacI1Eps0Im= -beta0;
 
 	// mg5 prefac: (4 \[M_PI])^-eps Gamma[1-eps]
 	mg5PrefacEps =euler_gamma - log(4*M_PI);
-	mg5PrefacEps2=(6*power(euler_gamma,2) + power(M_PI,2) - 12*euler_gamma*log(4*M_PI) + 6*power(log(4*M_PI),2))/12.;
+	mg5PrefacEps2=(6*pow(euler_gamma,2) + pow(M_PI,2) - 12*euler_gamma*log(4*M_PI) + 6*pow(log(4*M_PI),2))/12.;
 
 	recomp =false;
 	
