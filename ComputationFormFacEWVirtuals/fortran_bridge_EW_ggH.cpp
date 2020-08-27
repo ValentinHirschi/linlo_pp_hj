@@ -6,7 +6,7 @@
 #include <vector>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <math.h> 
+#include <math.h>
 using namespace std;
 
 
@@ -23,7 +23,7 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 						double *ewTensorNLORe,
 						double *ewTensorNLOIm
 						)  {
-	
+
 	double allow_dev, mZ, mW, mH;
 	double A0wwRe, A1wwRe, A2wwRe, ANLOFinwwRe;
 	double A0wwIm, A1wwIm, A2wwIm, ANLOFinwwIm;
@@ -35,13 +35,13 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 	double mg5PrefacEps, mg5PrefacEps2;
 	bool recomp;
 	int i;
-	// euler_gamma -- The Euler Mascheroni Constant 
+	// euler_gamma -- The Euler Mascheroni Constant
     const double euler_gamma = 0.5772156649015328606065;
 	// allow for variation of the masses
-	allow_dev = 1.e-004;
+	allow_dev = 1.e-003;
 	// values used for computation
-	mH=125.09; 
-	mW=80.385; 
+	mH=125.09;
+	mW=80.385;
 	mZ = 91.1876;
 	CA = 3.;
 	nf = 5.;
@@ -49,7 +49,7 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 
 	// The 3Loop is differently normalized than the 2loop
 	prefac3Lvs2L = 1./8.;
-	// I have a different tensor structure then given in the 
+	// I have a different tensor structure then given in the
 	// papers on the virtuals
 	prefacTensDiff =-1./pow(mH,2);
 
@@ -71,13 +71,13 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 	mg5PrefacEps2=(6*pow(euler_gamma,2) + pow(M_PI,2) - 12*euler_gamma*log(4*M_PI) + 6*pow(log(4*M_PI),2))/12.;
 
 	recomp =false;
-	
-	
+
+
 	ANLOFinzzRe =-2.97580125634092878835130586898977665654*prefacTensDiff*prefac3Lvs2L;
 	ANLOFinzzIm =-41.19509385404224724165178749439486111*prefacTensDiff*prefac3Lvs2L;
 	ANLOFinwwRe =-11.315570583184121341121574935828846867*prefacTensDiff*prefac3Lvs2L;
 	ANLOFinwwIm =-54.029894948618318637506676075420213247*prefacTensDiff*prefac3Lvs2L;
-	
+
 	A0zzRe = -0.86010579357833842705446467108391858030*prefacTensDiff;
 	A0zzIm = -0.072301488703818874120152045090322314188*prefacTensDiff;
 	A1zzRe =-4.0679890718539717274276892827906667866*prefacTensDiff;
@@ -127,14 +127,14 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 			ewTensorLORe[1]=A2wwRe - A1wwIm*prefaceps1Im + A1wwRe*prefaceps1Re - A0wwIm*prefaceps2Im + A0wwRe*prefaceps2Re;
 			ewTensorLOIm[0]=A2zzIm + A1zzRe*prefaceps1Im + A1zzIm*prefaceps1Re + A0zzRe*prefaceps2Im + A0zzIm*prefaceps2Re;
 			ewTensorLOIm[1]=A2wwIm + A1wwRe*prefaceps1Im + A1wwIm*prefaceps1Re + A0wwRe*prefaceps2Im + A0wwIm*prefaceps2Re;
-			
+
 		}
 		else {
 			throw std::invalid_argument( "eps^"+ std::to_string(eps_EW)+" at "+std::to_string(n_loops_EW)+"-loop is not implemented");
-		}		
+		}
 
 	}
-	
+
 // The arrays are [value_for_Z, value_for_W]
 	if (n_loops_EW==3){
 
@@ -165,7 +165,7 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 		}
 		else {
 			throw std::invalid_argument( "eps^"+ std::to_string(eps_EW)+" at "+std::to_string(n_loops_EW)+"-loop is not implemented");
-		}		
+		}
 
 	}
 
