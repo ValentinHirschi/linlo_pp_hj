@@ -26,25 +26,25 @@ C Cache
           FOUNDIT = .False.
 
           SEARCHLOOP : do cache_index=1,curr_cache_size
-            if (
-     &    (abs(pmassA-key_MA_GGH(cache_index)) .lt. cache_tol_ggH_heft) 
+            if ( .NOT.(
+     &    abs(pmassA-key_MA_GGH(cache_index)) .lt. cache_tol_ggH_heft) 
      &         ) then
               cycle SEARCHLOOP
             endif
-            if (
-     &    (abs(pmassB-key_MB_GGH(cache_index)) .lt. cache_tol_ggH_heft) 
+            if ( .NOT.(
+     &     abs(pmassB-key_MB_GGH(cache_index)) .lt. cache_tol_ggH_heft) 
      &         ) then
              cycle SEARCHLOOP
             endif
             ! cycle loops
-            if (
-     &   (abs(nloops-key_NLOOPS(cache_index)) .lt. cache_tol_ggH_heft)
+            if ( .NOT.(
+     &   abs(nloops-key_NLOOPS(cache_index)) .lt. cache_tol_ggH_heft)
      &         ) then
              cycle SEARCHLOOP
             endif
             ! cycle epsorders
-            if (
-     &   ( abs(eps-key_EPS(cache_index)) .lt. cache_tol_ggH_heft )
+            if ( .NOT.(
+     &    abs(eps-key_EPS(cache_index)) .lt. cache_tol_ggH_heft )
      &         ) then
              cycle SEARCHLOOP
             endif

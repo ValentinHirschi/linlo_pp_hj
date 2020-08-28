@@ -25,16 +25,16 @@ C Cache
           FOUNDIT = .False.
        
           SEARCHLOOP : do cache_index=1,curr_cache_gghg
-            if 
-     &      ( abs(pmassA-key_Mgghg(cache_index)) .lt. tol_gghg ) 
-     &      then
+            if ( .NOT.(
+     &       abs(pmassA-key_Mgghg(cache_index)) .lt. tol_gghg ) 
+     &      ) then
               cycle SEARCHLOOP
             endif
             do i=0,3
               do j=1,3
-                if 
-     &    ( abs(P(i,j)-key_Pgghg(cache_index,i,j)) .lt. tol_gghg ) 
-     &       then
+                if (.NOT.(
+     &          abs(P(i,j)-key_Pgghg(cache_index,i,j)) .lt. tol_gghg )
+     &          ) then
                   cycle SEARCHLOOP
                 endif
               enddo

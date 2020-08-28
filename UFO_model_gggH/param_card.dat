@@ -119,7 +119,6 @@ Block GGGHQCD
 ###################################
 Block GGHEW 
   22011 2.000000e+00 # n_loops_EW 
-  22022 1.000000e+00 # eps_order_EW 
 
 ###################################
 ## INFORMATION FOR GGHEWWW
@@ -156,7 +155,7 @@ Block GGHHEFT
 ## INFORMATION FOR LOOP
 ###################################
 Block LOOP 
-    1 9.118800e+01 # MU_R 
+    1 1.250900e+02 # MU_R 
 
 ###################################
 ## INFORMATION FOR WOLFENSTEIN

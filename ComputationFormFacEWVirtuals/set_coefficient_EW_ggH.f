@@ -7,13 +7,13 @@ c          write(*,*) 'EMPTYING CACHE! ',curr_size_ewvirt
 
       end subroutine
 C
-      subroutine ACCESS_CACHE_GGHEW(mur, nloops, eps,
+      subroutine ACCESS_CACHE_GGHEW(nloops,
      &    EWLORe, EWLOIm, EWNLORe,EWNLOIm,
      &    FOUNDIT)
 
           implicit none
 C Arguments
-          double precision mur,nloops, eps
+          double precision nloops
           double precision EWLORe(2)
           double precision EWLOIm(2)
           double precision EWNLORe(2)
@@ -28,25 +28,14 @@ C Cache
           FOUNDIT = .False.
 
           SEARCHLOOP : do cache_index=1,curr_size_ewvirt
-            if (
-     &           ( abs(mur-key_MUR(cache_index)) .lt. tol_ewvirt ) 
-     &         ) then
-              cycle SEARCHLOOP
-            endif
-            ! cycle loops
-            if (
-     &       ( abs(nloops-key_NLOOPSEW(cache_index)) .lt. tol_ewvirt )
+            if (.NOT.(
+     &        abs(nloops-key_NLOOPSEW(cache_index)) .lt. tol_ewvirt )
      &         ) then
              cycle SEARCHLOOP
             endif
-            ! cycle epsorders
-            if (
-     &       ( abs(eps-key_EPSEW(cache_index)) .lt. tol_ewvirt )
-     &         ) then
-             cycle SEARCHLOOP
-            endif
+            
             FOUNDIT = .True.
-            write(*,*) 'RECYCLED A CALL! ',cache_index
+            ! write(*,*) 'RECYCLED A CALL! ',cache_index
             do i=1,2
               EWLORe(i) = value_EWLORe(cache_index,i)
               EWLOIm(i) = value_EWLOIm(cache_index,i)
@@ -58,11 +47,11 @@ C Cache
 
       end subroutine
 
-      subroutine ADD_TO_CACHE_GGHEW(mur,
-     &    nloops, eps, EWLORe, EWLOIm, EWNLORe,EWNLOIm)
+      subroutine ADD_TO_CACHE_GGHEW(
+     &    nloops, EWLORe, EWLOIm, EWNLORe,EWNLOIm)
           implicit none
 C Arguments
-          double precision mur,nloops, eps
+          double precision nloops
           double precision EWLORe(2)
           double precision EWLOIm(2)
           double precision EWNLORe(2)
@@ -75,9 +64,9 @@ C Cache
           cache_index = MOD(curr_size_ewvirt,max_cache_ewvirt)+1
 c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           curr_size_ewvirt = MIN(curr_size_ewvirt + 1,max_cache_ewvirt)
-          key_MUR(cache_index)=mur
+          
           key_NLOOPSEW(cache_index)=nloops
-          key_EPSEW = eps
+          
           
           do i=1,2
             value_EWLORe(cache_index,i)=EWLORe(i)
@@ -90,11 +79,11 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
 
 
 
-      subroutine setGGHEWCoeffs(muR,nloops,eps)
+      subroutine setGGHEWCoeffs(muR,nloops)
           implicit none
           include 'coupl.inc'
           include 'input.inc'
-          double precision mur,nloops,eps,mH,mZ,mW
+          double precision mur,nloops,mH,mZ,mW
           double precision EWLORe(2)
           double precision EWLOIm(2)
           double precision EWNLORe(2)
@@ -122,17 +111,17 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           mH = MDL_MH
           muR =MU_R
           nloops = MDL_n_loops_EW
-          eps = MDL_eps_order_EW
+          
           ! Get Values for the couplings
-          CALL ACCESS_CACHE_GGHEW(muR,nloops,eps,
+          CALL ACCESS_CACHE_GGHEW(nloops,
      &            EWLORe,EWLOIm, EWNLORe,EWNLOIm,             
      &            FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
              CALL get_ggh_ew_coefs_fortran(
-     &         mH,mW,mZ,muR,int(nloops),int(eps),
+     &         mH,mW,mZ,muR,int(nloops),
      &         EWLORe,EWLOIm,EWNLORe,EWNLOIm) 
-             CALL ADD_TO_CACHE_GGHEW(muR,nloops,eps,
+             CALL ADD_TO_CACHE_GGHEW(nloops,
      &               EWLORe,EWLOIm, EWNLORe,EWNLOIm)
           endif
 
@@ -154,11 +143,11 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
  
         end subroutine setGGHEWCoeffs
 
-        subroutine setGGHEWCoeffsWW(muR,nloops,eps)
+        subroutine setGGHEWCoeffsWW(muR,nloops)
           implicit none
           include 'coupl.inc'
           include 'input.inc'
-          double precision mur,nloops,eps,mH,mZ,mW
+          double precision mur,nloops,mH,mZ,mW
           double precision EWLORe(2)
           double precision EWLOIm(2)
           double precision EWNLORe(2)
@@ -186,17 +175,17 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           mH = MDL_MH
           muR =MU_R
           nloops = MDL_n_loops_EW
-          eps = MDL_eps_order_EW
+          
           ! Get Values for the couplings
-          CALL ACCESS_CACHE_GGHEW(muR,nloops,eps,
+          CALL ACCESS_CACHE_GGHEW(muR,nloops,
      &            EWLORe,EWLOIm, EWNLORe,EWNLOIm,             
      &            FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
              CALL get_ggh_ew_coefs_fortran(
-     &         mH,mW,mZ,muR,int(nloops),int(eps),
+     &         mH,mW,mZ,muR,int(nloops),
      &         EWLORe,EWLOIm,EWNLORe,EWNLOIm) 
-             CALL ADD_TO_CACHE_GGHEW(muR,nloops,eps,
+             CALL ADD_TO_CACHE_GGHEW(muR,nloops,
      &               EWLORe,EWLOIm, EWNLORe,EWNLOIm)
           endif
 
@@ -214,11 +203,11 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
  
         end subroutine setGGHEWCoeffsWW
 
-        subroutine setGGHEWCoeffsZZ(muR,nloops,eps)
+        subroutine setGGHEWCoeffsZZ(muR,nloops)
           implicit none
           include 'coupl.inc'
           include 'input.inc'
-          double precision mur,nloops,eps,mH,mZ,mW
+          double precision mur,nloops,mH,mZ,mW
           double precision EWLORe(2)
           double precision EWLOIm(2)
           double precision EWNLORe(2)
@@ -246,17 +235,17 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           mH = MDL_MH
           muR =MU_R
           nloops = MDL_n_loops_EW
-          eps = MDL_eps_order_EW
+          
           ! Get Values for the couplings
-          CALL ACCESS_CACHE_GGHEW(muR,nloops,eps,
+          CALL ACCESS_CACHE_GGHEW(muR,nloops,
      &            EWLORe,EWLOIm, EWNLORe,EWNLOIm,             
      &            FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
              CALL get_ggh_ew_coefs_fortran(
-     &         mH,mW,mZ,muR,int(nloops),int(eps),
+     &         mH,mW,mZ,muR,int(nloops),
      &         EWLORe,EWLOIm,EWNLORe,EWNLOIm) 
-             CALL ADD_TO_CACHE_GGHEW(muR,nloops,eps,
+             CALL ADD_TO_CACHE_GGHEW(muR,nloops,
      &               EWLORe,EWLOIm, EWNLORe,EWNLOIm)
           endif
 

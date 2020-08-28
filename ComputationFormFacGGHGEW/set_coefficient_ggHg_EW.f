@@ -26,20 +26,20 @@ C Cache
           FOUNDIT = .False.
        
           SEARCHLOOP : do cache_index=1,curr_cache_size
-            if (
-     &      ( abs(pmassA-key_MAewreals(cache_index)) .lt. tol_EWREALS ) 
+            if ( .NOT.(
+     &       abs(pmassA-key_MAewreals(cache_index)) .lt. tol_EWREALS ) 
      &         ) then
               cycle SEARCHLOOP
             endif
-            if (
-     &      ( abs(pmassB-key_MBewreals(cache_index)) .lt. tol_EWREALS ) 
+            if ( .NOT.(
+     &       abs(pmassB-key_MBewreals(cache_index)) .lt. tol_EWREALS ) 
      &         ) then
              cycle SEARCHLOOP
             endif
             do i=0,3
               do j=1,3
-                if (
-     &     (abs(P(i,j)-key_Pewreals(cache_index,i,j)) .lt. tol_EWREALS) 
+                if ( .NOT.(
+     &     abs(P(i,j)-key_Pewreals(cache_index,i,j)) .lt. tol_EWREALS) 
      &         ) then
                   cycle SEARCHLOOP
                 endif

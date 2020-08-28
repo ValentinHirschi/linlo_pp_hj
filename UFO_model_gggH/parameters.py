@@ -50,7 +50,8 @@ CF = Parameter(name='CF',
 MU_R = Parameter(name='MU_R',
                  nature='external',
                  type='real',
-                 value=91.188,
+                 value=125.09,
+                 #value=91.188,
                  texname='\\text{\\mu_r}',
                  lhablock='LOOP',
                  lhacode=[1])
@@ -1032,13 +1033,13 @@ n_loops_EW = Parameter(name='n_loops_EW',
                         lhablock='GGHEW',
                         lhacode=[22011])
                         
-eps_order_EW=Parameter(name='eps_order_EW',
-                        nature='external',
-                        type='real',
-                        value=1,
-                        texname='\\text{eps_order_EW}',
-                        lhablock='GGHEW',
-                        lhacode=[22022])                        
+# eps_order_EW=Parameter(name='eps_order_EW',
+#                         nature='external',
+#                         type='real',
+#                         value=1,
+#                         texname='\\text{eps_order_EW}',
+#                         lhablock='GGHEW',
+#                         lhacode=[22022])                        
 
 # 2-Loop
 # Z-exchange
