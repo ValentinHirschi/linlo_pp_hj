@@ -200,7 +200,7 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
         MDL_GGGHEWWW_ForFac4_IM  = 0
         CALL COUP()
         ! update the WW couplings
-        set2LoopGGHGEWWWCoefficients(P)
+        CALL set2LoopGGHGEWWWCoefficients(P)
       end subroutine setGGHGEWWW
 
       subroutine setGGHGEWZZ(P)
@@ -227,7 +227,7 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
         MDL_GGGHEWWW_ForFac4_IM  = 0
         CALL COUP()
         ! update the ZZ couplings
-        set2LoopGGHGEWZZCoefficients(P)
+        CALL set2LoopGGHGEWZZCoefficients(P)
       end subroutine setGGHGEWZZ
       
       subroutine setGGHGEW(P)
@@ -254,7 +254,7 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
         MDL_GGGHEWWW_ForFac4_IM  = 0
         CALL COUP()
         ! update the ALL couplings
-        set2LoopGGHGEWZZCoefficients(P)
-        set2LoopGGHGEWWCoefficients(P)
+        CALL set2LoopGGHGEWZZCoefficients(P)
+        CALL set2LoopGGHGEWWWCoefficients(P)
       end subroutine setGGHGEW
 

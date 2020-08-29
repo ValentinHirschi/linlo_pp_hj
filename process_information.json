@@ -5,7 +5,7 @@
 		"fortran_evaluation":"set_coefficient_ggHg_QCD.f",
 		"coupling_update_function":["set1LoopGGHGQCDLOCoefficients"],
 		"tensor_structures":["gggHTensStruc1","gggHTensStruc2","gggHTensStruc3","gggHTensStruc4"],
-	    "associated_coupling":"GGGHQCD",
+	    "associated_coupling":["GGGHQCD"],
 		"fortran_cache": "gghgQCDLO_cache.inc",
 		"gluon_number":3
 	},
@@ -15,7 +15,7 @@
 		"fortran_evaluation":"set_coefficient_ggHg_EW.f",
 		"coupling_update_function":["setGGHGEW"],
 		"tensor_structures":["gggHTensStruc1","gggHTensStruc2","gggHTensStruc3","gggHTensStruc4"],
-	    "associated_coupling":"GGGHEW",
+	    "associated_coupling":["GGGHEW"],
 		"fortran_cache": "gghgEW_cache.inc",
 		"gluon_number":3
 	},
@@ -25,7 +25,7 @@
 		"fortran_evaluation":"set_coefficient_ggHg_EW.f",
 		"coupling_update_function":["setGGHGEWZZ"],
 		"tensor_structures":["gggHTensStruc1","gggHTensStruc2","gggHTensStruc3","gggHTensStruc4"],
-	    "associated_coupling":"ZZ",
+	    "associated_coupling":["ZZ","GGGHEW"],
 		"fortran_cache": "gghgEW_cache.inc",
 		"gluon_number":3
 	},
@@ -35,7 +35,7 @@
 		"fortran_evaluation":"set_coefficient_ggHg_EW.f",
 		"coupling_update_function":["setGGHGEWWW"],
 		"tensor_structures":["gggHTensStruc1","gggHTensStruc2","gggHTensStruc3","gggHTensStruc4"],
-	    "associated_coupling":"WW",
+	    "associated_coupling":["WW","GGGHEW"],
 		"fortran_cache": "gghgEW_cache.inc",
 		"gluon_number":3
 	},
@@ -45,7 +45,7 @@
 		"fortran_evaluation":"set_coefficient_EW_ggH.f",
 		"coupling_update_function":["setGGHEWCoeffs"],
 		"tensor_structures":["ggHTensStruc1"],
-	    "associated_coupling":"GGHEW",
+	    "associated_coupling":["GGHEW"],
 		"fortran_cache": "gghEW_cache.inc",
 		"gluon_number":2
 	},
@@ -55,7 +55,7 @@
 		"fortran_evaluation":"set_coefficient_EW_ggH.f",
 		"coupling_update_function":["setGGHEWCoeffsZZ"],
 		"tensor_structures":["ggHTensStruc1"],
-	    "associated_coupling":"ZZ",
+	    "associated_coupling":["ZZ","GGHEW"],
 		"fortran_cache": "gghEW_cache.inc",
 		"gluon_number":2
 	},
@@ -65,7 +65,7 @@
 		"fortran_evaluation":"set_coefficient_EW_ggH.f",
 		"coupling_update_function":["setGGHEWCoeffsWW"],
 		"tensor_structures":["ggHTensStruc1"],
-	    "associated_coupling":"WW",
+	    "associated_coupling":["WW","GGHEW"],
 		"fortran_cache": "gghEW_cache.inc",
 		"gluon_number":2
 	},
@@ -76,7 +76,7 @@
 		"fortran_evaluation":"set_coefficient_HEFT_ggHg.f",
 		"coupling_update_function":["setGGHGHEFTCoefficients"],
 		"tensor_structures":["gggHTensStruc1","gggHTensStruc2","gggHTensStruc3","gggHTensStruc4"],
-	    "associated_coupling":"GGGHEFT",
+	    "associated_coupling":["GGGHEFT"],
 		"fortran_cache": "gghgHEFT_cache.inc",
 		"gluon_number":3
 	},
@@ -86,7 +86,7 @@
 		"fortran_evaluation":"set_coefficient_HEFT_ggH.f",
 		"coupling_update_function":["set1LoopGGHHEFTCoeffs"],
 		"tensor_structures":["ggHTensStruc1"],
-	    "associated_coupling":"GGHEFT",
+	    "associated_coupling":["GGHEFT"],
 		"fortran_cache": "gghHEFT_cache.inc",
 		"gluon_number":2
 	},
@@ -96,7 +96,7 @@
 		"fortran_evaluation":"set_coefficient_HEFT_ggH.f",
 		"coupling_update_function":["set1LoopGGHHEFTCoeffs"],
 		"tensor_structures":["ggHTensStruc1"],
-	    "associated_coupling":"EP01L",
+	    "associated_coupling":["EP01L"],
 		"fortran_cache": "gghHEFT_cache.inc",
 		"gluon_number":2
 	},
@@ -106,7 +106,7 @@
 		"fortran_evaluation":"set_coefficient_HEFT_ggH.f",
 		"coupling_update_function":["set1LoopGGHHEFTCoeffs"],
 		"tensor_structures":["ggHTensStruc1"],
-	    "associated_coupling":"EPM11L",
+	    "associated_coupling":["EPM11L"],
 		"fortran_cache": "gghHEFT_cache.inc",
 		"gluon_number":2
 	},
@@ -116,7 +116,7 @@
 		"fortran_evaluation":"set_coefficient_HEFT_ggH.f",
 		"coupling_update_function":["set1LoopGGHHEFTCoeffs"],
 		"tensor_structures":["ggHTensStruc1"],
-	    "associated_coupling":"EPM21L",
+	    "associated_coupling":["EPM21L"],
 		"fortran_cache": "gghHEFT_cache.inc",
 		"gluon_number":2
 	}

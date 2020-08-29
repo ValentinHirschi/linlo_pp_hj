@@ -16,7 +16,6 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 						const double & massW,
 						const double & massZ,
 						const double &	muR,
-						const int & n_loops_EW,
 						double *ewTensorLORe,
 						double *ewTensorLOIm,
 						double *ewTensorNLORe,
@@ -95,33 +94,20 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 		
 	}
 	// The arrays are [value_for_Z, value_for_W]
-	if (n_loops_EW==2){
 
-		for (i=0;i<2;i=i+1){
-			ewTensorNLORe[i]=0.;
-			ewTensorNLOIm[i]=0.;
-		}
 		ewTensorLORe[0]=A0zzRe;
 		ewTensorLORe[1]=A0wwRe;
 		ewTensorLOIm[0]=A0zzIm;
 		ewTensorLOIm[1]=A0wwIm;
 		
-	}
 
 	// The arrays are [value_for_Z, value_for_W]
-	if (n_loops_EW==3){
-
-		for (i=0;i<2;i=i+1){
-			ewTensorLORe[i]=0.;
-			ewTensorLOIm[i]=0.;
-		}
-		// These are the NLO amplitudes for FKS subtraction
+	// These are the NLO amplitudes for FKS subtraction
 		ewTensorNLORe[0]=ANLOFinzzRe-(-(A0zzIm*prefacI1Eps0Im) + A0zzRe*prefacI1Eps0Re);
 		ewTensorNLORe[1]= ANLOFinwwRe-(-(A0wwIm*prefacI1Eps0Im) + A0wwRe*prefacI1Eps0Re);
 		ewTensorNLOIm[0]=ANLOFinzzIm-(A0zzRe*prefacI1Eps0Im + A0zzIm*prefacI1Eps0Re);
 		ewTensorNLOIm[1]=ANLOFinwwIm-(A0wwRe*prefacI1Eps0Im + A0wwIm*prefacI1Eps0Re);
 		
-	}
 
 
 

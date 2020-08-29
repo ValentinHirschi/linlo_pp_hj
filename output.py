@@ -192,27 +192,34 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             'processes')[0].get('split_orders')
         print involved_couplings
         for proc in self.available_processes:
-            if possible_procs[proc]['associated_coupling'] in involved_couplings:
-                prefix = str(proc)
-                needed_procs[prefix] = copy.deepcopy(possible_procs[proc])
-                #handle the fortran bridge
-                old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_bridge'])
-                # make relativ path absolute, so that we dont have to copy the mathematica folders
-                file = open(old_file,'r') 
-                file_source = file.read()
-                file.close()
-                file_source = file_source.replace('PATHTOC',pjoin(_plugin_path,possible_procs[proc]['directory']))              
-                new_file = prefix+"_"+ possible_procs[proc]['fortran_bridge']
-                with open(pjoin(_plugin_path,possible_procs[proc]['directory'],new_file),'w') as file:
-                    file.write(file_source)
-                needed_procs[prefix]['fortran_bridge'] = new_file
-                # handle the fortran evaluation
-                old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_evaluation'])
-                new_file = prefix+"_"+ possible_procs[proc]['fortran_evaluation']
-                shutil.copyfile(old_file,pjoin(_plugin_path,possible_procs[proc]['directory'],new_file))
-                needed_procs[prefix]['fortran_evaluation'] = new_file
-                self.relevant_processes.update(copy.deepcopy(needed_procs))
-                self.create_lib(pjoin(_plugin_path, possible_procs[proc]['directory']),needed_procs[prefix])
+            write = True
+            if set(possible_procs[proc]['associated_coupling'])<=set(involved_couplings):
+                # we do that for the coupling splitting of the EW corrections
+                for otherproc in self.available_processes:
+                    if set(possible_procs[otherproc]['associated_coupling'])<=set(involved_couplings) and set(possible_procs[otherproc]['associated_coupling']) > set(possible_procs[proc]['associated_coupling']):
+                        write = False
+                       
+                if write == True:        
+                    prefix = str(proc)
+                    needed_procs[prefix] = copy.deepcopy(possible_procs[proc])
+                    #handle the fortran bridge
+                    old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_bridge'])
+                    # make relativ path absolute, so that we dont have to copy the mathematica folders
+                    file = open(old_file,'r') 
+                    file_source = file.read()
+                    file.close()
+                    file_source = file_source.replace('PATHTOC',pjoin(_plugin_path,possible_procs[proc]['directory']))              
+                    new_file = prefix+"_"+ possible_procs[proc]['fortran_bridge']
+                    with open(pjoin(_plugin_path,possible_procs[proc]['directory'],new_file),'w') as file:
+                        file.write(file_source)
+                    needed_procs[prefix]['fortran_bridge'] = new_file
+                    # handle the fortran evaluation
+                    old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_evaluation'])
+                    new_file = prefix+"_"+ possible_procs[proc]['fortran_evaluation']
+                    shutil.copyfile(old_file,pjoin(_plugin_path,possible_procs[proc]['directory'],new_file))
+                    needed_procs[prefix]['fortran_evaluation'] = new_file
+                    self.relevant_processes.update(copy.deepcopy(needed_procs))
+                    self.create_lib(pjoin(_plugin_path, possible_procs[proc]['directory']),needed_procs[prefix])
                 
 
     

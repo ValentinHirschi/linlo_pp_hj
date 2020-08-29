@@ -1028,7 +1028,7 @@ AllGGGHEWZZCoup = Parameter(name='AllGGGHEWWWCoup',
 n_loops_EW = Parameter(name='n_loops_EW',
                         nature='external',
                         type='real',
-                        value=2,
+                        value=99,
                         texname='\\text{n_loops_EW}',
                         lhablock='GGHEW',
                         lhacode=[22011])
