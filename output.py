@@ -41,8 +41,13 @@ def get_helicity_matrix_longitudinal(self,allow_reverse=True):
     process = self.get('processes')[0]
     model = process.get('model')
     hel_per_part = []
+    gluon_count = 0
     for wf in self.get_external_wavefunctions():
-        if wf.get('pdg_code') != 21: 
+        if wf.get('pdg_code') ==21:
+            gluon_count +=1
+
+    for wf in self.get_external_wavefunctions():
+        if wf.get('pdg_code') != 21 or gluon_count<3: 
             hel_per_part+= [model.get('particle_dict')[\
                                 wf.get('pdg_code')].get_helicity_states(allow_reverse)]
         else:
@@ -61,11 +66,15 @@ def get_helicity_combinations_longitudinal(self):
 
     if not self.get('processes'):
         return None
+    gluon_count=0
+    for wf in self.get_external_wavefunctions():
+        if wf.get('pdg_code') ==21:
+            gluon_count +=1
 
     model = self.get('processes')[0].get('model')
     hel_per_part = []
     for wf in self.get_external_wavefunctions():
-        if wf.get('pdg_code') != 21: 
+        if wf.get('pdg_code') != 21 or gluon_count<3: 
             hel_per_part+= [len(model.get('particle_dict')[\
                                 wf.get('pdg_code')].get_helicity_states())]
         else:
