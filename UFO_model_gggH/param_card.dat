@@ -20,8 +20,8 @@ Block MASS
    11 5.110000e-04 # Me 
    13 1.056600e-01 # MM 
    15 1.777000e+00 # MTA 
-   23 9.118800e+01 # MZ 
-   25 1.250000e+02 # MH 
+   23 9.118760e+01 # MZ 
+   25 1.250900e+02 # MH 
 ##  Not dependent paramater.
 ## Those values should be edited following analytical the 
 ## analytical expression. Some generator could simply ignore 
@@ -35,8 +35,8 @@ Block MASS
   14 0.000000 # vm : 0.0 
   16 0.000000 # vt : 0.0 
   22 0.000000 # A : 0.0 
-  24 80.419000 # W+ : cmath.sqrt(MZ**2/2. + cmath.sqrt(MZ**4/4. - (aEW*cmath.pi*MZ**2)/(Gf*cmath.sqrt(2)))) 
-  251 80.419000 # G+ : cmath.sqrt(MZ**2/2. + cmath.sqrt(MZ**4/4. - (aEW*cmath.pi*MZ**2)/(Gf*cmath.sqrt(2)))) 
+  24 80.385000 # W+ : 80.385 
+  251 80.385000 # G+ : 80.385 
 
 ###################################
 ## INFORMATION FOR DECAY

@@ -51,7 +51,7 @@ MU_R = Parameter(name='MU_R',
                  nature='external',
                  type='real',
                  value=125.09,
-                 #value=91.188,
+                 # value=91.188,
                  texname='\\text{\\mu_r}',
                  lhablock='LOOP',
                  lhacode=[1])
@@ -188,7 +188,7 @@ MB = Parameter(name='MB',
 MZ = Parameter(name='MZ',
                nature='external',
                type='real',
-               value=91.188,
+               value=91.1876,
                texname='\\text{MZ}',
                lhablock='MASS',
                lhacode=[23])
@@ -196,7 +196,7 @@ MZ = Parameter(name='MZ',
 MH = Parameter(name='MH',
                nature='external',
                type='real',
-               value=125.,
+               value=125.09,
                texname='\\text{MH}',
                lhablock='MASS',
                lhacode=[25])
@@ -334,7 +334,8 @@ G = Parameter(name='G',
 MW = Parameter(name='MW',
                nature='internal',
                type='real',
-               value='cmath.sqrt(MZ**2/2. + cmath.sqrt(MZ**4/4. - (aEW*cmath.pi*MZ**2)/(Gf*cmath.sqrt(2))))',
+               value='80.385',
+               #value='cmath.sqrt(MZ**2/2. + cmath.sqrt(MZ**4/4. - (aEW*cmath.pi*MZ**2)/(Gf*cmath.sqrt(2))))',
                texname='M_W')
 
 ee = Parameter(name='ee',
@@ -922,12 +923,12 @@ GGH_HEFT1L_EPM2_RE = Parameter(name='GGH_HEFT1L_EPM2_RE',
                                lhacode=[20005])
 
 GGH_HEFT_LO = Parameter(name='GGH_HEFT_LO',
-                               nature='external',
-                               type='complex',
-                               value=20.006,
-                               texname='\\text{GGH_HEFT_LO}',
-                               lhablock='GGHHEFT',
-                               lhacode=[20006])                                                                   
+                        nature='external',
+                        type='complex',
+                        value=20.006,
+                        texname='\\text{GGH_HEFT_LO}',
+                        lhablock='GGHHEFT',
+                               lhacode=[20006])
 # gg>hg
 GGGH_HEFT_ForFac1 = Parameter(name='GGGH_HEFT_ForFac1',
                               nature='external',
@@ -961,10 +962,18 @@ GGGH_HEFT_ForFac4 = Parameter(name='GGGH_HEFT_ForFac4',
 # Overall Coupling for GGH EW. We use 1711.1113v2 eq (6.3)
 # ===============================================================================
 # Z-exchange
+CZew = Parameter(name='CZew',
+                 nature='internal',
+                 type='complex',
+                 value='(2./cw**4*(5./4.-7./3.*sw2+22./9.*sw2**2))',
+                 texname='CZew',
+                 lhablock='EW',
+                 lhacode=[22200]
+                 )
 AllGGHEWZZCoup2L = Parameter(name='AllGGHEWZZCoup2L',
                              nature='internal',
                              type='complex',
-                             value='-complex(0,1)*aEW**2*aS*v/(64.*cmath.pi*sw2**2)*(2./cw**4*(5./4.-7./3.*sw2+22./9.*sw2**2))',
+                             value='-complex(0,1)*aEW**2*aS*v/(64.*cmath.pi*sw2**2)*CZew',
                              texname='AllGGHEWCoup',
                              lhablock='GGHEWZZ',
                              lhacode=[22000])
@@ -997,12 +1006,12 @@ AllGGHEWWWCoup3L = Parameter(name='AllGGHEWWWCoup3L',
 # Overall Coupling for GGGH
 # ===============================================================================
 # my color factor is -Tr[T^a T^b T^c]+Tr[T^a T^c T^b] = 1/2 i f^abc
-# therefore I include a -1/2 i
+# therefore I include a 1/2 i
 # QCD
 AllGGGHQCDCoup = Parameter(name='AllGGGHQCDCoup',
                            nature='internal',
                            type='complex',
-                           value='-((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
+                           value='((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
                            texname='AllGGGHQCDCoup',
                            lhablock='GGGHQCD',
                            lhacode=[66000])
@@ -1010,7 +1019,7 @@ AllGGGHQCDCoup = Parameter(name='AllGGGHQCDCoup',
 AllGGGHEWZZCoup = Parameter(name='AllGGGHEWZZCoup',
                             nature='internal',
                             type='complex',
-                            value='-0.5*complex(0,1)*G**3*gw**3*MW/cw**4*(5./8. - (7.*sw**2)/6. + (11.*sw**4)/9.)',
+                            value='0.5*complex(0,1)*G**3*gw**3*MW/cw**4*(5./8. - (7.*sw**2)/6. + (11.*sw**4)/9.)',
                             texname='AllGGGHEWCoup',
                             lhablock='GGGHEWZZ',
                             lhacode=[77000])
@@ -1018,7 +1027,7 @@ AllGGGHEWZZCoup = Parameter(name='AllGGGHEWZZCoup',
 AllGGGHEWZZCoup = Parameter(name='AllGGGHEWWWCoup',
                             nature='internal',
                             type='complex',
-                            value='-0.5*complex(0,1)*G**3*gw**3*MW',
+                            value='0.5*complex(0,1)*G**3*gw**3*MW',
                             texname='AllGGGHEWWWCoup',
                             lhablock='GGGHEWWW',
                             lhacode=[88000])
@@ -1026,20 +1035,20 @@ AllGGGHEWZZCoup = Parameter(name='AllGGGHEWWWCoup',
 # Form Factors for ggH
 # ===============================================================================
 n_loops_EW = Parameter(name='n_loops_EW',
-                        nature='external',
-                        type='real',
-                        value=99,
-                        texname='\\text{n_loops_EW}',
-                        lhablock='GGHEW',
-                        lhacode=[22011])
-                        
+                       nature='external',
+                       type='real',
+                       value=99,
+                       texname='\\text{n_loops_EW}',
+                       lhablock='GGHEW',
+                       lhacode=[22011])
+
 # eps_order_EW=Parameter(name='eps_order_EW',
 #                         nature='external',
 #                         type='real',
 #                         value=1,
 #                         texname='\\text{eps_order_EW}',
 #                         lhablock='GGHEW',
-#                         lhacode=[22022])                        
+#                         lhacode=[22022])
 
 # 2-Loop
 # Z-exchange

@@ -49,7 +49,7 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 	prefac3Lvs2L = 8.;
 	// I have a different tensor structure then given in the
 	// papers on the virtuals
-	prefacTensDiff =-1./pow(mH,2);
+	prefacTensDiff =-2./pow(mH,2);
 
 	// catani (E^(eps (euler_gamma+I \[M_PI])) (CA+beta0 eps))/(eps^3 Gamma[-eps])
 	prefacI1Eps0Re= (7*CA*pow(M_PI,2))/12.;
@@ -58,7 +58,7 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 
 	recomp =false;
 
-
+	// These are the catani subtracted values of 1711.1113v2
 	ANLOFinzzRe =-2.97580125634092878835130586898977665654*prefacTensDiff;
 	ANLOFinzzIm =-41.19509385404224724165178749439486111*prefacTensDiff;
 	ANLOFinwwRe =-11.315570583184121341121574935828846867*prefacTensDiff;
@@ -85,8 +85,8 @@ extern"C" void get_ggh_ew_coefs_fortran_(
 	if (recomp){
 		throw std::invalid_argument( "A boson mass does not match within the allowed deviation of: "+ std::to_string(allow_dev)
 		+"\n\tDeviation for Higgs-mass "+ std::to_string(abs(massHiggs-mH)/massHiggs)
-		+"\n\tDeviation for Z-mass "+ std::to_string(abs(massW-mW)/massW)
-		+"\n\tDeviation for W-mass "+ std::to_string(abs(massZ-mZ)/massZ));
+		+"\n\tDeviation for W-mass "+ std::to_string(abs(massW-mW)/massW)
+		+"\n\tDeviation for Z-mass "+ std::to_string(abs(massZ-mZ)/massZ));
 	}
 	if (abs(massHiggs-muR)/massHiggs>allow_dev){
 		throw std::invalid_argument( "The renormalization scale does not match the higgs mass within the allowed deviation of: "+ std::to_string(allow_dev)

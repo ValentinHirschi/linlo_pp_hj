@@ -29,7 +29,7 @@ GGH_EFT_1L_EPM2 = Coupling(name = 'GGH_EFT_1L_EPM2',
                 order = {'GGHEFT':1,"QCD":4,"QED":1})
 
 # my color factor is -Tr[T^a T^b T^c]+Tr[T^a T^c T^b] = 1/2 i f^abc
-# therefore I include a -1/2 i
+# therefore I include a 1/2 i
 GGGH_HEFT_C1 = Coupling(name = 'GGGH_HEFT_C1',
                 value = '(-0.5)*(CHEFT)*G*GGGH_HEFT_ForFac1',
                 order = {'GGGHEFT':1,"QCD":3,"QED":1})
