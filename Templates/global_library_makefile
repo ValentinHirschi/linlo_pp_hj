@@ -1,0 +1,32 @@
+include ../Source/make_opts
+
+ifeq ($(origin LIBNAME),undefined)
+  LIBNAME=%(proc_prefix)s
+endif
+
+DOTO = %%.o
+DOTF = %%.f
+DOTCPP = %%.cpp
+
+GLOBAL_ME_LIBRARY = ./lib$(LIBNAME).a
+
+all: $(GLOBAL_ME_LIBRARY)
+
+include ../Source/DHELAS/aloha_file.inc
+HELAS_OBJS = $(addprefix ../Source/DHELAS/,$(ALOHARoutine) aloha_functions.o)  
+
+include ../Source/MODEL/makeinc.inc
+MODEL_OBJS= $(addprefix ../Source/MODEL/,$(MODEL) ) 
+
+PROC_OBJS=$(patsubst $(DOTF),$(DOTO), $(wildcard ../SubProcesses/P*/matrix.f) )
+
+MODEL_C_OBJS=$(patsubst $(DOTCPP),$(DOTO), $(wildcard ../Source/MODEL/*.cpp) )
+
+$(MODEL_C_OBJS): ../Source/MODEL
+	cd ../Source/MODEL; make ../../lib/libmodel.a; cd -;
+
+$(GLOBAL_ME_LIBRARY): $(HELAS_OBJS) $(MODEL_OBJS) $(PROC_OBJS)
+	$(call CREATELIB, $@, $^)
+
+clean:
+	rm -f $(GLOBAL_ME_LIBRARY)
