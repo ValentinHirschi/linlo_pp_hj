@@ -101,7 +101,7 @@ class GGHGInterface(master_interface.MasterCmd, cmd.CmdShell):
         logger.info("   generate g g > H    GGHEFT^2==2  QCD^2==4")
         logger.info("   generate g g > H g  GGGHEFT^2==2 ")
         logger.info("For NLO-virtuals: ")
-        logger.info("   generate g g > H g  GGHEFT^2==2  QCD^2==6")
+        logger.info("   generate g g > H    GGHEFT^2==2  QCD^2==6")
         logger.info("To adjust eps-order change parameter: eps_order_HEFT ")
         logger.info("----------------------------------")
         logger.info("----------------------------------")
