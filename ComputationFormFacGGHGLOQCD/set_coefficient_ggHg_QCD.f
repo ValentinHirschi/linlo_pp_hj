@@ -124,7 +124,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing it GGVVAMP'
-             call get_gggh_tensor_coefs_fortran(PGGG,MDL_MH,MDL_MT,
+             call %(C_prefix)sget_gggh_tensor_coefs_fortran(PGGG,MDL_MH,MDL_MT,
      &     oneLoopTensorRe,oneLoopTensorIm)
              CALL ADD_TO_CACHE_GGHGQCDLO(P,MDL_MH, MDL_MT, 
      &                         oneLoopTensorRe, oneLoopTensorIm)

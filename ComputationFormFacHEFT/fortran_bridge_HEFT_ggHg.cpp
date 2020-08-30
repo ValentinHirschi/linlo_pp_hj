@@ -14,7 +14,7 @@ using namespace std;
 
 
 
-extern"C" void get_gggh_heft_coefs_fortran_(const double *pInput,
+extern"C" void %(C_prefix)sget_gggh_heft_coefs_fortran_(const double *pInput,
 		                const double &	massHiggs,
 						double *gghgHEFTTensor
 						)  {

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-std::string exec(const char* cmd) {
+std::string %(C_prefix)sexec(const char* cmd) {
     char buffer[128];
     std::string result = "";
     FILE* pipe = popen(cmd, "r");
@@ -33,7 +33,7 @@ inline bool exists (const std::string& name) {
 
 
 
-extern"C" void get_gggh_tensor_coefs_fortran_(const double *pInput,
+extern"C" void %(C_prefix)sget_gggh_tensor_coefs_fortran_(const double *pInput,
 		                const double &	massHiggs,
 						const double &	massTop,
 						double *oneLoopTensorRe,
@@ -57,8 +57,8 @@ extern"C" void get_gggh_tensor_coefs_fortran_(const double *pInput,
 	ostr<<scientific;
 
 
-	if (exists("PATHTOC/mathematicaRoutines/HJ1L/exphj1l.wls")) {
-		ostr<<"PATHTOC/mathematicaRoutines/HJ1L/exphj1l.wls ";
+	if (exists("%(path_prefix)s/mathematicaRoutines/HJ1L/exphj1l.wls")) {
+		ostr<<"%(path_prefix)s/mathematicaRoutines/HJ1L/exphj1l.wls ";
 	} else  {
 	   std::cerr<<"Could Not find 'exphj1l.wls'. Place it somewhere as defined in fortran_bridge_ggHg_QCD.cpp"<<std::endl;
        exit (EXIT_FAILURE);
@@ -70,7 +70,7 @@ extern"C" void get_gggh_tensor_coefs_fortran_(const double *pInput,
 	
 	std::string command = ostr.str();
 	std::cout<<"About to call wrapper with: "<<command<<std::endl;
-    std::string str_result = exec(command.c_str());
+    std::string str_result = %(C_prefix)sexec(command.c_str());
 	// std::cout<<"I got result="<<str_result<<std::endl;
     vector<std::string> result;
 	std::istringstream iss(str_result);

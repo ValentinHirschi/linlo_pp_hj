@@ -9,7 +9,7 @@
 
 using namespace std;
 
-std::string exec_ew(const char* cmd) {
+std::string %(C_prefix)sexec_ew(const char* cmd) {
     char buffer[128];
     std::string result = "";
     FILE* pipe = popen(cmd, "r");
@@ -33,7 +33,7 @@ inline bool exists_ew (const std::string& name) {
 
 
 
-extern"C" void get_gggh_tensor_coefs_ew_(const double *pInput,
+extern"C" void %(C_prefix)sget_gggh_tensor_coefs_ew_(const double *pInput,
 		                const double &	massHiggs,
 						const double &	massBoson,
 						double *oneLoopTensorRe,
@@ -57,8 +57,8 @@ extern"C" void get_gggh_tensor_coefs_ew_(const double *pInput,
 	ostr<<scientific;
 
 
-	if (exists_ew("PATHTOC/mathematicaRoutines/expew.wls")) {
-		ostr<<"PATHTOC/mathematicaRoutines/expew.wls ";
+	if (exists_ew("%(path_prefix)sprefix)/mathematicaRoutines/expew.wls")) {
+		ostr<<"%(path_prefix)sprefix)/mathematicaRoutines/expew.wls ";
 	} else  {
 	   std::cerr<<"Could Not find 'expew.wls'. Place it somewhere as defined in fortran_bridge_ggHg_EW.cpp"<<std::endl;
        exit (EXIT_FAILURE);
@@ -70,7 +70,7 @@ extern"C" void get_gggh_tensor_coefs_ew_(const double *pInput,
 	
 	std::string command = ostr.str();
 	std::cout<<"About to call wrapper with: "<<command<<std::endl;
-    std::string str_result = exec_ew(command.c_str());
+    std::string str_result = %(C_prefix)sexec_ew(command.c_str());
 	// std::cout<<"I got result="<<str_result<<std::endl;
     vector<std::string> result;
 	std::istringstream iss(str_result);

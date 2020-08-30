@@ -115,7 +115,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
-             call get_gggh_tensor_coefs_ew(PGGG,MDL_MH,MDL_MZ,
+             call %(C_prefix)sget_gggh_tensor_coefs_ew(PGGG,MDL_MH,MDL_MZ,
      &     ewrealsRe,ewrealsIm)
              CALL ADD_TO_CACHE_GGHGEW(P,MDL_MH, MDL_MZ, 
      &                         ewrealsRe, ewrealsIm)
@@ -159,7 +159,7 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
-            call get_gggh_tensor_coefs_ew(PGGG,MDL_MH,MDL_MW,
+            call %(C_prefix)sget_gggh_tensor_coefs_ew(PGGG,MDL_MH,MDL_MW,
      &     ewrealsRe,ewrealsIm)
             CALL ADD_TO_CACHE_GGHGEW(P,MDL_MH, MDL_MW, 
      &                         ewrealsRe, ewrealsIm)

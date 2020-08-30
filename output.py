@@ -105,6 +105,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             self.available_processes = json.load(json_file)
         self.relevant_processes = {}
         self.fortran_routines = []
+        self.cpp_routines = []
         self.tensor_strucs = []
         self.coupl_update =[]
         self.add_libraries = ['lstdc++']          
@@ -201,6 +202,8 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         involved_couplings = matrix_element.get('processes')[0].get('split_orders')
         for proc in self.available_processes:
             write = True
+            p_prefix = pjoin(_plugin_path,possible_procs[proc]['directory'])
+            c_prefix = "proc_"+str(matrix_element.get('processes')[0].get('id'))+"_"
             if set(possible_procs[proc]['associated_coupling'])<=set(involved_couplings):
                 # we do that for the coupling splitting of the EW corrections
                 for otherproc in self.available_processes:
@@ -212,22 +215,43 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                     needed_procs[prefix] = copy.deepcopy(possible_procs[proc])
                     #handle the fortran bridge
                     old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_bridge'])
+                    new_file = "fortran_bride_" +prefix + ".cpp"
                     # make relativ path absolute, so that we dont have to copy the mathematica folders
                     file = open(old_file,'r') 
                     file_source = file.read()
                     file.close()
-                    file_source = file_source.replace('PATHTOC',pjoin(_plugin_path,possible_procs[proc]['directory']))              
-                    new_file = prefix+"_"+ possible_procs[proc]['fortran_bridge']
-                    with open(pjoin(_plugin_path,possible_procs[proc]['directory'],new_file),'w') as file:
+                    # file_source = file_source.replace('PATHTOC',pjoin(_plugin_path,possible_procs[proc]['directory']))      
+                    file_source = file_source%{"C_prefix":c_prefix,"path_prefix":p_prefix}        
+                    
+                    # copy the c++ routine
+                    with open(pjoin(self.dir_path, 'Source','MODEL',new_file),'w') as file:
                         file.write(file_source)
                     needed_procs[prefix]['fortran_bridge'] = new_file
+
                     # handle the fortran evaluation
                     old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_evaluation'])
                     new_file = prefix+"_"+ possible_procs[proc]['fortran_evaluation']
-                    shutil.copyfile(old_file,pjoin(_plugin_path,possible_procs[proc]['directory'],new_file))
+                    # apply the C_prefix
+                    file = open(old_file,'r') 
+                    file_source = file.read()
+                    file.close()
+                    file_source = file_source%{"C_prefix":c_prefix,"path_prefix":p_prefix}  
+                    with open(pjoin(self.dir_path, 'Source','MODEL',new_file),'w') as file:
+                        file.write(file_source)
+                    #shutil.copyfile(old_file,pjoin(_plugin_path,possible_procs[proc]['directory'],new_file))
+                    
                     needed_procs[prefix]['fortran_evaluation'] = new_file
+                    
+                    target_dir=pjoin(_plugin_path, possible_procs[proc]['directory'])
+                    repl_dict=needed_procs[prefix]
+                    # copy cache file
+                    cp(path1=pjoin(target_dir,repl_dict['fortran_cache']),path2=pjoin(self.dir_path, 'Source','MODEL'))
+
+
                     self.relevant_processes.update(copy.deepcopy(needed_procs))
-                    self.create_lib(pjoin(_plugin_path, possible_procs[proc]['directory']),needed_procs[prefix])
+                    self.fortran_routines +=[repl_dict['fortran_evaluation'].replace('.f','.o')]
+                    self.cpp_routines +=[repl_dict['fortran_bridge'].replace('.cpp','.o')]
+                    #self.create_lib(pjoin(_plugin_path, possible_procs[proc]['directory']),needed_procs[prefix])
                 
 
     
@@ -434,9 +458,24 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             return replace_dict  # for subclass update
 
     def finalize(self, matrix_elements, history, mg5options, flaglist):
+        # append the process routines
         for ff in self.fortran_routines:
             with open(pjoin(self.dir_path, 'Source','MODEL','makeinc.inc'),'a') as file:
                 file.write(' ' + ff)
+        
+        for cc in self.cpp_routines:
+            with open(pjoin(self.dir_path, 'Source','MODEL','makeinc.inc'),'a') as file:
+                file.write(' ' + cc)
+        # fix model makefile
+        fix_make = """
+            GCC = g++
+            CCFLAGs = -Wall
+
+            fortan_bridge%.o : fortan_bridge%.cpp
+	            $(GCC) $(CCFLAGs) -c $<"""
+        with open(pjoin(self.dir_path, 'Source','MODEL','makefile'),'a') as ff:
+            ff.write(fix_make)
+
         # I am not sure, but I think -lstdc++ should be a the end
         new_libs = ' '        
         for ff in reversed(self.add_libraries):
@@ -450,6 +489,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             f.seek(0)
             for line in lines:
                 f.write(line)
+        
         # fix helas code for inclusion of coupling updates:
         _helas_dir = pjoin(self.dir_path, 'Source','DHELAS')
         _template_dir = pjoin(_plugin_path,'Templates')

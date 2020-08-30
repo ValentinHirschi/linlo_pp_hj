@@ -11,7 +11,7 @@ using namespace std;
 
 
 
-extern"C" void get_ggh_ew_coefs_fortran_(
+extern"C" void %(C_prefix)sget_ggh_ew_coefs_fortran_(
 		                const double &	massHiggs,
 						const double & massW,
 						const double & massZ,

@@ -137,7 +137,7 @@ C Cache
             if (int(nloops).NE.0) THEN
                HEFTLO = 1.0
               !  HEFTLO = 0
-              call get_ggh_heft_coefs_fortran(mH,muR,
+              call %(C_prefix)sget_ggh_heft_coefs_fortran(mH,muR,
      &                    HEFTNLORe,HEFTNLOIm)
               ! WRITE(*,*) "i GOT FROM C++"
               ! do i=1,3
