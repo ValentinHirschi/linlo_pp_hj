@@ -1,4 +1,4 @@
-#!/usr/bin/env /usr/bin/wolframscript
+#!/usr/bin/env wolframscript
 (* ::Package:: *)
 
 If[ByteCount[$mypath]==0,

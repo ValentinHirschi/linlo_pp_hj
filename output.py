@@ -131,6 +131,10 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         os.mkdir(pjoin(self.dir_path, 'bin'))
         os.mkdir(pjoin(self.dir_path, 'bin', 'internal'))
         os.mkdir(pjoin(self.dir_path, 'lib'))
+        shutil.copy(
+            pjoin(_plugin_path,'Templates','global_library_makefile'), 
+            pjoin(self.dir_path, 'lib','makefile'))
+
         os.mkdir(pjoin(self.dir_path, 'Cards'))
         
         # Information at top-level
@@ -197,9 +201,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         """
         needed_procs ={}
         possible_procs = self.available_processes
-        involved_couplings = matrix_element.get(
-            'processes')[0].get('split_orders')
-        print involved_couplings
+        involved_couplings = matrix_element.get('processes')[0].get('split_orders')
         for proc in self.available_processes:
             write = True
             if set(possible_procs[proc]['associated_coupling'])<=set(involved_couplings):
@@ -433,6 +435,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             replace_dict['return_value'] = len(
                 filter(lambda call: call.find('#') != 0, helas_calls))
             return replace_dict  # for subclass update
+
     def finalize(self, matrix_elements, history, mg5options, flaglist):
         for ff in self.fortran_routines:
             with open(pjoin(self.dir_path, 'Source','MODEL','makeinc.inc'),'a') as file:
@@ -493,6 +496,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                 else:
                     err= 'Tensor structure '+tensfile+' not found!'
                     print MadGraph5Error(err)
+
         # compile helas DIR
         misc.compile(arg=[],cwd = _helas_dir)
         # FIX 2>1 kinematics
@@ -507,7 +511,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             for line in lines:
                 file.write(line)
 
-
-
         super(My_ggHg_Exporter,self).finalize(matrix_elements, history, mg5options, flaglist)
-           
+
+        # Compile the global library
+        misc.compile(arg=['LIBNAME=%s'%os.path.basename(self.dir_path)],cwd=pjoin(self.dir_path,'lib'))
