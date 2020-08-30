@@ -12,7 +12,7 @@ import madgraph.various.misc as misc
 from madgraph.iolibs.files import cp, ln, mv
 import madgraph.iolibs.files as files
 from madgraph import MadGraph5Error, InvalidCmd, MG5DIR
-
+import re
 
 
 pjoin = os.path.join
@@ -131,10 +131,6 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         os.mkdir(pjoin(self.dir_path, 'bin'))
         os.mkdir(pjoin(self.dir_path, 'bin', 'internal'))
         os.mkdir(pjoin(self.dir_path, 'lib'))
-        shutil.copy(
-            pjoin(_plugin_path,'Templates','global_library_makefile'), 
-            pjoin(self.dir_path, 'lib','makefile'))
-
         os.mkdir(pjoin(self.dir_path, 'Cards'))
         
         # Information at top-level
@@ -199,6 +195,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
     def copy_and_compile_process_files(self,matrix_element):
         """create copies of the evaluation functions and compile
         """
+
         needed_procs ={}
         possible_procs = self.available_processes
         involved_couplings = matrix_element.get('processes')[0].get('split_orders')
@@ -514,4 +511,158 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         super(My_ggHg_Exporter,self).finalize(matrix_elements, history, mg5options, flaglist)
 
         # Compile the global library
-        misc.compile(arg=['LIBNAME=%s'%os.path.basename(self.dir_path)],cwd=pjoin(self.dir_path,'lib'))
+        prefix = 'PROC_%d'%matrix_elements.get_matrix_elements()[0].get('processes')[0].get('id')
+
+        open(pjoin(self.dir_path, 'lib','makefile'),'w').write(
+            open(pjoin(_plugin_path,'Templates','global_library_makefile'),'r').read()%
+                {'proc_prefix': prefix}
+        )
+
+        # Render all subroutines and commons blocks to share a unique prefix
+        self.individualizes_distribution_prefixes(self.dir_path,prefix+'_')
+
+        misc.compile(arg=[],cwd=pjoin(self.dir_path,'lib'))
+
+    def individualizes_distribution_prefixes(self, root_path, prefix, restore=False, verbose=False):
+        """ Adds a unique prefix to all common block and subroutine names that are not already prefixed by a unique name."""
+
+        logger.info("Making all common blocks and subroutine names unique in '%s' with prefix '%s'."%(root_path, prefix))
+
+        def get_source_files():
+            files_list = []
+            targets = []
+            targets += misc.glob(pjoin(root_path,'Source','DHELAS','*.f'))
+            targets += misc.glob(pjoin(root_path,'Source','DHELAS','*.inc'))
+            targets += misc.glob(pjoin(root_path,'Source','MODEL','*.f'))
+            targets += misc.glob(pjoin(root_path,'Source','MODEL','*.inc'))
+            targets += misc.glob(pjoin(root_path,'SubProcesses','*.f'))
+            targets += misc.glob(pjoin(root_path,'SubProcesses','*.inc'))
+            targets += misc.glob(pjoin(root_path,'SubProcesses','P*','*.f'))
+            targets += misc.glob(pjoin(root_path,'SubProcesses','P*','*.inc'))
+            for afile in targets:
+                if os.path.islink(afile) or '__BackUp' in os.path.basename(afile):
+                    continue
+                BackUp_path = pjoin(os.path.dirname(afile),'%s__BackUp'%os.path.basename(afile))
+                if not os.path.isfile(BackUp_path):
+                    shutil.copy(afile,BackUp_path)
+                files_list.append((afile,BackUp_path))
+            return files_list
+
+        target_files = get_source_files()
+
+        if restore:
+            for targetFile, sourceFile in target_files:
+                shutil.copy(sourceFile,targetFile)
+                os.remove(sourceFile)
+            return
+
+        # Subs and common block with prefix to ignore
+        veto_prefixed = re.compile(r"^(MP_)?ML5_\d*_.*")
+        
+        # First scan subroutines and common blocks
+        identified_subroutines = []
+        sub_identifier_re = re.compile(r"^(?P<routine_before>\s*subroutine\s+)(?P<routine_name>\w+)\((?P<rest_of_line>.*)",re.IGNORECASE)
+        sub_suspicious_re = re.compile(r"^(?P<routine_before>\s*subroutine\s+).*",re.IGNORECASE)
+        common_identifier_re = re.compile(r"^(?P<common_before>\s*common\s*/\s*)(?P<common_name>\w+)\s*/(?P<rest_of_line>.*)",re.IGNORECASE)
+        common_suspicious_re = re.compile(r"^(?P<common_before>\s*common\s*/\s*).*",re.IGNORECASE)
+        for targetFile, sourceFile in target_files:
+            new_lines = []
+            for line in open(sourceFile,'r').readlines():
+                sub_identifier = re.match(sub_identifier_re,line)
+                common_identifier = re.match(common_identifier_re,line)        
+                if not sub_identifier is None:
+                    # Make sure it was not already prefixed with ML5_
+                    sub_name = sub_identifier.group('routine_name')
+                    if not re.match(veto_prefixed,sub_name) is None:
+                        new_lines.append(line)
+                        continue
+                    identified_subroutines.append(sub_name.lower())
+                    new_lines.append('%s%s%s(%s\n'%(sub_identifier.group('routine_before'),
+                                             prefix,
+                                             sub_name,
+                                             sub_identifier.group('rest_of_line')))
+                elif not common_identifier is None:
+                    # Make sure it was not already prefixed with ML5_
+                    common_name = common_identifier.group('common_name')
+                    if not re.match(veto_prefixed,common_name) is None:
+                        new_lines.append(line)
+                        continue
+                    # Renaming those in check_sa is problematic.
+                    # It doesn't matter anyway since they aren't exported symbols in any library
+                    # Also prevent the prefix of the common block for the initialization of the one-loop reduction
+                    # dependencies which should only be initialized once across all MadLoop libraries.
+                    if common_name in ['RASET1','RASET2', 'REDUCTIONCODEINIT']:
+                        new_lines.append(line)
+                        continue
+                    new_lines.append('%s%s%s/%s\n'%(common_identifier.group('common_before'),
+                                             prefix,
+                                             common_name,
+                                             common_identifier.group('rest_of_line')))
+                else:
+                    if re.match(sub_suspicious_re,line) or re.match(common_suspicious_re,line):
+                        if verbose: logger.warning("Warning: Suspicious subroutine/common definition without delimiter! Probably a line break.")
+                        if verbose: logger.warning("Found in file '%s', line is:\n%s"%(targetFile,line))
+                    new_lines.append(line)
+            open(targetFile,'w').writelines(new_lines)
+        
+        # Now we can also substitute the corresponding matching 'CALL'
+        call_identifier_re = re.compile(r"^(?P<call_before>\s*\d*\s*call\s+)(?P<routine_name>\w+)\((?P<rest_of_line>.*)",re.IGNORECASE)
+        call_suspicious_re = re.compile(r"^(?P<call_before>\s*\d*\s*call\s+).*",re.IGNORECASE)
+        endSub_identifier_re = re.compile(r"^(?P<endSub_before>\s*end\s+subroutine\s+)(?P<routine_name>\w+)",re.IGNORECASE)
+        
+        for targetFile, sourceFile in target_files:
+            new_lines = []
+            for line in open(targetFile,'r').readlines():
+                call_identifier = re.match(call_identifier_re,line)
+                endSub_identifier = re.match(endSub_identifier_re,line)
+                
+                if not call_identifier is None:
+                    # Make sure it was not already prefixed with ML5_
+                    routine_name = call_identifier.group('routine_name')
+                    if not re.match(veto_prefixed,routine_name) is None:
+                        new_lines.append(line)
+                        continue
+                    if routine_name.lower() not in identified_subroutines:
+                        if verbose: logger.warning("Skipping subroutine call to '%s' since apparently not taken from here."%routine_name)
+                        new_lines.append(line)
+                        continue
+                    new_lines.append('%s%s%s(%s\n'%(call_identifier.group('call_before'),
+                                             prefix,
+                                             routine_name,
+                                             call_identifier.group('rest_of_line')))
+                elif not endSub_identifier is None:
+                    # Make sure it was not already prefixed with ML5_
+                    routine_name = endSub_identifier.group('routine_name')
+                    if not re.match(veto_prefixed,routine_name) is None:
+                        new_lines.append(line)
+                        continue
+                    if routine_name.lower() not in identified_subroutines:
+                        if verbose: logger.warning("Skipping subroutine call to '%s' since apparently not taken from here."%routine_name)
+                        new_lines.append(line)
+                        continue
+                    new_lines.append('%s%s%s\n'%(endSub_identifier.group('endSub_before'),
+                                             prefix,
+                                             routine_name))
+                else:
+                    if re.match(call_suspicious_re,line):
+                        if verbose: logger.warning("Warning: Suspicious subroutine call without delimiter! Probably a line break.")
+                        if verbose: logger.warning("Found in file '%s', line is:\n%s"%(targetFile,line))
+                    new_lines.append(line)
+            open(targetFile,'w').writelines(new_lines)
+
+        # And now recompile the MODEL, DHELAS and the SubProcesses
+        logger.info('Recompiling MODEL...')
+        misc.compile(arg=[],cwd=pjoin(root_path,'Source','MODEL'))
+        logger.info('Recompiling DHELAS...')        
+        misc.compile(arg=[],cwd=pjoin(root_path,'Source','DHELAS'))
+        all_subproc_dirs = []
+        for subproc in misc.glob(pjoin(root_path,'SubProcesses','P*')):
+            if os.path.isdir(subproc) and os.path.isfile(pjoin(subproc,'loop_matrix.f')):
+                all_subproc_dirs.append(subproc)
+        for subproc in all_subproc_dirs:
+            logger.info("Recompiling SubProcess '%s' ..."%subproc)
+            misc.compile(arg=['check'],cwd=subproc)
+
+        # Finally recompile the global library
+        logger.info('Recompiling the global library...')
+        misc.compile(arg=['LIBNAME=%s'%os.path.basename(root_path)],cwd=pjoin(root_path,'lib'))
