@@ -506,7 +506,7 @@ fortran_bridge%.o : fortran_bridge%.cpp
                 if proc['gluon_number'] == 3:
                     helas_string_update +='      call SETCOEFFFUNC(pg)'.replace('SETCOEFFFUNC',coup_update)+'\n'
                 if proc['gluon_number'] == 2:
-                    helas_string_update +='      call SETCOEFFFUNC(mH,muR)'.replace('SETCOEFFFUNC',coup_update)+'\n'
+                    helas_string_update +='      call SETCOEFFFUNC()'.replace('SETCOEFFFUNC',coup_update)+'\n'
             # now edit the tensor structures in the helas functions
             for tens in proc["tensor_structures"]:
                 tensfile = pjoin(_helas_dir,tens+'_0.f')

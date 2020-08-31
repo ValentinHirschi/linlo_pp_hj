@@ -90,7 +90,7 @@ C Cache
 
 
 
-      subroutine set1LoopGGHHEFTCoeffs(mH,muR,nloops,eps)
+      subroutine set1LoopGGHHEFTCoeffs()
           implicit none
           include 'coupl.inc'
           include 'input.inc'
@@ -127,7 +127,7 @@ C Cache
 
             
             if (int(nloops).EQ.0) THEN
-              HEFTLO =1.0  
+              HEFTLO =1.0d0  
               do i=1,3
                 ! set NLO to 0
                 HEFTNLORe(i) = 0
@@ -135,7 +135,7 @@ C Cache
               enddo
             endif
             if (int(nloops).NE.0) THEN
-               HEFTLO = 1.0
+               HEFTLO = 1.0d0
               !  HEFTLO = 0
               call %(C_prefix)sget_ggh_heft_coefs_fortran(mH,muR,
      &                    HEFTNLORe,HEFTNLOIm)

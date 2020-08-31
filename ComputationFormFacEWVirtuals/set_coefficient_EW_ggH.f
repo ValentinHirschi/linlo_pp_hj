@@ -79,7 +79,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
 
 
 
-      subroutine setGGHEWCoeffs(muR,nloops)
+      subroutine setGGHEWCoeffs()
           implicit none
           include 'coupl.inc'
           include 'input.inc'
@@ -153,7 +153,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
  
         end subroutine setGGHEWCoeffs
 
-        subroutine setGGHEWCoeffsWW(muR,nloops)
+        subroutine setGGHEWCoeffsWW()
           implicit none
           include 'coupl.inc'
           include 'input.inc'
@@ -219,7 +219,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
  
         end subroutine setGGHEWCoeffsWW
 
-        subroutine setGGHEWCoeffsZZ(muR,nloops)
+        subroutine setGGHEWCoeffsZZ()
           implicit none
           include 'coupl.inc'
           include 'input.inc'
