@@ -148,10 +148,11 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         # Add file in SubProcesses
         shutil.copy(pjoin(self.mgme_dir, 'madgraph', 'iolibs', 'template_files', 'makefile_sa_f_sp'), 
                     pjoin(self.dir_path, 'SubProcesses', 'makefileP'))
-        
-        if self.format == 'standalone':
-            shutil.copy(pjoin(self.mgme_dir, 'madgraph', 'iolibs', 'template_files', 'check_sa.f'), 
-                    pjoin(self.dir_path, 'SubProcesses', 'check_sa.f'))
+
+#       This is now dynamically generated        
+#        if self.format == 'standalone':
+#            shutil.copy(pjoin(self.mgme_dir, 'madgraph', 'iolibs', 'template_files', 'check_sa.f'), 
+#                    pjoin(self.dir_path, 'SubProcesses', 'check_sa.f'))
                         
         # Add file in Source
         shutil.copy(pjoin(temp_dir, 'Source', 'make_opts'), 
@@ -276,7 +277,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         """Export a matrix element to a matrix.f file in MG4 standalone format
             if write is on False, just return the replace_dict and not write anything."""
 
-
+        proc_prefix = 'P%d_'%matrix_element.get('processes')[0].get('id')
         if not matrix_element.get('processes') or \
                 not matrix_element.get('diagrams'):
             return 
@@ -393,11 +394,11 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             # that explicitely writes out the contribution from each squared order.
             # The original driver still works and is compiled with 'make' while
             # the splitOrders one is compiled with 'make check_sa_born_splitOrders'
-            check_sa_writer = writers.FortranWriter(
-                'check_sa_born_splitOrders.f')
+            #check_sa_writer = writers.FortranWriter(pjoin(self.dir_path, 'SubProcesses', 
+            #    "P%s" % matrix_element.get('processes')[0].shell_string(),'check_sa_tmp.f'))
+            check_sa_writer = writers.FortranWriter(pjoin(self.dir_path, 'SubProcesses','check_sa.f'))
             self.write_check_sa_splitOrders(squared_orders, split_orders,
                                             nexternal, ninitial, proc_prefix, check_sa_writer)
-
         if write:
             writers.FortranWriter('nsqso_born.inc').writelines(
                 """INTEGER NSQSO_BORN
@@ -456,6 +457,33 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             replace_dict['return_value'] = len(
                 filter(lambda call: call.find('#') != 0, helas_calls))
             return replace_dict  # for subclass update
+
+    def write_check_sa_splitOrders(self,squared_orders, split_orders, nexternal,
+                                                nincoming, proc_prefix, writer):
+        """ Write out a more advanced version of the check_sa drivers that
+        individually returns the matrix element for each contributing squared
+        order."""
+        
+        check_sa_content = open(pjoin(_plugin_path,'Templates','check_sa_splitOrders.f'),'r').read()
+        printout_sq_orders=[]
+        for i, squared_order in enumerate(squared_orders):
+            sq_orders=[]
+            for j, sqo in enumerate(squared_order):
+                sq_orders.append('%s=%d'%(split_orders[j],sqo))
+            printout_sq_orders.append(\
+                    "write(*,*) '%d) Matrix element for (%s) = ',MATELEMS(%d)"\
+                                                 %(i+1,' '.join(sq_orders),i+1))
+        printout_sq_orders='\n'.join(printout_sq_orders)
+        replace_dict = {'printout_sqorders':printout_sq_orders, 
+                        'nSplitOrders':len(squared_orders),
+                        'nexternal':nexternal,
+                        'nincoming':nincoming,
+                        'proc_prefix':proc_prefix}
+        
+        if writer:
+            writer.writelines(check_sa_content % replace_dict)
+        else:
+            return replace_dict
 
     def finalize(self, matrix_elements, history, mg5options, flaglist):
         # append the process routines
@@ -535,17 +563,6 @@ fortran_bridge%.o : fortran_bridge%.cpp
 
         # compile helas DIR
         misc.compile(arg=[],cwd = _helas_dir)
-        # FIX 2>1 kinematics
-        with open(pjoin(_plugin_path,_tmp_dir,'fix_2_to_1_kinematics.f'),'r') as file:
-            fix_check_sa = file.read()
-        with open(pjoin(self.dir_path, 'SubProcesses','check_sa.f'),'r+') as file:
-            lines = file.readlines()
-            for i, line in enumerate(lines):
-                if line.strip().startswith('CALL GET_MOMENTA(SQRTS,PMASS,P)'):
-                    lines[i] = fix_check_sa + '\n'
-            file.seek(0)
-            for line in lines:
-                file.write(line)
 
         super(My_ggHg_Exporter,self).finalize(matrix_elements, history, mg5options, flaglist)
 
