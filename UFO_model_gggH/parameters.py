@@ -60,7 +60,7 @@ MU_R = Parameter(name='MU_R',
 aEWM1 = Parameter(name='aEWM1',
                   nature='external',
                   type='real',
-                  value=132.50698,
+                  value=132.268,
                   texname='\\text{aEWM1}',
                   lhablock='SMINPUTS',
                   lhacode=[1])
@@ -334,7 +334,6 @@ G = Parameter(name='G',
 MW = Parameter(name='MW',
                nature='internal',
                type='real',
-               #value='80.385',
                value='cmath.sqrt(MZ**2/2. + cmath.sqrt(MZ**4/4. - (aEW*cmath.pi*MZ**2)/(Gf*cmath.sqrt(2))))',
                texname='M_W')
 
