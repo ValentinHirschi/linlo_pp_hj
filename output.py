@@ -215,7 +215,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                     needed_procs[prefix] = copy.deepcopy(possible_procs[proc])
                     #handle the fortran bridge
                     old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_bridge'])
-                    new_file = "fortran_bride_" +prefix + ".cpp"
+                    new_file = "fortran_bridge_" +prefix + ".cpp"
                     # make relativ path absolute, so that we dont have to copy the mathematica folders
                     file = open(old_file,'r') 
                     file_source = file.read()
@@ -468,11 +468,10 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                 file.write(' ' + cc)
         # fix model makefile
         fix_make = """
-            GCC = g++
-            CCFLAGs = -Wall
-
-            fortan_bridge%.o : fortan_bridge%.cpp
-	            $(GCC) $(CCFLAGs) -c $<"""
+GCC=g++
+GCCFLAGS = $(MACFLAG) -Wall
+fortran_bridge%.o : fortran_bridge%.cpp
+\t$(GCC) -c $< $(GCCFLAGS)"""
         with open(pjoin(self.dir_path, 'Source','MODEL','makefile'),'a') as ff:
             ff.write(fix_make)
 
