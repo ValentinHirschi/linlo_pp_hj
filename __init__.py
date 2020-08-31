@@ -14,6 +14,9 @@ sys.path.insert(0, root_path)
 if True:
     import output as output
     import gghg_interface as gghg_interface
+    import madgraph_patches as madgraph_patches
+    madgraph_patches.force_aloha_to_loop_mode()
+    
 #import output as output
 # 1. Define new output mode
 #    example: new_output = {'myformat': MYCLASS}
@@ -38,6 +41,6 @@ new_interface = gghg_interface.GGHGInterface
 __author__ = ''
 __email__ = ''
 __version__ = (1,0,0)
-minimal_mg5amcnlo_version = (2,3,4)
+minimal_mg5amcnlo_version = (2,6,6)
 maximal_mg5amcnlo_version = (1000,1000,1000)
-latest_validated_version = (2,4,0)
+latest_validated_version = (2,7,6)

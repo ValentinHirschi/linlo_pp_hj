@@ -9,7 +9,7 @@
 
 * install MadGraph5_aMC@NLO VERSION 2.7.3
 * clone the repo in madgraphs /PLUGIN/ directory
-* copy the file /TEMPLATES/aloha_functions.f into ../../aloha/template_files. It only extends the functionality of the gluon wave function to allow for additional polarization states
+
 ### Coupling orders and description ###
 * GGGHQCD: effective coupling for LO QCD    
 * GGGHEW: effective coupling for EW corrections (W and Z)   

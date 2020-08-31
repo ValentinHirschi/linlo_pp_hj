@@ -549,6 +549,22 @@ fortran_bridge%.o : fortran_bridge%.cpp
 
         super(My_ggHg_Exporter,self).finalize(matrix_elements, history, mg5options, flaglist)
 
+        # Overwite lha_read.f to make it able to work with absolute paths
+        shutil.copy( pjoin(_plugin_path,'Templates','lha_read.f'), 
+                     pjoin(self.dir_path,'Source','MODEL','lha_read.f') )
+        misc.compile(arg=['clean'],cwd=pjoin(self.dir_path,'Source','MODEL'))
+        misc.compile(arg=[],cwd=pjoin(self.dir_path,'Source','MODEL'))
+
+        # Overwite aloha_functions.f
+        import aloha.create_aloha as create_aloha
+        if create_aloha.AbstractALOHAModel.IS_PATCHED:
+            aloha_functions_template = pjoin(_plugin_path,'Templates','aloha_functions_loop.f')
+        else:
+            aloha_functions_template = pjoin(_plugin_path,'Templates','aloha_functions.f')
+        shutil.copy( aloha_functions_template, pjoin(self.dir_path,'Source','DHELAS','aloha_functions.f') )
+        misc.compile(arg=['clean'],cwd=pjoin(self.dir_path,'Source','DHELAS'))
+        misc.compile(arg=[],cwd=pjoin(self.dir_path,'Source','DHELAS'))
+
         # Compile the global library
         prefix = 'PROC_%d'%matrix_elements.get_matrix_elements()[0].get('processes')[0].get('id')
 
