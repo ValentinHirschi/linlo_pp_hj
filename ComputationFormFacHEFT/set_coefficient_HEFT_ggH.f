@@ -49,7 +49,7 @@ C Cache
              cycle SEARCHLOOP
             endif
             FOUNDIT = .True.
-            write(*,*) 'RECYCLED A CALL! ',cache_index
+            ! write(*,*) 'RECYCLED A CALL! ',cache_index
             do i=1,3
               HEFTNLORe(i) = value_HEFTNLORe(cache_index,i)
               HEFTNLOIm(i) = value_HEFTNLOIm(cache_index,i)

@@ -707,8 +707,10 @@ fortran_bridge%.o : fortran_bridge%.cpp
 
         # And now recompile the MODEL, DHELAS and the SubProcesses
         logger.info('Recompiling MODEL...')
+        misc.compile(arg=['clean'],cwd=pjoin(root_path,'Source','MODEL'))
         misc.compile(arg=[],cwd=pjoin(root_path,'Source','MODEL'))
-        logger.info('Recompiling DHELAS...')        
+        logger.info('Recompiling DHELAS...')
+        misc.compile(arg=['clean'],cwd=pjoin(root_path,'Source','DHELAS'))
         misc.compile(arg=[],cwd=pjoin(root_path,'Source','DHELAS'))
         all_subproc_dirs = []
         for subproc in misc.glob(pjoin(root_path,'SubProcesses','P*')):
@@ -716,8 +718,10 @@ fortran_bridge%.o : fortran_bridge%.cpp
                 all_subproc_dirs.append(subproc)
         for subproc in all_subproc_dirs:
             logger.info("Recompiling SubProcess '%s' ..."%subproc)
+            misc.compile(arg=['clean'],cwd=subproc)
             misc.compile(arg=['check'],cwd=subproc)
 
         # Finally recompile the global library
         logger.info('Recompiling the global library...')
-        misc.compile(arg=['LIBNAME=%s'%os.path.basename(root_path)],cwd=pjoin(root_path,'lib'))
+        misc.compile(arg=['clean'],cwd=pjoin(root_path,'lib'))
+        misc.compile(arg=[],cwd=pjoin(root_path,'lib'))
