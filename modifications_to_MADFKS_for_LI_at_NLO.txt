@@ -1,0 +1,330 @@
+# The benchmark restrict card is like the -heft one but with adjusted MH, MZ, MW, aewm1 etc..
+import model HC_NLO_X0_UFO-benchmark
+generate p p > x0 [QCD]
+output LI_at_NLO_QCD_EW_pp_h
+
+#
+# Steps to turn that into LI_at_NLO_QCD_EW:
+#
+
+
+# >>>>>>>>> PDF
+# =============
+
+# >> in LI_at_NLO_QCD_EW/Source/PDF/pdg2pdf_lhapdf6.f
+       if (iabs(ipart).ne.0) then
+         pdg2pdf=1d-40
+         return
+      endif
+
+# >>>>>>>>> FKS_singular.f (select NLO only)
+# ==========================================
+
+# >> in LI_at_NLO_QCD_EW/SubProcesses/P0_gg_x0/fks_singular.f (subroutine add_wgt)
+      if (type.eq.2) return
+
+# >>>>>>>>> links to external LI_at_NLO standalone processes
+# ==========================================================
+
+# >> in LI_at_NLO_QCD_EW_pp_h, add the following soft links:
+ln -s /Users/valentin/Documents/MG5/2.6.6/HIGGSEW_HEFT_BORN LI_at_NLO_BORN
+ln -s /Users/valentin/Documents/MG5/2.6.6/HIGGSEW_HEFT_REAL LI_at_NLO_REAL
+ln -s /Users/valentin/Documents/MG5/2.6.6/HIGGSEW_HEFT_VIRTUAL LI_at_NLO_VIRTUAL
+
+# >> which can be generated with the NLO EW QCD form factor plugin:
+
+import model /Users/valentin/Documents/Work/Projects/HiggsNLOQCDEW/higgsew/UFO_model_gggH
+# First generate the BORN
+generate g g > H GGHEFT^2==2  QCD^2==4 @1
+!rm -rf /Users/valentin/Documents/MG5/2.6.6/HIGGSEW_HEFT_BORN
+output standalone_ggHg HIGGSEW_HEFT_BORN
+# Then generate the REAL
+generate g g > H g GGGHEFT^2==2 @2
+!rm -rf /Users/valentin/Documents/MG5/2.6.6/HIGGSEW_HEFT_REAL
+output standalone_ggHg HIGGSEW_HEFT_REAL
+# Finally generate the VIRTUAL
+generate g g > H GGHEFT^2==2  QCD^2==6 @3
+!rm -rf /Users/valentin/Documents/MG5/2.6.6/HIGGSEW_HEFT_VIRTUAL
+output standalone_ggHg HIGGSEW_HEFT_VIRTUAL
+
+# >>>>>>>>> MODEL modifications
+# =============================
+
+# >> in LI_at_NLO_QCD_EW/Source/MODEL/couplings.f in SUBROUTINE UPDATE_AS_PARAM(), add
+      CALL UPDATE_AS_PARAM_BORN(G, MU_R)
+      CALL UPDATE_AS_PARAM_REAL(G, MU_R)
+      CALL UPDATE_AS_PARAM_VIRTUAL(G, MU_R)
+
+# >> in LI_at_NLO_QCD_EW/Source/MODEL/couplings.f in MP_UPDATE_AS_PARAM(), add
+      double precision GINPUT, MU_RINPUT
+[...]
+      GINPUT = DBLE(MP__G)
+      MU_RINPUT = DBLE(MP__MU_R)
+      
+      CALL UPDATE_AS_PARAM_BORN(GINPUT, MU_RINPUT)
+      CALL UPDATE_AS_PARAM_REAL(GINPUT, MU_RINPUT)
+      CALL UPDATE_AS_PARAM_VIRTUAL(GINPUT, MU_RINPUT)
+
+# >> in LI_at_NLO_QCD_EW/Source/MODEL/rw_para.f in subroutine setpara(param_name), add the following:
+      character(512) BORN_param_name
+      character(512) REAL_param_name
+      character(512) VIRTUAL_param_name
+[...]
+c     setup the BORN paameters
+      BORN_param_name = '../../../LI_at_NLO_BORN/Cards/param_card.dat'
+      WRITE(*,*) 'Now reading born param card: '//BORN_param_name 
+      call PROC_1_setpara2(BORN_param_name)
+c     setup the REAL paameters
+      REAL_param_name='../../../LI_at_NLO_REAL/Cards/param_card.dat'
+      WRITE(*,*) 'Now reading real param card:'//REAL_param_name
+      call PROC_2_setpara2(REAL_param_name)
+c     setup the VIRTUAL paameters
+      VIRTUAL_param_name='../../../LI_at_NLO_VIRTUAL/Cards/param_card.dat'
+      WRITE(*,*) 'Now reading virtual param card:'//VIRTUAL_param_name
+      call PROC_3_setpara2(VIRTUAL_param_name)
+
+# >> Add the following file LI_at_NLO_QCD_EW/Source/MODEL/LI_at_NLO_param_settings.f containing:
+      SUBROUTINE UPDATE_AS_PARAM_BORN(GINPUT, MU_RINPUT)
+          double precision GINPUT,MU_RINPUT
+          include '../../LI_at_NLO_BORN/Source/MODEL/coupl.inc'
+          G = GINPUT
+          MU_R = MU_RINPUT
+          CALL PROC_1_UPDATE_AS_PARAM()
+      END SUBROUTINE UPDATE_AS_PARAM_BORN
+
+      SUBROUTINE UPDATE_AS_PARAM_REAL(GINPUT, MU_RINPUT)
+          double precision GINPUT,MU_RINPUT
+          include '../../LI_at_NLO_REAL/Source/MODEL/coupl.inc'
+          G = GINPUT
+          MU_R = MU_RINPUT          
+          CALL PROC_2_UPDATE_AS_PARAM()
+      END SUBROUTINE UPDATE_AS_PARAM_REAL
+
+      SUBROUTINE UPDATE_AS_PARAM_VIRTUAL(GINPUT, MU_RINPUT)
+          double precision GINPUT,MU_RINPUT
+          include '../../LI_at_NLO_VIRTUAL/Source/MODEL/coupl.inc'
+          G = GINPUT
+          MU_R = MU_RINPUT
+          CALL PROC_3_UPDATE_AS_PARAM()
+      END SUBROUTINE UPDATE_AS_PARAM_VIRTUAL
+
+# >> Add 'LI_at_NLO_param_settings.o' to then end of the line in LI_at_NLO_QCD_EW/Source/MODEL/makeinc.inc
+
+
+# >>>>>>>>>Subprocesses/P0_gg_x0 modifications
+# ============================================
+
+# >> In LI_at_NLO_QCD_EW/SubProcesses/P0_gg_x0/makefile add
+include LI_at_NLO_extra
+
+# >> In LI_at_NLO_QCD_EW/SubProcesses/P0_gg_x0 add the file 'LI_at_NLO_extra' with the following content
+
+#MG_HEFT_HIGGS_ROOT_PATH=/Users/valentin/Documents/MG5/2.6.6
+# PROC_1 is the born
+LI_at_NLO_extra_LIBS+= -L../../LI_at_NLO_BORN/lib/ -lPROC_1
+# $(MG_HEFT_HIGGS_ROOT_PATH)/HIGGSEW_HEFT_BORN/lib/ -lPROC_1
+# PROC_2 is the real
+LI_at_NLO_extra_LIBS+= -L../../LI_at_NLO_REAL/lib/ -lPROC_2
+#$(MG_HEFT_HIGGS_ROOT_PATH)/HIGGSEW_HEFT_REAL/lib/ -lPROC_2
+# PROC_3 is the virtual
+LI_at_NLO_extra_LIBS+= -L../../LI_at_NLO_VIRTUAL/lib/ -lPROC_3
+#$(MG_HEFT_HIGGS_ROOT_PATH)/HIGGSEW_HEFT_VIRTUAL/lib/ -lPROC_3
+# Make sure -lstdc++ is included
+LI_at_NLO_extra_LIBS+= -lstdc++
+[...]
+# Add the extra libs from LINLO
+LINKLIBS+= $(LI_at_NLO_extra_LIBS)
+
+# >>>>>>>>> SPOOFING THE BORN
+# ===========================
+
+# >> In file LI_at_NLO_QCD_EW_pp_h/SubProcesses/P0_gg_x0/born.f substitute
+
+c      INCLUDE 'coupl.inc'
+by
+      INCLUDE '../../LI_at_NLO_BORN/Source/MODEL/coupl.inc'
+
+# >> In that same file LI_at_NLO_QCD_EW_pp_h/SubProcesses/P0_gg_x0/born.f, also substitute
+
+c            CALL VVS2_10_0(W(1,1),W(1,2),W(1,3),GC_3002H,GC_3002A
+c     $       ,AMP(1))
+for
+            CALL PROC_1_GGHTENSSTRUC1_0(W(1,1),W(1,2),W(1,3),
+     $            GGH_HEFT_LO_C1,AMP(1))
+
+# >>>>>>>>> SPOOFING THE REALS
+# ============================
+
+# >> In file LI_at_NLO_QCD_EW_pp_h/SubProcesses/P0_gg_x0/real_me_chooser.f, also change
+
+      DOUBLE PRECISION WGT
+for
+      DOUBLE PRECISION WGT, WGT_LI_at_NLO
+
+and
+
+      IF (NFKSPROCESS.EQ.1) THEN
+        CALL SMATRIX_1(P, WGT)
+      ELSEIF (NFKSPROCESS.EQ.2) THEN
+        CALL SMATRIX_1(P, WGT)
+
+for:
+
+      IF (NFKSPROCESS.EQ.1) THEN
+        CALL SMATRIX_1(P, WGT)
+        CALL PROC_2_P2_SMATRIX(P,WGT_LI_at_NLO)
+c        WRITE(*,*) 'ORIG          :',WGT
+c        WRITE(*,*) 'WGT_LI_at_NLO :',WGT_LI_at_NLO
+        WGT = WGT_LI_at_NLO
+      ELSEIF (NFKSPROCESS.EQ.2) THEN
+        CALL SMATRIX_1(P, WGT)
+        CALL PROC_2_P2_SMATRIX(P,WGT_LI_at_NLO)
+c        WRITE(*,*) 'ORIG          :',WGT
+c        WRITE(*,*) 'WGT_LI_at_NLO :',WGT_LI_at_NLO
+        WGT = WGT_LI_at_NLO
+
+# >>>>>>>>> SPOOFING MADLOOP
+# ==========================
+
+# >> In LI_at_NLO_QCD_EW_pp_h/SubProcesses/P0_gg_x0/V0_gg_x0, Change:
+
+SLOOPMATRIXHEL_THRES([...] -> ORIG_SLOOPMATRIXHEL_THRES([...]
+SLOOPMATRIX_THRES([...] -> ORIG_SLOOPMATRIX_THRES([...]
+
+# >> In LI_at_NLO_QCD_EW_pp_h/SubProcesses/P0_gg_x0/V0_gg_x0, Add the file `helas_calls_LI_at_NLO.f` containing:
+
+      SUBROUTINE SLOOPMATRIX_THRES(P,ANS,PREC_ASKED,PREC_FOUND
+     $ ,RET_CODE)
+C     
+C     Inputs are:
+C     P(0:3, Nexternal)  double  :: Kinematic configuration
+C      (E,px,py,pz)
+C     PEC_ASKED          double  :: Target relative accuracy, -1 for
+C      default
+C     
+C     Outputs are:
+C     ANS(3)             double  :: Result (finite, single pole,
+C      double pole) 
+C     PREC_FOUND         double  :: Relative accuracy estimated for
+C      the result
+C     Returns -1 if no stab test could be performed.
+C     RET_CODE			 integer :: Return code. See below for details
+C  
+C     
+      IMPLICIT NONE
+C     
+C     CONSTANTS
+C     
+      INTEGER    NEXTERNAL
+      PARAMETER (NEXTERNAL=3)
+      INTEGER    NSQUAREDSO
+      PARAMETER (NSQUAREDSO=1)
+
+      INCLUDE 'MadLoopParams.inc'
+      INCLUDE '../../../LI_at_NLO_VIRTUAL/Source/MODEL/input.inc'
+      INCLUDE '../../../LI_at_NLO_VIRTUAL/Source/MODEL/coupl.inc'      
+      LOGICAL COMPUTE_POLES
+      PARAMETER (COMPUTE_POLES=.TRUE.)
+C     
+C     ARGUMENTS 
+C     
+      REAL*8 P(0:3,NEXTERNAL)
+      REAL*8 ANS(0:3,0:NSQUAREDSO)
+      REAL*8 PREC_ASKED,PREC_FOUND(0:NSQUAREDSO)
+      INTEGER RET_CODE
+C     
+C     LOCAL VARIABLES
+C     
+      INTEGER I,J
+      REAL*8 ORIG_ANS(0:3,0:NSQUAREDSO)
+      REAL*8 LIANS
+
+      DO I=0,NSQUAREDSO
+        PREC_FOUND(I)=1.0d-16
+      ENDDO
+
+      RET_CODE = 211
+
+      CALL ORIG_SLOOPMATRIX_THRES(P,ORIG_ANS,PREC_ASKED,PREC_FOUND
+     $ ,RET_CODE)
+
+      DO J=0,NSQUAREDSO
+        ANS(0,J) = 0.0d0
+      ENDDO     
+
+      MDL_EPS_ORDER_HEFT = 0.0d0
+      CALL PROC_3_P3_SMATRIX(P,LIANS)
+      DO J=0,NSQUAREDSO
+        ANS(1,J) = LIANS
+      ENDDO
+      IF (COMPUTE_POLES) THEN
+        MDL_EPS_ORDER_HEFT = -1.0d0          
+        CALL PROC_3_P3_SMATRIX(P,LIANS)
+        DO J=0,NSQUAREDSO
+          ANS(2,J) = LIANS
+        ENDDO
+        MDL_EPS_ORDER_HEFT = -2.0d0          
+        CALL PROC_3_P3_SMATRIX(P,LIANS)
+        DO J=0,NSQUAREDSO
+          ANS(3,J) = LIANS
+        ENDDO
+      ELSE
+        DO J=0,NSQUAREDSO
+          ANS(2,J) = 0.0d0
+          ANS(3,J) = 0.0d0          
+        ENDDO
+      ENDIF
+      MDL_EPS_ORDER_HEFT = 0.0d0
+
+c      WRITE(*,*) 'G=',G
+c      WRITE(*,*) 'MU_R=',MU_R
+
+c      WRITE(*,*) 'ORIG      ANS(1)=',ORIG_ANS(1,0)
+c      WRITE(*,*) 'LI at NLO ANS(1)=',ANS(1,0)
+c      WRITE(*,*) 'ORIG      ANS(2)=',ORIG_ANS(2,0)
+c      WRITE(*,*) 'LI at NLO ANS(2)=',ANS(2,0)
+c      WRITE(*,*) 'ORIG      ANS(3)=',ORIG_ANS(3,0)
+c      WRITE(*,*) 'LI at NLO ANS(3)=',ANS(3,0)
+
+      END SUBROUTINE SLOOPMATRIX_THRES
+
+
+      SUBROUTINE SLOOPMATRIXHEL_THRES(P,HEL,ANS,PREC_ASKED,PREC_FOUND
+     $ ,RET_CODE)
+      IMPLICIT NONE
+C     
+C     CONSTANTS
+C     
+      INTEGER    NEXTERNAL
+      PARAMETER (NEXTERNAL=3)
+      INTEGER    NSQUAREDSO
+      PARAMETER (NSQUAREDSO=1)
+C     
+C     ARGUMENTS 
+C     
+      REAL*8 P(0:3,NEXTERNAL)
+      REAL*8 ANS(0:3,0:NSQUAREDSO)
+      INTEGER HEL, RET_CODE
+      REAL*8 PREC_ASKED,PREC_FOUND(0:NSQUAREDSO)
+
+C     
+C     LOCAL VARIABLES
+C     
+      INTEGER I
+
+      DO I=0,NSQUAREDSO
+        PREC_FOUND(I)=1.0d-16
+      ENDDO
+
+      RET_CODE = 211
+
+      WRITE(*,*) "ERROR:: The FORM-FACTOR LIatNLO virtual does"/
+     &/" not support evaluations for specific helicities."
+      stop
+
+      END SUBROUTINE SLOOPMATRIXHEL_THRES
+
+
+
+
+
