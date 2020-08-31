@@ -57,8 +57,8 @@ extern"C" void %(C_prefix)sget_gggh_tensor_coefs_ew_(const double *pInput,
 	ostr<<scientific;
 
 
-	if (exists_ew("%(path_prefix)sprefix)/mathematicaRoutines/expew.wls")) {
-		ostr<<"%(path_prefix)sprefix)/mathematicaRoutines/expew.wls ";
+	if (exists_ew("%(path_prefix)/mathematicaRoutines/expew.wls")) {
+		ostr<<"%(path_prefix)/mathematicaRoutines/expew.wls ";
 	} else  {
 	   std::cerr<<"Could Not find 'expew.wls'. Place it somewhere as defined in fortran_bridge_ggHg_EW.cpp"<<std::endl;
        exit (EXIT_FAILURE);

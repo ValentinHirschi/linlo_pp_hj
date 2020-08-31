@@ -78,8 +78,8 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           curr_cache_size = MIN(curr_cache_size + 1,max_cache_ggH_heft)
           key_MA_GGH(cache_index)=pmassA
           key_MB_GGH(cache_index)=pmassB
-          key_NLOOPS = nloops
-          key_EPS = eps
+          key_NLOOPS(cache_index) = nloops
+          key_EPS(cache_index) = eps
           value_HEFTLO(cache_index) = HEFTLO
           do i=1,3
             value_HEFTNLORe(cache_index,i)=HEFTNLORe(i)
