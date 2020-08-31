@@ -74,7 +74,7 @@ C Cache
           include 'gghHEFT_cache.inc'
 
           cache_index = MOD(curr_cache_size,max_cache_ggH_heft)+1
-          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
+c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           curr_cache_size = MIN(curr_cache_size + 1,max_cache_ggH_heft)
           key_MA_GGH(cache_index)=pmassA
           key_MB_GGH(cache_index)=pmassB
