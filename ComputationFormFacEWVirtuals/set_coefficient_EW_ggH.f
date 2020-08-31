@@ -118,7 +118,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &            FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
-             CALL %(C_prefix)get_ggh_ew_coefs_fortran(
+             CALL %(C_prefix)sget_ggh_ew_coefs_fortran(
      &         mH,mW,mZ,muR,
      &         EWLORe,EWLOIm,EWNLORe,EWNLOIm) 
              CALL ADD_TO_CACHE_GGHEW(nloops,
@@ -192,7 +192,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &            FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
-             CALL %(C_prefix)get_ggh_ew_coefs_fortran(
+             CALL %(C_prefix)sget_ggh_ew_coefs_fortran(
      &         mH,mW,mZ,muR,
      &         EWLORe,EWLOIm,EWNLORe,EWNLOIm) 
              CALL ADD_TO_CACHE_GGHEW(muR,nloops,
@@ -258,7 +258,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &            FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
-             CALL %(C_prefix)get_ggh_ew_coefs_fortran(
+             CALL %(C_prefix)sget_ggh_ew_coefs_fortran(
      &         mH,mW,mZ,muR,
      &         EWLORe,EWLOIm,EWNLORe,EWNLOIm) 
              CALL ADD_TO_CACHE_GGHEW(muR,nloops,
