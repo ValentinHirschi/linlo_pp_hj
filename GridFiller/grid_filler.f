@@ -44,7 +44,9 @@ c           WRITE(*,*) 'MU_R=',MU_R_INPUT
            MU_R = MU_R_INPUT
            CALL PROC_2_UPDATE_AS_PARAM()
            CALL PROC_2_P2_SMATRIX(P,ME_result)
+           WRITE(*,*) "BEGIN RESULT"
            WRITE(*,*) ME_result
+           WRITE(*,*) "END RESULT"
 
       END PROGRAM MAIN
       

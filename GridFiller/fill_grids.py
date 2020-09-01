@@ -17,8 +17,28 @@ def worker(worker_ID,job_queue,res_queue):
 #        time.sleep(1.0*random.random())
         
 #        job_result = "Job '%s@%d' done by worker %d."%(new_job,job_ID,worker_ID)
-        res = subprocess.run(['./grid_filler %s'%new_job], shell=True, check=True, capture_output=True)
-        ME_res = res.stdout.decode('utf-8')
+#        print("Now running : %s"%('./grid_filler %s'%new_job))
+ 
+#        process = subprocess.Popen('./grid_filler %s'%new_job, shell=True, stdout=subprocess.PIPE)
+#        stdout = process.communicate()[0].decode('utf-8')
+
+        res = subprocess.run('./grid_filler %s'%new_job, shell=True, check=True, capture_output=True)
+        stdout = res.stdout.decode('utf-8')
+
+        ME_res = None
+        take_next = False
+        for line in stdout.split('\n'):
+            if line.strip()=='BEGIN RESULT':
+                take_next = True
+            elif take_next:
+                ME_res = line.strip()+'\n'
+                break
+        if ME_res is None:
+            print("ERROR: could not get ME res for job: %s.\nOutput:\n%s"%(
+                ('./grid_filler %s'%new_job), stdout))
+            sys.exit(1)
+#        print("ME_res=",ME_res)
+
         job_result = '%s %s'%(new_job, ME_res)
 
         # Fetch a new job
@@ -48,6 +68,8 @@ if __name__ == '__main__':
             print("ERROR: When specifying './LI_at_NLO_proc' as a process to run, you must manually place the soft link.")
             sys.exit(1)
     else:
+        if os.path.exists('./LI_at_NLO_proc'):
+            os.remove('./LI_at_NLO_proc')
         subprocess.call(['ln -s %s ./LI_at_NLO_proc'%args.proc], shell=True)
 
     subprocess.call(['make clean'], shell=True)
