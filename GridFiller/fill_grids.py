@@ -83,7 +83,8 @@ if __name__ == '__main__':
 
         output_grid = open(args.grid_out,'w')
         output_grid.write('%d\n'%n_entries)
-
+        
+        start_time = time.time()
         while n_received<max_jobs:
 
             while n_job_placed < min( (n_received+args.cores*2), max_jobs):
@@ -103,8 +104,9 @@ if __name__ == '__main__':
                 #print("Added result #%d"%next_job_to_add)
 #                ordered_job_results.append(job_results_to_add.pop(next_job_to_add))
                 output_grid.write(job_results_to_add.pop(next_job_to_add)) 
-                print("ME evaluation # %d / %d (%.2f%%)\r"%(
-                    next_job_to_add+1, max_jobs, 100.0*float(next_job_to_add+1)/float(max_jobs)
+                print("ME evaluation # %d / %d (%.2f%%) (%.2f pts/s)\r"%(
+                    next_job_to_add+1, max_jobs, 100.0*float(next_job_to_add+1)/float(max_jobs),
+                    float(n_received)/(time.time()-start_time)
                 ), end="")
                 next_job_to_add += 1
 
