@@ -63,6 +63,18 @@ extern"C" void %(C_prefix)sget_gggh_tensor_coefs_ew_(const double *pInput,
 	   std::cerr<<"Could Not find 'expew.wls'. Place it somewhere as defined in fortran_bridge_ggHg_EW.cpp"<<std::endl;
        exit (EXIT_FAILURE);
 	}
+
+	// Check if the PS-point is physical
+	if ((s*t*(massHiggs*massHiggs-s-t))<0){
+		std::cerr<<"The condition s*t*u>0 for:"<<std::endl;
+		std::cerr<<"s: "<<s<<std::endl;
+		std::cerr<<"t: "<<t<<std::endl;
+		std::cerr<<"u: "<<(massHiggs*massHiggs-s-t)<<std::endl;
+		std::cerr<<"is not fulfilled!"<<std::endl;
+       	exit (EXIT_FAILURE);
+	}
+
+
 	ostr<< s << " ";
     ostr<<t<<" ";
     ostr<<massHiggs<<" ";
@@ -83,6 +95,9 @@ extern"C" void %(C_prefix)sget_gggh_tensor_coefs_ew_(const double *pInput,
 		  result.push_back(s);
 		if (s.compare("START_OUTPUT_STREAM")==0)
 			output_stream_on = true;
+		if (s.compare("NaN")==0 && output_stream_on)
+			std::cerr<<"Encountered Mathematica Error NaN:"<<std::endl;
+			exit (EXIT_FAILURE);
 	}
 
 	for(int i=0; i<4; i++) {
