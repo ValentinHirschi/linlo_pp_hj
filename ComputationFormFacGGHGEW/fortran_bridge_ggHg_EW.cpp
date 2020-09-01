@@ -95,9 +95,10 @@ extern"C" void %(C_prefix)sget_gggh_tensor_coefs_ew_(const double *pInput,
 		  result.push_back(s);
 		if (s.compare("START_OUTPUT_STREAM")==0)
 			output_stream_on = true;
-		if (s.compare("NaN")==0 && output_stream_on)
+		if (s.compare("NaN")==0 && output_stream_on) {
 			std::cerr<<"Encountered Mathematica Error NaN:"<<std::endl;
 			exit (EXIT_FAILURE);
+		}
 	}
 
 	for(int i=0; i<4; i++) {
