@@ -103,7 +103,7 @@ Block GGGHHEFT
 ## INFORMATION FOR GGGHQCD
 ###################################
 Block GGGHQCD 
-  40001 1.000000e+00 # n_loops 
+  40001 1.000001e+00 # n_loops 
   40002 1.000000e-07 # requiredRelativeAccuracy 
   66001 6.600100e+01 # GGGHQCD_ForFac1_RE 
   66002 6.600200e+01 # GGGHQCD_ForFac1_IM 
@@ -142,8 +142,8 @@ Block GGHEWZZ
 ## INFORMATION FOR GGHHEFT
 ###################################
 Block GGHHEFT 
-  19998 1.000000e+00 # n_loops_HEFT 
-  19999 0.000000e+00 # eps_order_HEFT 
+  19998 1.000001e+00 # n_loops_HEFT 
+  19999 0.000001e+00 # eps_order_HEFT 
   20001 2.000100e+01 # GGH_HEFT1L_EP0_RE 
   20002 2.000200e+01 # GGH_HEFT1L_EP0_IM 
   20003 2.000300e+01 # GGH_HEFT1L_EPM1_RE 
