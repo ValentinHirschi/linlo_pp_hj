@@ -8,7 +8,7 @@ ieps0=I 10^(-acc/2);
 
 
 
-$grid=True;
+$grid=False;
 
 $PrecStart=5;
 $SegTolerance=10^(-2);

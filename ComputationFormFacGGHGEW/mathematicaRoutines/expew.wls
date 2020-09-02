@@ -26,9 +26,9 @@ basedir=Directory[];
 nvar=4;
 nindvar=3;
 myVars=4;
-Do[kinvars[ii]=Rationalize[SetPrecision[ImportString[$ScriptCommandLine[[ii+1]],"CSV"],32][[1,1]],10^-32],{ii,myVars}];
+Do[kinvars[ii]=Rationalize[SetPrecision[ImportString[$ScriptCommandLine[[ii+1]],"CSV"],32][[1,1]],10^-36],{ii,myVars}];
 kinvars[3]=kinvars[3]^2;
-Do[inputcl[ii]=kinvars[ii]/kinvars[4]^2,{ii,nindvar}];
+Do[inputcl[ii]=Rationalize[N[kinvars[ii]/kinvars[4]^2,100],10^-16],{ii,nindvar}];
 (* three dimension from the projector and one from the couplings *)
 rescalingNorm=kinvars[4]^(-4);
 loopMeasure=-(1/(4 Pi)^4);
