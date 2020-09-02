@@ -1,33 +1,145 @@
 #include <iostream>
 #include <stdexcept>
-#include <stdio.h>
 #include <string>
 #include <sstream>
 #include <vector>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <fstream>
+
+#include <cstdio>
+#include <memory>
+#include <array>
 
 using namespace std;
 
+const bool PIPE_TO_STDOUT = false;
+
+#include <random>
+#include <sstream>
+
+namespace %(C_prefix)suuid {
+    static std::random_device              rd;
+    static std::mt19937                    gen(rd());
+    static std::uniform_int_distribution<> dis(0, 15);
+    static std::uniform_int_distribution<> dis2(8, 11);
+
+    std::string %(C_prefix)sgenerate_uuid_v4() {
+        std::stringstream ss;
+        int i;
+        ss << std::hex;
+        for (i = 0; i < 8; i++) {
+            ss << dis(gen);
+        }
+        ss << "-";
+        for (i = 0; i < 4; i++) {
+            ss << dis(gen);
+        }
+        ss << "-4";
+        for (i = 0; i < 3; i++) {
+            ss << dis(gen);
+        }
+        ss << "-";
+        ss << dis2(gen);
+        for (i = 0; i < 3; i++) {
+            ss << dis(gen);
+        }
+        ss << "-";
+        for (i = 0; i < 12; i++) {
+            ss << dis(gen);
+        };
+        return ss.str();
+    }
+}
+
+/*
 std::string %(C_prefix)sexec_ew(const char* cmd) {
     char buffer[128];
     std::string result = "";
     FILE* pipe = popen(cmd, "r");
+	if (PIPE_TO_STDOUT) std::cout<<"\nStart MM call"<<std::endl;
     if (!pipe) throw std::runtime_error("popen() failed!");
     try {
         while (!feof(pipe)) {
             if (fgets(buffer, 128, pipe) != NULL)
                 result += buffer;
+			    if (PIPE_TO_STDOUT) std::cout<<buffer<<std::flush;
         }
     } catch (...) {
         pclose(pipe);
         throw;
     }
     pclose(pipe);
+	if (PIPE_TO_STDOUT) std::cout<<"\nDone with the MM call"<<std::endl;	
     return result;
 }
+*/
 
-inline bool exists_ew (const std::string& name) {
+/*
+std::string %(C_prefix)sexec_ew(const char* cmd) {
+    std::array<char, 128> buffer;
+    std::string result("");
+	std::string target_start("START_OUTPUT_STREAM");	
+	std::string target_end("END_OUTPUT_STREAM");
+	if (PIPE_TO_STDOUT) std::cout<<"\nStart MM call"<<std::endl;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+	std::size_t found;
+	bool must_read = false;
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+		std::string buffer_str(buffer.data());
+		found = buffer_str.find(target_start);
+		if (found!=std::string::npos && !must_read) {
+			must_read = true;
+		}
+		if (must_read) {
+			result += buffer_str;
+		}
+		if (PIPE_TO_STDOUT) {
+			std::cout<<buffer_str<<std::flush;
+		}
+		found = buffer_str.find(target_end);
+		if (found!=std::string::npos) {
+			break;
+		}
+    }
+	if (PIPE_TO_STDOUT) std::cout<<"\nWe are done with MM call"<<std::endl;
+    return result;
+}
+*/
+
+std::string %(C_prefix)sexec_ew(const char* cmd) {
+    const int bufsize=128;
+	std::string output;
+    std::array<char, bufsize> buffer;
+
+    auto pipe = popen(cmd, "r");
+	if (PIPE_TO_STDOUT) std::cout<<"\nStart MM call"<<std::endl;
+
+    if (!pipe) throw std::runtime_error("popen() failed!");
+
+    size_t count;
+    do {
+        if ((count = fread(buffer.data(), 1, bufsize, pipe)) > 0) {
+			std::string one_elem;
+            one_elem.insert(one_elem.end(), std::begin(buffer), std::next(std::begin(buffer), count));
+			if (PIPE_TO_STDOUT) {
+				std::cout<<one_elem<<std::flush;
+			}			
+			output = output+one_elem;
+            //output.insert(output.end(), std::begin(buffer), std::next(std::begin(buffer), count));
+        }
+    } while(count > 0);
+
+	if (PIPE_TO_STDOUT) std::cout<<"\nWe are done with MM call"<<std::endl;
+    int ret_code = pclose(pipe);
+	if (PIPE_TO_STDOUT) std::cout<<"\nWe closed MM"<<std::endl;
+	return output;
+}
+
+inline bool %(C_prefix)sexists_ew (const std::string& name) {
     return ( access( name.c_str(), F_OK ) != -1 );
 }
 
@@ -57,8 +169,9 @@ extern"C" void %(C_prefix)sget_gggh_tensor_coefs_ew_(const double *pInput,
 	ostr<<scientific;
 
 
-	if (exists_ew("%(path_prefix)s/mathematicaRoutines/expew.wls")) {
+	if (%(C_prefix)sexists_ew("%(path_prefix)s/mathematicaRoutines/expew.wls")) {
 		ostr<<"%(path_prefix)s/mathematicaRoutines/expew.wls ";
+		//ostr<<"%(path_prefix)s/mathematicaRoutines/python_wrapper.py ";
 	} else  {
 	   std::cerr<<"Could Not find 'expew.wls'. Place it somewhere as defined in fortran_bridge_ggHg_EW.cpp"<<std::endl;
        exit (EXIT_FAILURE);
@@ -80,15 +193,43 @@ extern"C" void %(C_prefix)sget_gggh_tensor_coefs_ew_(const double *pInput,
     ostr<<massHiggs<<" ";
     ostr<<massBoson;
 	
+	string tmp_file = "%(path_prefix)s/mathematicaRoutines/"+%(C_prefix)suuid::%(C_prefix)sgenerate_uuid_v4()+".tmp";
+	ostr<<" "<<tmp_file;
+	//ostr<<" 2>&1 > "<<tmp_file;
+	ostr<<" 2>&1 > /dev/null";
+
 	std::string command = ostr.str();
 	std::cout<<"About to call wrapper with: "<<command<<std::endl;
-    std::string str_result = %(C_prefix)sexec_ew(command.c_str());
-	// std::cout<<"I got result="<<str_result<<std::endl;
+    // std::string str_result = %(C_prefix)sexec_ew(command.c_str());
+	system(command.c_str());
+	std::ifstream infile(tmp_file);
+	
+	std::string str_result;
+
+    if (infile.is_open())
+    {
+		str_result =std::string((std::istreambuf_iterator<char>(infile)),
+                   std::istreambuf_iterator<char>());
+/*
+	   while ( getline (infile,line) )
+       {
+          cout << line << '\n';
+       }
+       infile.close();
+*/
+    } else {
+		std::cerr<<"Could not find result file: "<<tmp_file<<std::endl;
+		exit (EXIT_FAILURE);
+	}
+	remove(tmp_file.c_str());
+
+
+	if (PIPE_TO_STDOUT) std::cout<<"\nI got the following result from MM=\n"<<str_result<<std::endl;
     vector<std::string> result;
 	std::istringstream iss(str_result);
 	bool output_stream_on = false;
 	for(std::string s; iss >> s; ) {
-	//		std::cout<<"s="<<s<<std::endl;
+//		std::cout<<"s="<<s<<std::endl;
 		if (s.compare("END_OUTPUT_STREAM")==0)
 			output_stream_on = false;
 		if (output_stream_on)
@@ -103,11 +244,11 @@ extern"C" void %(C_prefix)sget_gggh_tensor_coefs_ew_(const double *pInput,
 
 	for(int i=0; i<4; i++) {
 		oneLoopTensorRe[i]=std::stod(result[i]);
-		// std::cout<<"oneLoopTensorRe["<<i<<"]="<<oneLoopTensorRe[i]<<std::endl;
+		if (PIPE_TO_STDOUT) std::cout<<"oneLoopTensorRe["<<i<<"]="<<oneLoopTensorRe[i]<<std::endl;
 	}
 	for(int i=4; i<8; i++) {
 		oneLoopTensorIm[i-4]=std::stod(result[i]);
-		// std::cout<<"oneLoopTensorIm["<<i-4<<"]="<<oneLoopTensorIm[i-4]<<std::endl;
+		if (PIPE_TO_STDOUT) std::cout<<"oneLoopTensorIm["<<i-4<<"]="<<oneLoopTensorIm[i-4]<<std::endl;
 	}
 
 }

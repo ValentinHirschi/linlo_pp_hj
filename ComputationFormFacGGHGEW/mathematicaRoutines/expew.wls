@@ -26,6 +26,10 @@ basedir=Directory[];
 nvar=4;
 nindvar=3;
 myVars=4;
+
+outFilename=ToString[$ScriptCommandLine[[-1]]];
+WriteLine[outFilename, "Arguments received: "<>ToString[$ScriptCommandLine]];
+Print["Arguments received: "<>ToString[$ScriptCommandLine]];
 Do[kinvars[ii]=Rationalize[SetPrecision[ImportString[$ScriptCommandLine[[ii+1]],"CSV"],32][[1,1]],10^-36],{ii,myVars}];
 kinvars[3]=kinvars[3]^2;
 Do[inputcl[ii]=Rationalize[N[kinvars[ii]/kinvars[4]^2,100],10^-16],{ii,nindvar}];
@@ -112,6 +116,21 @@ fflistn=(rescalingNorm*loopMeasure*fflist/.{canMINP[a_,b_,c_]:>INTNP[c/.pin][[a,
 print["n ff done"];
 
 print["Points evaluated ",p1li//N]
+
+WriteLine[outFilename,"START_OUTPUT_STREAM"];
+
+Do[
+WriteLine[outFilename,Re[fflistn[[ii]]]//CForm//ToString]
+,{ii,Length@fflistn}];
+
+Do[ 
+WriteLine[outFilename,Im[fflistn[[ii]]]//CForm//ToString]
+,{ii,Length@fflistn}];
+
+WriteLine[outFilename,"END_OUTPUT_STREAM"];
+
+(* Safety short pause to make sure its flushed *)
+Pause[0.1];
 
 Print["START_OUTPUT_STREAM"];
 

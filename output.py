@@ -497,7 +497,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
         # fix model makefile
         fix_make = """
 GCC=g++
-GCCFLAGS = $(MACFLAG) -Wall
+GCCFLAGS = $(MACFLAG) -Wall -std=c++11
 fortran_bridge%.o : fortran_bridge%.cpp
 \t$(GCC) -c $< $(GCCFLAGS)"""
         with open(pjoin(self.dir_path, 'Source','MODEL','makefile'),'a') as ff:

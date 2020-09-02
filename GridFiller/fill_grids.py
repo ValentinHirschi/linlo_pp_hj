@@ -9,41 +9,81 @@ import sys
 from pprint import pformat
 
 def worker(worker_ID,job_queue,res_queue):
-    time.sleep(1.0*random.random())
+    time.sleep(0.1*worker_ID)
     #print("I am worker #%d"%worker_ID)
+    job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')    
+    job_log.write('Waiting for new job...\n')
+    job_log.close()
     job_ID, new_job = job_queue.get()
     while new_job != 'DONE':
-        #print("Worker %d :: Got job: %s@%d"%(worker_ID, new_job, job_ID))
-#        time.sleep(1.0*random.random())
         
 #        job_result = "Job '%s@%d' done by worker %d."%(new_job,job_ID,worker_ID)
-#        print("Now running : %s"%('./grid_filler %s'%new_job))
+#        job_cmd = './grid_filler %s 2>&1 | tee -a ./logs/worker_%d.log'%(new_job,job_ID)
+        job_cmd = './grid_filler %s 2>&1 | tee -a ./logs/worker_%d.log > ./logs/worker_%d_current_res.log'%(
+                                                            new_job,worker_ID,worker_ID)
+        
+        job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')
+        job_log.write('Received job #%d:\n%s\n'%(job_ID,job_cmd))
+        job_log.close()
+        #print("Now running : %s"%job_cmd) 
+        job_start = time.time()
+#        process = subprocess.Popen(job_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.call(job_cmd, shell=True)
+        #print("Worker %d done with job #%d!"%(worker_ID,job_ID))
+
+        if not os.path.isfile('./logs/worker_%d_current_res.log'%worker_ID):
+            print("ERROR: Could not find result of the job in: './logs/worker_%d_current_res.log'"%worker_ID)
+            sys.exit(1)            
+        
+        job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')
+        job_log.write('Job #%d done in %.1f s.\n'%(job_ID, time.time()-job_start))
+        job_log.close()
+
+        stdout = open('./logs/worker_%d_current_res.log'%worker_ID,'r').read()
+        stderr = "N/A"
+#        stdout, stderr = process.communicate()
+#        stdout = stdout.decode('utf-8')
+#        stderr = stderr.decode('utf-8')
  
-#        process = subprocess.Popen('./grid_filler %s'%new_job, shell=True, stdout=subprocess.PIPE)
-#        stdout = process.communicate()[0].decode('utf-8')
-
-        res = subprocess.run('./grid_filler %s'%new_job, shell=True, check=True, capture_output=True)
-        stdout = res.stdout.decode('utf-8')
-
         ME_res = None
         take_next = False
         for line in stdout.split('\n'):
-            if line.strip()=='BEGIN RESULT':
+            if line.strip()=='BEGIN MG RESULT':
                 take_next = True
             elif take_next:
                 ME_res = line.strip()+'\n'
                 break
         if ME_res is None:
-            print("ERROR: could not get ME res for job: %s.\nOutput:\n%s"%(
-                ('./grid_filler %s'%new_job), stdout))
-            sys.exit(1)
-#        print("ME_res=",ME_res)
+            print("ERROR: could not get ME res for job #%d: %s.\nstdout:\n%s\nstderr:\n%s"%(
+                 job_ID, job_cmd, stdout, stderr))
+            job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')
+            job_log.write('Failed to get result for job #%d.'%job_ID)
+            job_log.close()            
+            job_result = '%s %s'%(new_job, 'NaN')
+            res_queue.put(tuple([job_ID,job_result]))
+            job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')        
+            job_log.write('Waiting for new job...\n')
+            job_log.close()
+            job_ID, new_job = job_queue.get()
+            continue
+        #print("ME_res=",ME_res)
 
         job_result = '%s %s'%(new_job, ME_res)
 
+        job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')
+        job_log.write('Result for job #%d:\n%s\n'%(job_ID,job_result))
+        job_log.close()
+
         # Fetch a new job
         res_queue.put(tuple([job_ID,job_result]))
+        job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')        
+        job_log.write('Waiting for new job...\n')
+        job_log.close()
         job_ID, new_job = job_queue.get()
+
+    job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')    
+    job_log.write('DONE!\n')
+    job_log.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=""" Calls grid filler in parallel to compute real-emission 2-loop MEs.""")
@@ -71,7 +111,9 @@ if __name__ == '__main__':
         if os.path.exists('./LI_at_NLO_proc'):
             os.remove('./LI_at_NLO_proc')
         subprocess.call(['ln -s %s ./LI_at_NLO_proc'%args.proc], shell=True)
-
+    
+    subprocess.call(['rm -f ./logs/worker_*.log'], shell=True)
+    
     subprocess.call(['make clean'], shell=True)
     subprocess.call(['make'], shell=True)
 
@@ -107,12 +149,15 @@ if __name__ == '__main__':
         output_grid.write('%d\n'%n_entries)
         
         start_time = time.time()
+        issued_completion_printout = False
         while n_received<max_jobs:
-
+            
+            if (not issued_completion_printout) and (n_job_placed == min( (n_received+args.cores*2), max_jobs)):
+                issued_completion_printout = True
+                print("All jobs have now been sent!")
             while n_job_placed < min( (n_received+args.cores*2), max_jobs):
-                #print("Placing new job #%d"%n_job_placed)
-#                new_job = "Job #%d"%n_job_placed
                 new_job = input_grid.readline().strip()
+                #print("Placing new job #%d :\n%s"%(n_job_placed,new_job))
 
                 job_queue.put((n_job_placed,new_job))
                 n_job_placed +=1
