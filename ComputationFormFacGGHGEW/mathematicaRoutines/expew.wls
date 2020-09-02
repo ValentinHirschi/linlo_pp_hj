@@ -1,5 +1,18 @@
-#!/usr/bin/env /opt/mathematica-12.0/Executables/wolframscript
+#!/usr/bin/env wolframscript
+(* ::Package:: *)
+
 (*#!/usr/bin/env /Applications/Mathematica.app/Contents/MacOS/wolframscript*)
+
+
+If[ByteCount[$mypath]==0,
+	$myImportPath=FileNameJoin[{DirectoryName @ $InputFileName, ""}];
+	SetDirectory[$myImportPath];
+	$myImportPath=".";
+	$mypath="."
+	,
+	$myImportPath=$mypath
+];
+
 
 Get["ExpCan4_Reg.wl"];
 
@@ -12,10 +25,14 @@ basedir=Directory[];
 
 nvar=4;
 nindvar=3;
-
-Do[inputcl[ii]=ToExpression[$ScriptCommandLine[[ii+1]]],{ii,nindvar}];
-precinput=ToExpression[$ScriptCommandLine[[nindvar+2]]];
-Do[inputcl[ii]=If[Accuracy[inputcl[ii]]===Infinity,inputcl[ii],Rationalize[inputcl[ii],10^(-16)]],{ii,nindvar}]
+myVars=4;
+Do[kinvars[ii]=Rationalize[SetPrecision[ImportString[$ScriptCommandLine[[ii+1]],"CSV"],32][[1,1]],10^-32],{ii,myVars}];
+kinvars[3]=kinvars[3]^2;
+Do[inputcl[ii]=kinvars[ii]/kinvars[4]^2,{ii,nindvar}];
+(* three dimension from the projector and one from the couplings *)
+rescalingNorm=kinvars[4]^(-4);
+loopMeasure=-(1/(4 Pi)^4);
+precinput=16;(*ToExpression[$ScriptCommandLine[[nindvar+2]]];*)
 p1in=Table[inputcl[ii],{ii,nindvar}];
 
 
@@ -89,7 +106,7 @@ pinN=#[[1]]->N[#[[2]],acc]&/@pin;
 
 (*print[pinN];*)
 
-fflistn=fflist/.{canMINP[a_,b_,c_]:>INTNP[c/.pin][[a,b+1]],canMIPlanar[a_,b_,c_]:>INTP[c/.pin][[a,b+1]]}/.pinN//Rationalize[#,10^(-32)]&;
+fflistn=(rescalingNorm*loopMeasure*fflist/.{canMINP[a_,b_,c_]:>INTNP[c/.pin][[a,b+1]],canMIPlanar[a_,b_,c_]:>INTP[c/.pin][[a,b+1]]}/.pinN//Rationalize[#,10^(-32)]&);
 
 
 print["n ff done"];
