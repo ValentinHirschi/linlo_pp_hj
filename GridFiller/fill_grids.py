@@ -59,7 +59,7 @@ def worker(worker_ID,job_queue,res_queue):
             job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')
             job_log.write('Failed to get result for job #%d.'%job_ID)
             job_log.close()            
-            job_result = '%s %s'%(new_job, 'NaN')
+            job_result = '%s %s'%(new_job, 'NaN\n')
             res_queue.put(tuple([job_ID,job_result]))
             job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')        
             job_log.write('Waiting for new job...\n')
