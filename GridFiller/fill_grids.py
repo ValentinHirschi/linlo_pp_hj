@@ -173,10 +173,10 @@ if __name__ == '__main__':
                 output_grid.write(job_results_to_add.pop(next_job_to_add)) 
                 next_job_to_add += 1
 
-        print("ME evaluation # %d / %d (%.2f%%) (%.2f pts/min) (n written out so far: %d)\r"%(
-            n_received, max_jobs, 100.0*float(n_received)/float(max_jobs),
-            (float(n_received)/(time.time()-start_time))*60.0,next_job_to_add
-        ), end="")
+            print("ME evaluation # %d / %d (%.2f%%) (%.2f pts/min) (n written out so far: %d)\r"%(
+                n_received, max_jobs, 100.0*float(n_received)/float(max_jobs),
+                (float(n_received)/(time.time()-start_time))*60.0,next_job_to_add
+            ), end="")
 
         print("All done, now terminating wokers!")
         for wid in range(args.cores):
