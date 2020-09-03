@@ -8,6 +8,8 @@ import os
 import sys
 from pprint import pformat
 
+n_zombies = multiprocessing.Value('i',0)
+
 def worker(worker_ID,job_queue,res_queue):
     time.sleep(0.1*worker_ID)
     #print("I am worker #%d"%worker_ID)
@@ -19,27 +21,62 @@ def worker(worker_ID,job_queue,res_queue):
         
 #        job_result = "Job '%s@%d' done by worker %d."%(new_job,job_ID,worker_ID)
 #        job_cmd = './grid_filler %s 2>&1 | tee -a ./logs/worker_%d.log'%(new_job,job_ID)
-        job_cmd = './grid_filler %s 2>&1 | tee -a ./logs/worker_%d.log > ./logs/worker_%d_current_res.log'%(
-                                                            new_job,worker_ID,worker_ID)
-        
-        job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')
-        job_log.write('Received job #%d:\n%s\n'%(job_ID,job_cmd))
-        job_log.close()
-        #print("Now running : %s"%job_cmd) 
-        job_start = time.time()
-#        process = subprocess.Popen(job_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        process = subprocess.call(job_cmd, shell=True)
-        #print("Worker %d done with job #%d!"%(worker_ID,job_ID))
 
-        if not os.path.isfile('./logs/worker_%d_current_res.log'%worker_ID):
-            print("ERROR: Could not find result of the job in: './logs/worker_%d_current_res.log'"%worker_ID)
+        attempt_number = 0
+        MAX_ATTEMPTS = 3
+        BASE_TIME = 300.0 # in seconds
+        TIME_INCREMENT = 300.0 # in seconds
+        SUCCESSFUL = False
+        while (not SUCCESSFUL) and (attempt_number < MAX_ATTEMPTS):
+            job_cmd = './grid_filler %s 2>&1 | tee -a ./logs/worker_%d.log > ./logs/worker_%d_current_res_attempt_%d.log'%(
+                                                            new_job,worker_ID,worker_ID,attempt_number)
+
+            job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')
+            if attempt_number == 0:
+                job_log.write('Received job #%d:\n%s\n'%(job_ID,job_cmd))
+            else:
+                job_log.write('Rerunning job #%d (attempt #%d):\n%s\n'%(job_ID,attempt_number+1,job_cmd))
+            job_log.close()
+
+
+            #print("Now running : %s"%job_cmd) 
+            job_start = time.time()
+            #process = subprocess.Popen(job_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            try:
+                #process = subprocess.call(job_cmd, shell=True)
+                proc = subprocess.run(job_cmd, shell=True, timeout=(BASE_TIME+TIME_INCREMENT*attempt_number))
+            except subprocess.TimeoutExpired as e:
+                attempt_number += 1
+                n_zombies.value += 1
+                job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')
+                job_log.write('Attempt #%d of job #%d timed out after %.1f s.\n'%(attempt_number,job_ID, time.time()-job_start))
+                job_log.close()
+                continue
+            #print("Worker %d done with job #%d!"%(worker_ID,job_ID))
+            SUCCESSFUL = True
+        
+        if not SUCCESSFUL:
+            print('ERROR: Job #%d failed on worker #%d after %d attempts. Ignoring that point. Job was:\n%s\n'%(job_ID, worker_ID, attempt_number,new_job))
+            job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')
+            job_log.write('Job #%d failed after %d attempts. Ignoring that point. Job was:\n%s\n'%(job_ID, attempt_number,new_job))
+            job_log.close()
+            job_result = '%s %s'%(new_job, 'NaN\n')
+            res_queue.put(tuple([job_ID,job_result]))
+            job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')        
+            job_log.write('Waiting for new job...\n')
+            job_log.close()
+            job_ID, new_job = job_queue.get()
+            continue
+
+        if not os.path.isfile('./logs/worker_%d_current_res_attempt_%d.log'%(worker_ID,attempt_number)):
+            print("ERROR: Could not find result of the job in: './logs/worker_%d_current_res_attempt_%d.log'"%(worker_ID,attempt_number))
             sys.exit(1)            
         
         job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')
         job_log.write('Job #%d done in %.1f s.\n'%(job_ID, time.time()-job_start))
         job_log.close()
 
-        stdout = open('./logs/worker_%d_current_res.log'%worker_ID,'r').read()
+        stdout = open('./logs/worker_%d_current_res_attempt_%d.log'%(worker_ID,attempt_number),'r').read()
         stderr = "N/A"
 #        stdout, stderr = process.communicate()
 #        stdout = stdout.decode('utf-8')
@@ -173,9 +210,10 @@ if __name__ == '__main__':
                 output_grid.write(job_results_to_add.pop(next_job_to_add)) 
                 next_job_to_add += 1
 
-            print("ME evaluation # %d / %d (%.2f%%) (%.2f pts/min) (n written out so far: %d)\r"%(
+            print("ME evaluation # %d / %d (%.2f%%) (%.2f pts/min) (n written out so far: %d) (n zombies: %s)\r"%(
                 n_received, max_jobs, 100.0*float(n_received)/float(max_jobs),
-                (float(n_received)/(time.time()-start_time))*60.0,next_job_to_add
+                (float(n_received)/(time.time()-start_time))*60.0,next_job_to_add,
+                n_zombies.value
             ), end="")
 
         print("All done, now terminating wokers!")
