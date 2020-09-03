@@ -18,7 +18,7 @@ Get["ExpCan4_Reg.wl"];
 
 
 
-$Verbose=True;
+$Verbose=False;
 
 basedir=Directory[];
 
