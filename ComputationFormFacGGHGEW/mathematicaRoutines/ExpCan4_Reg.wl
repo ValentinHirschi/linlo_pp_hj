@@ -464,7 +464,7 @@ solordg[oo]=solordp[oo]+Table[c[i],{i,Length@solordp[oo]}];
 
 print["fixing bc"];
 eqbc[nn,oo]=Table[(solordg[oo][[ii]]/.Log[x]/;(singbc)->Log[signx /rad]+log0/.x->signx /rad( xb+signim  ieps0-x0))-(solm1[[oo+1,ii]]/.Log[x]/;(singbc)->log0/.x->xb/.ieps->ieps0)==0,{ii,Length@solordg[oo]}];
-solordc[oo]=Solve[eqbc[nn,oo](*Chop[eqbc[nn,oo]//Expand,10^-acc]*),Table[c[i],{i,Length@solordg[oo]}](*,WorkingPrecision->2 acc*)]//Flatten//Quiet//Chop[#,10^-(acc)]&;
+solordc[oo]=NSolve[Chop[eqbc[nn,oo],10^-acc],Table[c[i],{i,Length@solordg[oo]}],WorkingPrecision->2 acc]//Flatten//Quiet//Chop[#,10^-(acc)]&;
 print["done"];
 
 
