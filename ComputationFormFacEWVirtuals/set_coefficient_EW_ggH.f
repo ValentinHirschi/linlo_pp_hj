@@ -96,14 +96,14 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           save EWNLORe
           save EWNLOIm
           ! We start by setting all couplings to 0
-          MDL_GGHEWZZ2L_ForFac1_RE=0;
-          MDL_GGHEWZZ2L_ForFac1_IM=0;
-          MDL_GGHEWWW2L_ForFac1_RE=0;
-          MDL_GGHEWWW2L_ForFac1_IM=0;
-          MDL_GGHEWZZ3L_ForFac1_RE=0;
-          MDL_GGHEWZZ3L_ForFac1_IM=0;
-          MDL_GGHEWWW3L_ForFac1_RE=0;
-          MDL_GGHEWWW3L_ForFac1_IM=0;
+          MDL_GGHEWZZ2L_ForFac1_RE=0.0d0;
+          MDL_GGHEWZZ2L_ForFac1_IM=0.0d0;
+          MDL_GGHEWWW2L_ForFac1_RE=0.0d0;
+          MDL_GGHEWWW2L_ForFac1_IM=0.0d0;
+          MDL_GGHEWZZ3L_ForFac1_RE=0.0d0;
+          MDL_GGHEWZZ3L_ForFac1_IM=0.0d0;
+          MDL_GGHEWWW3L_ForFac1_RE=0.0d0;
+          MDL_GGHEWWW3L_ForFac1_IM=0.0d0;
           CALL COUP()
 
           mZ = MDL_MZ
@@ -111,6 +111,13 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           mH = MDL_MH
           muR =MU_R
           nloops = MDL_n_loops_EW
+          if (.NOT.(
+     &      (abs(mur-mH)/mH).lt.(1.0d-5)) 
+     &      ) then
+              WRITE(*,*) 'Rel. deviation of MU_R and MDL_MH is >1.0d-5'
+              CALL ABORT()
+          endif
+          
           
           ! Get Values for the couplings
           CALL ACCESS_CACHE_GGHEW(nloops,
@@ -170,14 +177,14 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           save EWNLORe
           save EWNLOIm
           ! We start by setting all couplings to 0
-          MDL_GGHEWZZ2L_ForFac1_RE=0;
-          MDL_GGHEWZZ2L_ForFac1_IM=0;
-          MDL_GGHEWWW2L_ForFac1_RE=0;
-          MDL_GGHEWWW2L_ForFac1_IM=0;
-          MDL_GGHEWZZ3L_ForFac1_RE=0;
-          MDL_GGHEWZZ3L_ForFac1_IM=0;
-          MDL_GGHEWWW3L_ForFac1_RE=0;
-          MDL_GGHEWWW3L_ForFac1_IM=0;
+          MDL_GGHEWZZ2L_ForFac1_RE=0.0d0;
+          MDL_GGHEWZZ2L_ForFac1_IM=0.0d0;
+          MDL_GGHEWWW2L_ForFac1_RE=0.0d0;
+          MDL_GGHEWWW2L_ForFac1_IM=0.0d0;
+          MDL_GGHEWZZ3L_ForFac1_RE=0.0d0;
+          MDL_GGHEWZZ3L_ForFac1_IM=0.0d0;
+          MDL_GGHEWWW3L_ForFac1_RE=0.0d0;
+          MDL_GGHEWWW3L_ForFac1_IM=0.0d0;
           CALL COUP()
 
           mZ = MDL_MZ
@@ -185,7 +192,12 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           mH = MDL_MH
           muR =MU_R
           nloops = MDL_n_loops_EW
-          
+          if (.NOT.(
+     &      (abs(mur-mH)/mH).lt.(1.0d-5)) 
+     &      ) then
+              WRITE(*,*) 'Rel. deviation of MU_R and MDL_MH is >1.0d-5'
+              CALL ABORT()
+          endif
           ! Get Values for the couplings
           CALL ACCESS_CACHE_GGHEW(muR,nloops,
      &            EWLORe,EWLOIm, EWNLORe,EWNLOIm,             
@@ -200,15 +212,15 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           endif
 
           ! Now we set the relevant non-zero values
-          if ((int(nloops))==2) THEN
+          if ((nint(nloops))==2) THEN
             MDL_GGHEWWW2L_ForFac1_RE=EWLORe(2);
             MDL_GGHEWWW2L_ForFac1_IM=EWLOIm(2);
           endif
-          if ((int(nloops))==3) THEN
+          if ((nint(nloops))==3) THEN
             MDL_GGHEWWW3L_ForFac1_RE=EWNLORe(2);
             MDL_GGHEWWW3L_ForFac1_IM=EWNLOIm(2);
           endif
-          if ((int(nloops))==99) THEN
+          if ((nint(nloops))==99) THEN
             MDL_GGHEWWW2L_ForFac1_RE=EWLORe(2);
             MDL_GGHEWWW2L_ForFac1_IM=EWLOIm(2);
             MDL_GGHEWWW3L_ForFac1_RE=EWNLORe(2);
@@ -236,14 +248,14 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           save EWNLORe
           save EWNLOIm
           ! We start by setting all couplings to 0
-          MDL_GGHEWZZ2L_ForFac1_RE=0;
-          MDL_GGHEWZZ2L_ForFac1_IM=0;
-          MDL_GGHEWWW2L_ForFac1_RE=0;
-          MDL_GGHEWWW2L_ForFac1_IM=0;
-          MDL_GGHEWZZ3L_ForFac1_RE=0;
-          MDL_GGHEWZZ3L_ForFac1_IM=0;
-          MDL_GGHEWWW3L_ForFac1_RE=0;
-          MDL_GGHEWWW3L_ForFac1_IM=0;
+          MDL_GGHEWZZ2L_ForFac1_RE=0.0d0;
+          MDL_GGHEWZZ2L_ForFac1_IM=0.0d0;
+          MDL_GGHEWWW2L_ForFac1_RE=0.0d0;
+          MDL_GGHEWWW2L_ForFac1_IM=0.0d0;
+          MDL_GGHEWZZ3L_ForFac1_RE=0.0d0;
+          MDL_GGHEWZZ3L_ForFac1_IM=0.0d0;
+          MDL_GGHEWWW3L_ForFac1_RE=0.0d0;
+          MDL_GGHEWWW3L_ForFac1_IM=0.0d0;
           CALL COUP()
 
           mZ = MDL_MZ
@@ -251,7 +263,12 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           mH = MDL_MH
           muR =MU_R
           nloops = MDL_n_loops_EW
-          
+          if (.NOT.(
+     &      (abs(mur-mH)/mH).lt.(1.0d-5)) 
+     &      ) then
+              WRITE(*,*) 'Rel. deviation of MU_R and MDL_MH is >1.0d-5'
+              CALL ABORT()
+          endif
           ! Get Values for the couplings
           CALL ACCESS_CACHE_GGHEW(muR,nloops,
      &            EWLORe,EWLOIm, EWNLORe,EWNLOIm,             
@@ -266,15 +283,15 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           endif
 
           ! Now we set the relevant non-zero values
-          if ((int(nloops))==2) THEN
+          if ((nint(nloops))==2) THEN
             MDL_GGHEWZZ2L_ForFac1_RE=EWLORe(1);
             MDL_GGHEWZZ2L_ForFac1_IM=EWLOIm(1);
           endif
-          if ((int(nloops))==3) THEN
+          if ((nint(nloops))==3) THEN
             MDL_GGHEWZZ3L_ForFac1_RE=EWNLORe(2);
             MDL_GGHEWZZ3L_ForFac1_IM=EWNLOIm(2);
           endif
-          if ((int(nloops))==99) THEN
+          if ((nint(nloops))==99) THEN
             MDL_GGHEWZZ2L_ForFac1_RE=EWLORe(1);
             MDL_GGHEWZZ2L_ForFac1_IM=EWLOIm(1);
             MDL_GGHEWZZ3L_ForFac1_RE=EWNLORe(2);

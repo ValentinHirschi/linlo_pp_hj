@@ -116,8 +116,8 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
             ! Write(*,*) 'Recomputing it'
-            if ((int(nloops).EQ.0) .and. (.NOT.(int(eps).EQ.0))
-     &       .or.(int(nloops).EQ.1) .and. (.NOT.(int(eps).LE.0))
+            if ((nint(nloops).EQ.0) .and. (.NOT.(nint(eps).EQ.0))
+     &       .or.(nint(nloops).EQ.1) .and. (.NOT.(nint(eps).LE.0))
      &      ) THEN
               WRITE(*,*) 'EPS-ORDER DOES NOT EXIST'
               Write (*,*) 'LOOPS', nloops
@@ -126,15 +126,15 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
             endif
 
             
-            if (int(nloops).EQ.0) THEN
+            if (nint(nloops).EQ.0) THEN
               HEFTLO =1.0d0  
               do i=1,3
                 ! set NLO to 0
-                HEFTNLORe(i) = 0
-                HEFTNLOIm(i) = 0
+                HEFTNLORe(i) = 0.0d0
+                HEFTNLOIm(i) = 0.0d0
               enddo
             endif
-            if (int(nloops).NE.0) THEN
+            if (nint(nloops).NE.0) THEN
                HEFTLO = 1.0d0
               !  HEFTLO = 0
               call %(C_prefix)sget_ggh_heft_coefs_fortran(mH,muR,
@@ -144,26 +144,26 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
               !   write(*,*) "Re", i, HEFTNLORe(i)
               !   write(*,*) "Im", i, HEFTNLOIm(i)
               ! enddo
-              if (int(eps).EQ.0) THEN
+              if (nint(eps).EQ.0) THEN
                 ! set poles to 0
                 do i=1,2
-                  HEFTNLORe(i) =0
-                  HEFTNLOIm(i) =0
+                  HEFTNLORe(i) =0.0d0
+                  HEFTNLOIm(i) =0.0d0
                 enddo
               endif
-              if (int(eps).EQ.-1) THEN
+              if (nint(eps).EQ.-1) THEN
                 ! set poles 1/eps^2 and eps^0 to 0
-                  HEFTNLORe(1) =0
-                  HEFTNLOIm(1) =0
-                  HEFTNLORe(3) =0
-                  HEFTNLOIm(3) =0                
+                  HEFTNLORe(1) =0.0d0
+                  HEFTNLOIm(1) =0.0d0
+                  HEFTNLORe(3) =0.0d0
+                  HEFTNLOIm(3) =0.0d0            
               endif
-              if (int(eps).EQ.-2) THEN
+              if (nint(eps).EQ.-2) THEN
                 ! set poles 1/eps and eps^0 to 0
-                  HEFTNLORe(2) =0
-                  HEFTNLOIm(2) =0
-                  HEFTNLORe(3) =0
-                  HEFTNLOIm(3) =0                
+                  HEFTNLORe(2) =0.0d0
+                  HEFTNLOIm(2) =0.0d0
+                  HEFTNLORe(3) =0.0d0
+                  HEFTNLOIm(3) =0.0d0                
               endif
             endif
             ! write(*,*) "I SET STUFF TO 0"

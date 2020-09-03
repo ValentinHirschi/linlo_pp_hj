@@ -182,22 +182,22 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
         include 'input.inc'
         double precision P(0:3,3)
         ! Set all relevant couplings to 0
-        MDL_GGGHEWZZ_ForFac1_RE  = 0
-        MDL_GGGHEWZZ_ForFac2_RE  = 0
-        MDL_GGGHEWZZ_ForFac3_RE  = 0
-        MDL_GGGHEWZZ_ForFac4_RE  = 0
-        MDL_GGGHEWZZ_ForFac1_IM  = 0
-        MDL_GGGHEWZZ_ForFac2_IM  = 0
-        MDL_GGGHEWZZ_ForFac3_IM  = 0
-        MDL_GGGHEWZZ_ForFac4_IM  = 0
-        MDL_GGGHEWWW_ForFac1_RE  = 0
-        MDL_GGGHEWWW_ForFac2_RE  = 0
-        MDL_GGGHEWWW_ForFac3_RE  = 0
-        MDL_GGGHEWWW_ForFac4_RE  = 0
-        MDL_GGGHEWWW_ForFac1_IM  = 0
-        MDL_GGGHEWWW_ForFac2_IM  = 0
-        MDL_GGGHEWWW_ForFac3_IM  = 0
-        MDL_GGGHEWWW_ForFac4_IM  = 0
+        MDL_GGGHEWZZ_ForFac1_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac2_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac3_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac4_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac1_IM  = 0.0d0
+        MDL_GGGHEWZZ_ForFac2_IM  = 0.0d0
+        MDL_GGGHEWZZ_ForFac3_IM  = 0.0d0
+        MDL_GGGHEWZZ_ForFac4_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac1_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac2_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac3_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac4_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac1_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac2_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac3_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac4_IM  = 0.0d0
         CALL COUP()
         ! update the WW couplings
         CALL set2LoopGGHGEWWWCoefficients(P)
@@ -209,22 +209,22 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
         include 'input.inc'
         double precision P(0:3,3)
         ! Set all relevant couplings to 0
-        MDL_GGGHEWZZ_ForFac1_RE  = 0
-        MDL_GGGHEWZZ_ForFac2_RE  = 0
-        MDL_GGGHEWZZ_ForFac3_RE  = 0
-        MDL_GGGHEWZZ_ForFac4_RE  = 0
-        MDL_GGGHEWZZ_ForFac1_IM  = 0
-        MDL_GGGHEWZZ_ForFac2_IM  = 0
-        MDL_GGGHEWZZ_ForFac3_IM  = 0
-        MDL_GGGHEWZZ_ForFac4_IM  = 0
-        MDL_GGGHEWWW_ForFac1_RE  = 0
-        MDL_GGGHEWWW_ForFac2_RE  = 0
-        MDL_GGGHEWWW_ForFac3_RE  = 0
-        MDL_GGGHEWWW_ForFac4_RE  = 0
-        MDL_GGGHEWWW_ForFac1_IM  = 0
-        MDL_GGGHEWWW_ForFac2_IM  = 0
-        MDL_GGGHEWWW_ForFac3_IM  = 0
-        MDL_GGGHEWWW_ForFac4_IM  = 0
+        MDL_GGGHEWZZ_ForFac1_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac2_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac3_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac4_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac1_IM  = 0.0d0
+        MDL_GGGHEWZZ_ForFac2_IM  = 0.0d0
+        MDL_GGGHEWZZ_ForFac3_IM  = 0.0d0
+        MDL_GGGHEWZZ_ForFac4_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac1_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac2_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac3_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac4_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac1_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac2_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac3_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac4_IM  = 0.0d0
         CALL COUP()
         ! update the ZZ couplings
         CALL set2LoopGGHGEWZZCoefficients(P)
@@ -236,22 +236,22 @@ c             Write(*,*) 'Recomputing 2-loop tensor for Z exchange'
         include 'input.inc'
         double precision P(0:3,3)
         ! Set all relevant couplings to 0
-        MDL_GGGHEWZZ_ForFac1_RE  = 0
-        MDL_GGGHEWZZ_ForFac2_RE  = 0
-        MDL_GGGHEWZZ_ForFac3_RE  = 0
-        MDL_GGGHEWZZ_ForFac4_RE  = 0
-        MDL_GGGHEWZZ_ForFac1_IM  = 0
-        MDL_GGGHEWZZ_ForFac2_IM  = 0
-        MDL_GGGHEWZZ_ForFac3_IM  = 0
-        MDL_GGGHEWZZ_ForFac4_IM  = 0
-        MDL_GGGHEWWW_ForFac1_RE  = 0
-        MDL_GGGHEWWW_ForFac2_RE  = 0
-        MDL_GGGHEWWW_ForFac3_RE  = 0
-        MDL_GGGHEWWW_ForFac4_RE  = 0
-        MDL_GGGHEWWW_ForFac1_IM  = 0
-        MDL_GGGHEWWW_ForFac2_IM  = 0
-        MDL_GGGHEWWW_ForFac3_IM  = 0
-        MDL_GGGHEWWW_ForFac4_IM  = 0
+        MDL_GGGHEWZZ_ForFac1_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac2_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac3_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac4_RE  = 0.0d0
+        MDL_GGGHEWZZ_ForFac1_IM  = 0.0d0
+        MDL_GGGHEWZZ_ForFac2_IM  = 0.0d0
+        MDL_GGGHEWZZ_ForFac3_IM  = 0.0d0
+        MDL_GGGHEWZZ_ForFac4_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac1_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac2_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac3_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac4_RE  = 0.0d0
+        MDL_GGGHEWWW_ForFac1_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac2_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac3_IM  = 0.0d0
+        MDL_GGGHEWWW_ForFac4_IM  = 0.0d0
         CALL COUP()
         ! update the ALL couplings
         CALL set2LoopGGHGEWZZCoefficients(P)
