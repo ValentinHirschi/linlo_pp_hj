@@ -133,19 +133,19 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           endif
 
           ! Now we set the relevant non-zero values
-          if ((int(nloops))==2) THEN
+          if ((nint(nloops)).EQ.2) THEN
             MDL_GGHEWZZ2L_ForFac1_RE=EWLORe(1);
             MDL_GGHEWZZ2L_ForFac1_IM=EWLOIm(1);
             MDL_GGHEWWW2L_ForFac1_RE=EWLORe(2);
             MDL_GGHEWWW2L_ForFac1_IM=EWLOIm(2);
           endif
-          if ((int(nloops))==3) THEN
+          if ((nint(nloops)).EQ.3) THEN
             MDL_GGHEWZZ3L_ForFac1_RE=EWNLORe(1);
             MDL_GGHEWZZ3L_ForFac1_IM=EWNLOIm(1);
             MDL_GGHEWWW3L_ForFac1_RE=EWNLORe(2);
             MDL_GGHEWWW3L_ForFac1_IM=EWNLOIm(2);
           endif
-          if ((int(nloops))==99) THEN
+          if ((nint(nloops)).EQ.99) THEN
             MDL_GGHEWZZ2L_ForFac1_RE=EWLORe(1);
             MDL_GGHEWZZ2L_ForFac1_IM=EWLOIm(1);
             MDL_GGHEWWW2L_ForFac1_RE=EWLORe(2);
@@ -212,15 +212,15 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           endif
 
           ! Now we set the relevant non-zero values
-          if ((nint(nloops))==2) THEN
+          if ((nint(nloops)).EQ.2) THEN
             MDL_GGHEWWW2L_ForFac1_RE=EWLORe(2);
             MDL_GGHEWWW2L_ForFac1_IM=EWLOIm(2);
           endif
-          if ((nint(nloops))==3) THEN
+          if ((nint(nloops)).EQ.3) THEN
             MDL_GGHEWWW3L_ForFac1_RE=EWNLORe(2);
             MDL_GGHEWWW3L_ForFac1_IM=EWNLOIm(2);
           endif
-          if ((nint(nloops))==99) THEN
+          if ((nint(nloops)).EQ.99) THEN
             MDL_GGHEWWW2L_ForFac1_RE=EWLORe(2);
             MDL_GGHEWWW2L_ForFac1_IM=EWLOIm(2);
             MDL_GGHEWWW3L_ForFac1_RE=EWNLORe(2);
@@ -283,15 +283,15 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           endif
 
           ! Now we set the relevant non-zero values
-          if ((nint(nloops))==2) THEN
+          if ((nint(nloops)).EQ.2) THEN
             MDL_GGHEWZZ2L_ForFac1_RE=EWLORe(1);
             MDL_GGHEWZZ2L_ForFac1_IM=EWLOIm(1);
           endif
-          if ((nint(nloops))==3) THEN
+          if ((nint(nloops)).EQ.3) THEN
             MDL_GGHEWZZ3L_ForFac1_RE=EWNLORe(2);
             MDL_GGHEWZZ3L_ForFac1_IM=EWNLOIm(2);
           endif
-          if ((nint(nloops))==99) THEN
+          if ((nint(nloops)).EQ.99) THEN
             MDL_GGHEWZZ2L_ForFac1_RE=EWLORe(1);
             MDL_GGHEWZZ2L_ForFac1_IM=EWLOIm(1);
             MDL_GGHEWZZ3L_ForFac1_RE=EWNLORe(2);
