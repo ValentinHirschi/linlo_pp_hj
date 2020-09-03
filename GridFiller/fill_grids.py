@@ -171,10 +171,6 @@ if __name__ == '__main__':
                 #print("Added result #%d"%next_job_to_add)
 #                ordered_job_results.append(job_results_to_add.pop(next_job_to_add))
                 output_grid.write(job_results_to_add.pop(next_job_to_add)) 
-                print("ME evaluation # %d / %d (%.2f%%) (%.2f pts/s)\r"%(
-                    next_job_to_add+1, max_jobs, 100.0*float(next_job_to_add+1)/float(max_jobs),
-                    float(n_received)/(time.time()-start_time)
-                ), end="")
                 next_job_to_add += 1
 
         print("ME evaluation # %d / %d (%.2f%%) (%.2f pts/min) (n written out so far: %d)\r"%(
