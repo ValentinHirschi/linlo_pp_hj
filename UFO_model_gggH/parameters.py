@@ -869,7 +869,7 @@ n_loops_HEFT = Parameter(name='n_loops_HEFT',
 eps_order_HEFT = Parameter(name='eps_order_HEFT',
                            nature='external',
                            type='real',
-                           value=0.0,
+                           value=0.000000000001,
                            texname='\\text{eps_order_HEFT}',
                            lhablock='GGHHEFT',
                            lhacode=[19999])
@@ -1036,7 +1036,7 @@ AllGGGHEWZZCoup = Parameter(name='AllGGGHEWWWCoup',
 n_loops_EW = Parameter(name='n_loops_EW',
                        nature='external',
                        type='real',
-                       value=99,
+                       value=99.0,
                        texname='\\text{n_loops_EW}',
                        lhablock='GGHEW',
                        lhacode=[22011])
@@ -1315,23 +1315,3 @@ GGGHEWWW_ForFac4_IM = Parameter(name='GGGHEWWW_ForFac4_IM',
                                 lhablock='GGGHEWWW',
                                 lhacode=[88008])
 
-
-# -----------------------------------------------------------------------------
-# one-loop GGGH related parameters
-# -----------------------------------------------------------------------------
-
-n_loops = Parameter(name='n_loops',
-                    nature='external',
-                    type='real',
-                    value=1.0,
-                    texname='\\text{n_loops}',
-                    lhablock='GGGHQCD',
-                    lhacode=[40001])
-
-requiredRelativeAccuracy = Parameter(name='requiredRelativeAccuracy',
-                                     nature='external',
-                                     type='real',
-                                     value=1.0e-7,
-                                     texname='\\text{requiredRelativeAccuracy}',
-                                     lhablock='GGGHQCD',
-                                     lhacode=[40002])
