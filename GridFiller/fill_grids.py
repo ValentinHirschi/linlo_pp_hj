@@ -18,13 +18,27 @@ def worker(worker_ID,job_queue,res_queue):
     job_log.close()
     job_ID, new_job = job_queue.get()
     while new_job != 'DONE':
-        
+       
+        # Test if it is a dummy job
+        split_job = new_job.split()
+        if len(split_job)>18:
+            if split_job[18].strip().upper() != 'NAN':
+                # Then this entry is filled already and we should immediately return
+                res_queue.put(tuple([job_ID,new_job+'\n']))
+                job_ID, new_job = job_queue.get()
+                continue
+            else:
+                new_job = ' '.join(split_job[:18])
 #        job_result = "Job '%s@%d' done by worker %d."%(new_job,job_ID,worker_ID)
 #        job_cmd = './grid_filler %s 2>&1 | tee -a ./logs/worker_%d.log'%(new_job,job_ID)
 
+#        res_queue.put(tuple([job_ID,new_job+' 1337.0\n']))
+#        job_ID, new_job = job_queue.get()
+#        continue
+
         attempt_number = 0
         MAX_ATTEMPTS = 3
-        BASE_TIME = 300.0 # in seconds
+        BASE_TIME = 3600.0 # in seconds
         TIME_INCREMENT = 300.0 # in seconds
         SUCCESSFUL = False
         while (not SUCCESSFUL) and (attempt_number < MAX_ATTEMPTS):
