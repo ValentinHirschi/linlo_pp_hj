@@ -1,0 +1,19 @@
+Using HEFT sampling grid:
+-------------------------
+
+processed_fm_grid_5k_no_IR_thres_increase.dat
+randinit r=38
+RESTART = -1
+NPOINTS = 5000
+HiggsDistribution_5k.HwU
+-> 0.3841626 +- 0.03607
+
+With uniform sampling grid:
+---------------------------
+
+processed_fm_grid_15k_no_grid.dat
+randinit r=38
+RESTART = 0
+NPOINTS = 15000
+HiggsDistribution_15k_flat_grid.HwU
+-> 0.3566 +- 0.0157
