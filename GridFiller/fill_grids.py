@@ -153,7 +153,11 @@ if __name__ == '__main__':
                     help='Path of the standalone process to use to run the points.')
 
     args = parser.parse_args()
-  
+ 
+    if os.path.exists(args.grid_out):
+        print("Error: target output grid path '%s' already exists. Remove it before running this script."%args.grid_out)
+        sys.exit(1)
+    
     if args.proc == './LI_at_NLO_proc':
         if not os.path.exists('./LI_at_NLO_proc'):
             print("ERROR: When specifying './LI_at_NLO_proc' as a process to run, you must manually place the soft link.")
