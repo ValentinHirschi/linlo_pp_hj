@@ -1,6 +1,6 @@
 import os
 import shutil
-import timeit
+import time
 
 
 input_grid = "to_process_fm_grid_15k_test.dat"
@@ -33,8 +33,8 @@ ps_points = grid_length(output_grid)
 
 cmd = "parallel -j " + str(cores) + " ./grid_filler_princess -- $(seq 1 "+str(ps_points)+")"
 print("About to call:\n" + cmd)
-start_time = timeit.timeit()
-os.system(cmd)
-end_time = timeit.timeit()
-print("The grid with "+ str(ps_points)+" took "+ str(end_time -start_time) +"s")
+start_time = time.time()
+  os.system(cmd)
+end_time = time.time()
+print("The grid with "+ str(ps_points)+" took "+ str(end_time - start_time) +"s")
 print("The average eval time per core is"+ str((end_time -start_time)/ps_points/cores))
