@@ -1,2 +1,2 @@
-scp hirschva@princess.ethz.ch:/scratch/hirschva/HIGGS_EW_GRID/NP_EW1.tar.gz .
-scp hirschva@princess.ethz.ch:/scratch/hirschva/HIGGS_EW_GRID/Planar_EW1.tar.gz .
+scp fmoriell@princess:/scratch/francesco/ExpCan/QCDEW_24/Planar_EW1_24.tar.gz .
+scp fmoriell@princess:/scratch/francesco/ExpCan/QCDEW_24/NP_EW1_24.tar.gz .

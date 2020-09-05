@@ -1,8 +1,4 @@
 #!/usr/bin/env wolframscript
-(* ::Package:: *)
-
-(*#!/usr/bin/env /Applications/Mathematica.app/Contents/MacOS/wolframscript*)
-
 
 If[ByteCount[$mypath]==0,
 	$myImportPath=FileNameJoin[{DirectoryName @ $InputFileName, ""}];
@@ -14,11 +10,18 @@ If[ByteCount[$mypath]==0,
 ];
 
 
+outFilename=ToString[$ScriptCommandLine[[-1]]];
+WriteLine[outFilename,$ProcessID];
+WriteLine[outFilename, "Arguments received: "<>ToString[$ScriptCommandLine]];
+
+
 Get["ExpCan4_Reg.wl"];
 
 
-
+$grid=False;
 $Verbose=False;
+$delQ=True;
+
 
 basedir=Directory[];
 
@@ -26,17 +29,18 @@ basedir=Directory[];
 nvar=4;
 nindvar=3;
 myVars=4;
+precinput=16; 
 
-outFilename=ToString[$ScriptCommandLine[[-1]]];
-WriteLine[outFilename, "Arguments received: "<>ToString[$ScriptCommandLine]];
+
 Print["Arguments received: "<>ToString[$ScriptCommandLine]];
 Do[kinvars[ii]=Rationalize[SetPrecision[ImportString[$ScriptCommandLine[[ii+1]],"CSV"],32][[1,1]],10^-36],{ii,myVars}];
 kinvars[3]=kinvars[3]^2;
-Do[inputcl[ii]=Rationalize[N[kinvars[ii]/kinvars[4]^2,100],10^-16],{ii,nindvar}];
+Do[inputcl[ii]=Rationalize[N[kinvars[ii]/kinvars[4]^2,100],10^-(precinput)],{ii,nindvar}];
 (* three dimension from the projector and one from the couplings *)
 rescalingNorm=kinvars[4]^(-4);
 loopMeasure=-(1/(4 Pi)^4);
-precinput=16;(*ToExpression[$ScriptCommandLine[[nindvar+2]]];*)
+
+
 p1in=Table[inputcl[ii],{ii,nindvar}];
 
 
@@ -104,7 +108,6 @@ Do[INTNP[p1li[[ii]]]=Transpose[Get["./"<>FileTagNP<>"/BClist/BClist_"<>FileTagNP
 
 print["n ff"];
 
-(*fflistn=fflist/.pin/.{canMINP[a_,b_,c_]:>INTNP[c][[a,b+1]],canMIPlanar[a_,b_,c_]:>INTP[c][[a,b+1]]}//Rationalize[#,10^(-32)]&;*)
 
 pinN=#[[1]]->N[#[[2]],acc]&/@pin;
 
@@ -114,6 +117,29 @@ fflistn=(rescalingNorm*loopMeasure*fflist/.{canMINP[a_,b_,c_]:>INTNP[c/.pin][[a,
 
 
 print["n ff done"];
+
+
+
+(*--------delete files----------*)
+
+
+If[!$grid && $delQ===True,
+
+Do[
+
+fileToBeDeleted=("./"<>famName<>"/BClist/BClist_"<>famName<>"_p"<>ToString[Hash[p1li[[ii]]]]<>".txt");
+print["deleting ",fileToBeDeleted];
+DeleteFile[fileToBeDeleted]
+,{famName,{"Planar_EW1","NP_EW1"}},{ii,Length@p1li}];
+
+];
+
+
+
+(*-----------------------------*)
+
+
+
 
 print["Points evaluated ",p1li//N]
 

@@ -17,6 +17,7 @@ Print[">>>ExpCan4_Reg.m<<<"]
 
 SetOptions[OpenAppend, PageWidth -> Infinity];
 
+$forcestdbc=False;
 $grid=True;
 $script=True;
 $PosMass=3;
@@ -463,7 +464,7 @@ print["acc primitive ",Accuracy[solordp[oo]]];
 solordg[oo]=solordp[oo]+Table[c[i],{i,Length@solordp[oo]}];
 
 print["fixing bc"];
-eqbc[nn,oo]=Table[(solordg[oo][[ii]]/.Log[x]/;(singbc)->Log[signx /rad]+log0/.x->signx /rad( xb+signim  ieps0-x0))-(solm1[[oo+1,ii]]/.Log[x]/;(singbc)->log0/.x->xb/.ieps->ieps0)==0,{ii,Length@solordg[oo]}];
+eqbc[nn,oo]=Table[Expand[(solordg[oo][[ii]]/.Log[x]/;(singbc)->Log[signx /rad]+log0/.x->signx /rad( xb+signim  ieps0-x0))-(solm1[[oo+1,ii]]/.Log[x]/;(singbc)->log0/.x->xb/.ieps->ieps0)]==0,{ii,Length@solordg[oo]}];
 solordc[oo]=NSolve[Chop[eqbc[nn,oo],10^-acc],Table[c[i],{i,Length@solordg[oo]}],WorkingPrecision->2 acc]//Flatten//Quiet//Chop[#,10^-(acc)]&;
 print["done"];
 
@@ -474,6 +475,13 @@ If[Accuracy[solordc[oo]]<acc(1-1/10),PrintAndSaveErrorAbort["low acc bc ",Accura
 solordc[oo]=SetAccuracy[solordc[oo],acc+Ceiling[0.20 acc]]/.c[a__]:>Rationalize[c[a],10^-100];
 print["acc BC -> ", Accuracy[solordc[oo]]];
 solord[oo]=solordg[oo]/.solordc[oo];
+
+
+print["sol ord c freeQ: ", FreeQ[solord[oo],c]];
+If[! FreeQ[solord[oo],c], PrintAndSaveErrorAbort["c in sol"]];
+
+
+
 
 print["bc sample ",(#[[1]]->N[#[[2]]])&/@solordc[oo][[;;1]]];
 
@@ -606,9 +614,12 @@ IntersectionSpuriousPhysicalQ[DEFactors,pli];
 ]
 
 
-ImportBC[]:=Module[{import},
+ImportBC[]:=Module[{import, import0},
 print["loading bc ... "];
-import=StringSplit[Import["Exists/Exists_BClist_"<>FileTag<>"_p"<>"list.txt"],"\n"]//ToExpression;
+import0=Import["Exists/Exists_BClist_"<>FileTag<>"_p"<>"list.txt"]//Quiet;
+If[import0===$Failed,PrintAndSaveErrorAbort["no bc files"]];
+import=StringSplit[import0,"\n"]//ToExpression;
+
 bclist=DeleteCases[import,a_/;Head[a]=!=List,1];
 bclist=DeleteCases[bclist,a_/;Length[a]=!=nindvar,1];
 bclist=DeleteCases[bclist,a_/;Union[NumericQ/@(a)]=!={True},1];
@@ -619,10 +630,14 @@ print["loading bc ... done "];
 ImportBCRegion[]:=Module[{import,import0},
 print["loading bc ... "];
 import0=Import["Exists/Exists_BClist_"<>FileTag<>"_p"<>RegionLabel<>"list.txt"]//Quiet;
+If[$forcestdbc,import0=$Failed];
 If[import0===$Failed,
 print["using default bc "];import0=Import["Exists/Exists_BClist_"<>FileTag<>"_p"<>"list.txt"],
 print["using bc from ","Exists/Exists_BClist_"<>FileTag<>"_p"<>RegionLabel<>"list.txt" ];
 ];
+
+If[import0===$Failed,PrintAndSaveErrorAbort["no bc files"]];
+
 import=StringSplit[import0,"\n"]//ToExpression;
 bclist=DeleteCases[import,a_/;Head[a]=!=List,1];
 bclist=DeleteCases[bclist,a_/;Length[a]=!=nindvar,1];

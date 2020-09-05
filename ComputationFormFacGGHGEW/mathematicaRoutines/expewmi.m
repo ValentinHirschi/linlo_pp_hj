@@ -8,7 +8,6 @@ ieps0=I 10^(-acc/2);
 
 
 
-$grid=False;
 
 $PrecStart=5;
 $SegTolerance=10^(-2);
@@ -64,11 +63,20 @@ time=(
 
 Do[
 
+WriteLine[outFilename,FileTag<>", point "<>ToString[iip1]];
 print[RegionLabel];
 
 p1=p1li[[iip1]];
 Setp0[];
-If[p0 === p1, print["Already computed"];Goto[skip]];
+
+If[p0===p1,
+print["Already computed"];
+$delQ=False;
+Goto[skip]
+];
+
+
+
 SetGlobalV[];
 
 
