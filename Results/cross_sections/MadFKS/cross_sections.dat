@@ -8,6 +8,13 @@ NPOINTS = 5000
 HiggsDistribution_5k.HwU
 -> 0.3841626 +- 0.03607
 
+processed_v3_fm_grid_30k.dat
+randinit r=38
+RESTART = -1
+NPOINTS = 30000
+HiggsDistribution_30k.HwU
+-> 0.3604161 +- 0.00655
+
 With uniform sampling grid:
 ---------------------------
 
