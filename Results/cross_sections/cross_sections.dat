@@ -47,7 +47,23 @@ V:
 BF1:
 2.46880e-01 +/- 3.35e-04 [pb]
 
-R:
+R: (using points from all_points_5_x_300_3_x_30k.database)
 set_integrator_options VEGAS3 --n_iterations_survey=5 --n_points_survey=300 --n_iterations_refine=3 --n_points_refine=3000 --seed=1
 launch --itg=R --seed=1
+DEBUG:
+itn   integral        average         chi2/dof        Q
+-------------------------------------------------------
+  1   -0.0996(34)     -0.0996(34)         0.00     1.00
+  2   -0.0974(47)     -0.0985(29)         0.15     0.70
+  3   -0.0953(40)     -0.0974(24)         0.28     0.75
 
+DEBUG: ===============================================================
+DEBUG: Total integration time: 4h12m29s
+DEBUG: Vegas3 used a total of 4868 function evaluations, on 25 core(s).
+DEBUG: Vegas3 returned final results : -0.0974(24)
+DEBUG: ===============================================================
+INFO: ====================================================================================================
+INFO:                 Cross-section of MadNkLO_pp_h_LI_at_NLO@R with integrator 'Vegas3':
+INFO:                                    -9.74064e-02 +/- 2.35e-03 [pb]
+INFO: ====================================================================================================
+--> 0.3500 +- 0.0023
