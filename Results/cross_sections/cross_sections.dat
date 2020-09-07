@@ -1,3 +1,6 @@
+MadFKS:
+-------
+
 Using HEFT sampling grid:
 -------------------------
 
@@ -24,3 +27,27 @@ RESTART = 0
 NPOINTS = 15000
 HiggsDistribution_15k_flat_grid.HwU
 -> 0.3566 +- 0.0157
+
+processed_v2_fm_grid_100k_no_grid.dat
+randinit r=38
+RESTART = 0
+NPOINTS = 100000
+HiggsDistribution_100k_flat_grid.HwU
+-> 0.3626 +- 0.0081
+
+MadNkLO:
+--------
+
+B:
+6.87320e-01 +/- 1.31e-04 [pb]
+
+V:
+-4.63327e-02 +/- 3.34e-06 [pb]
+
+BF1:
+2.46880e-01 +/- 3.35e-04 [pb]
+
+R:
+set_integrator_options VEGAS3 --n_iterations_survey=5 --n_points_survey=300 --n_iterations_refine=3 --n_points_refine=3000 --seed=1
+launch --itg=R --seed=1
+
