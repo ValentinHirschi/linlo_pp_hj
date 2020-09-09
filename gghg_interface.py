@@ -25,6 +25,8 @@ from madgraph.iolibs.files import cp, ln, mv
 import madgraph.interface.master_interface as master_interface
 import datetime
 
+from output import My_ggHg_Exporter
+
 logger = logging.getLogger('GGHG.Interface')
 _plugin_path = os.path.dirname(os.path.realpath( __file__ ))
 pjoin = os.path.join
@@ -72,6 +74,14 @@ class GGHGInterface(master_interface.MasterCmd, cmd.CmdShell):
         self.exec_cmd('output standalone_ggHg ' + EXPORTDIRNAME )
         self.exec_cmd('launch -f')
         logger.info('The default should be: 1.1654775807795E-003')
+
+    def do_set_IO_mode(self, line):
+        if line.upper()=='FIFO':
+            My_ggHg_Exporter.IO_mode = 'fifo'
+        elif line.upper()=='SYSTEM_CALL':
+            My_ggHg_Exporter.IO_mode = 'system_call'
+        else:
+            raise GGHGInvalidCmd("Unsupported IO mode: %s"%line)
 
     def preloop(self, *args, **opts):
         """only change the prompt after calling  the mother preloop command"""

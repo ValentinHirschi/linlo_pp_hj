@@ -60,8 +60,8 @@ print["fifo read! ", fifoin];
 
 
 outString="";
-outString=StringJoin[outString,ToString[$ProcessID]<>"\n"];
-outString=StringJoin[outString,ToString[Join[{$ScriptCommandLine[[1]]},fifoin]]<>" \n"];
+outString=StringJoin[outString,ToString[$ProcessID]<>"\\n"];
+outString=StringJoin[outString,ToString[Join[{$ScriptCommandLine[[1]]},fifoin]]<>"\\n"];
 
 
 
@@ -178,23 +178,21 @@ DeleteFile[fileToBeDeleted]
 
 print["Points evaluated ",p1li//N];
 
-outString=StringJoin[outString,"START_OUTPUT_STREAM"<>"\n"];
+outString=StringJoin[outString,"START_OUTPUT_STREAM"<>"\\n"];
 
 Do[
-outString=StringJoin[outString,(Re[fflistn[[ii]]]//CForm//ToString)<>"\n"]
+outString=StringJoin[outString,(Re[fflistn[[ii]]]//CForm//ToString)<>"\\n"]
 ,{ii,Length@fflistn}];
 
 Do[ 
-outString=StringJoin[outString,(Im[fflistn[[ii]]]//CForm//ToString)<>"\n"]
+outString=StringJoin[outString,(Im[fflistn[[ii]]]//CForm//ToString)<>"\\n"]
 ,{ii,Length@fflistn}];
 
-outString=StringJoin[outString,"END_OUTPUT_STREAM"];
+outString=StringJoin[outString,"END_OUTPUT_STREAM\\n"];
 
 print[outString];
 
-Run["echo '"<>outString<>"' > "<>outFilename];
-
-
-
+(*Run["echo '"<>outString<>"' > "<>outFilename];*)
+Run["python3 -c \"open('"<>outFilename<>"','w').write('"<>outString<>"');\""];
 
 ];

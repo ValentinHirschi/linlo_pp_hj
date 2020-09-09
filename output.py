@@ -95,6 +95,7 @@ setattr(helas_objects.HelasMatrixElement,'get_helicity_combinations_longitudinal
 ###############################################################################################
 class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
 
+    IO_mode = 'system_call'
 
     matrix_template = "Templates/matrix_standalone_v4_mod_hel_sum.inc"    
     
@@ -216,6 +217,9 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                     needed_procs[prefix] = copy.deepcopy(possible_procs[proc])
                     #handle the fortran bridge
                     old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_bridge'])
+                    if self.IO_mode == 'fifo':
+                        if os.path.exists(old_file[:-4]+'_fifo.cpp'):
+                            old_file = old_file[:-4]+'_fifo.cpp'
                     new_file = "fortran_bridge_" +prefix + ".cpp"
                     # make relativ path absolute, so that we dont have to copy the mathematica folders
                     file = open(old_file,'r') 
