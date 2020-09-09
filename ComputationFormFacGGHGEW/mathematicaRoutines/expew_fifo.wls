@@ -19,10 +19,11 @@ Get["ExpCan4_Reg.wl"];
 
 PrintAndSaveErrorAbort[text__]:=(
 PutAppend[{{text},": "<>ToString[p0->p1//InputForm//ToString]},ErrorLogFile];
-outString=StringJoin[outString,"START_OUTPUT_STREAM"<>"\n"];
-outString=StringJoin[outString,"NaN"<>"\n"];
-outString=StringJoin[outString,"END_OUTPUT_STREAM"];
-Run["echo '"<>outString<>"' > "<>outFilename];
+outString=StringJoin[outString,"START_OUTPUT_STREAM"<>"\\n"];
+outString=StringJoin[outString,"NaN"<>"\\n"];
+outString=StringJoin[outString,"END_OUTPUT_STREAM\\n"];
+(*Run["echo '"<>outString<>"' > "<>outFilename];*)
+Run["python3 -c \"open('"<>outFilename<>"','w').write('"<>outString<>"');\""];
 saveQ=False;
 If[$script,Quit[],Abort[]]
 )
