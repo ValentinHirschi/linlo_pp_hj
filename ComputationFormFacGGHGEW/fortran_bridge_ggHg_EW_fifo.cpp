@@ -210,7 +210,7 @@ extern"C" void %(C_prefix)sget_gggh_tensor_coefs_ew_(const double *pInput,
 	std::cout<<"About to call wrapper with: "<<command<<std::endl;
 	int fd;
 	fd = open(mathematica_input_file.c_str(), O_WRONLY); 
-	write(fd, command.c_str(), strlen(command.c_str())+1); 
+	write(fd, command.c_str(), strlen(command.c_str())); 
     close(fd);
 	
 	// Now read the result in a blocking fashion
