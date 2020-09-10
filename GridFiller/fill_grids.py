@@ -6,9 +6,14 @@ import random
 import time
 import os
 import sys
+import time
 from pprint import pformat
 
 n_zombies = multiprocessing.Value('i',0)
+n_computed = multiprocessing.Value('i',0)
+has_interrupted = multiprocessing.Event()
+
+root_path = os.path.dirname(os.path.realpath( __file__ ))
 
 def worker(worker_ID,job_queue,res_queue):
     time.sleep(0.1*worker_ID)
@@ -35,6 +40,11 @@ def worker(worker_ID,job_queue,res_queue):
 #        res_queue.put(tuple([job_ID,new_job+' 1337.0\n']))
 #        job_ID, new_job = job_queue.get()
 #        continue
+
+        if has_interrupted.is_set():
+            job_result = '%s %s'%(new_job, 'NaN\n')
+            res_queue.put(tuple([job_ID,job_result]))
+            continue
 
         attempt_number = 0
         MAX_ATTEMPTS = 3
@@ -126,6 +136,7 @@ def worker(worker_ID,job_queue,res_queue):
         job_log.close()
 
         # Fetch a new job
+        n_computed.value += 1
         res_queue.put(tuple([job_ID,job_result]))
         job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')        
         job_log.write('Waiting for new job...\n')
@@ -135,6 +146,9 @@ def worker(worker_ID,job_queue,res_queue):
     job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')    
     job_log.write('DONE!\n')
     job_log.close()
+
+def fifo_worker(wolfram_script_exe_path, fifo_path):
+    subprocess.call('%s %s'%(wolfram_script_exe_path, fifo_path), shell=True)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=""" Calls grid filler in parallel to compute real-emission 2-loop MEs.""")
@@ -147,6 +161,8 @@ if __name__ == '__main__':
     # Optional options
     parser.add_argument('--cores', '-c', default=multiprocessing.cpu_count(), type=int,
                     help='Number of CPUs to run on')
+    parser.add_argument('--fifo', '-f', default=0, type=int,
+                    help='Number of mathematica fifo listeners to initiate. If negative, then it is set equal to number of cores.')
     parser.add_argument('--grid_out', '-o', type=str, default='./processed_grid.dat',
                     help='Path of the grid to output')
     parser.add_argument('--proc', '-p', type=str, default='./LI_at_NLO_proc',
@@ -172,6 +188,28 @@ if __name__ == '__main__':
     subprocess.call(['make clean'], shell=True)
     subprocess.call(['make'], shell=True)
 
+    if args.fifo < 0:
+        args.fifo = args.cores
+
+    fifo_pool = None
+    if args.fifo > 1:
+        # Start fifo listeners
+        fifo_exe_path = os.path.abspath(os.path.join(root_path,os.path.pardir,
+                            'ComputationFormFacGGHGEW','mathematicaRoutines','expewmi_fifo.m'))
+        fifo_path = os.path.abspath(os.path.join(root_path,os.path.pardir,
+                            'ComputationFormFacGGHGEW','mathematicaRoutines','mathematica_input.fifo'))
+        if not os.path.isfile(fifo_exe_path):
+            print("ERROR: Could not find the wolframscript listener file at:\n%s"%fifo_exe_path)
+            sys.exit(1)
+        if not os.path.exists(fifo_path):
+            print("ERROR: Could not find the input fifo pipe. Create it at:\n%s"%fifo_path)
+            sys.exit(1)
+        print("Starting %d concurrent fifo mathematica listeners."%args.fifo)
+        fifo_pool = multiprocessing.Pool(args.fifo)
+        fifo_pool.starmap_async(fifo_worker, [(fifo_exe_path, fifo_path) for wid in range(args.fifo)])     
+        print("Waiting 20 seconds for the mathematica listener to properly load.")
+        time.sleep(20.0)
+
     manager = multiprocessing.Manager()
     job_queue = manager.Queue()
     res_queue = manager.Queue()
@@ -186,6 +224,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     print("About to process grid file with %d entries on %d cores:"%(n_entries,args.cores))
+        
     with multiprocessing.Pool(args.cores) as pool:
         
         r = pool.starmap_async(worker, [(wid,job_queue,res_queue) for wid in range(args.cores)])
@@ -205,34 +244,47 @@ if __name__ == '__main__':
         
         start_time = time.time()
         issued_completion_printout = False
+
+        has_interrupted_already = False
+
         while n_received<max_jobs:
-            
-            if (not issued_completion_printout) and (n_job_placed == min( (n_received+args.cores*2), max_jobs)):
-                issued_completion_printout = True
-                print("All jobs have now been sent!")
-            while n_job_placed < min( (n_received+args.cores*2), max_jobs):
-                new_job = input_grid.readline().strip()
-                #print("Placing new job #%d :\n%s"%(n_job_placed,new_job))
 
-                job_queue.put((n_job_placed,new_job))
-                n_job_placed +=1
+            try:
 
-            result_ID, new_result = res_queue.get()
-            #print("Received new result #%d: %s"%(result_ID,new_result))
-            n_received+=1
-            job_results_to_add[result_ID] = new_result
-            # Now place the result of all jobs we can place
-            while next_job_to_add in job_results_to_add:
-                #print("Added result #%d"%next_job_to_add)
-#                ordered_job_results.append(job_results_to_add.pop(next_job_to_add))
-                output_grid.write(job_results_to_add.pop(next_job_to_add)) 
-                next_job_to_add += 1
+                if (not issued_completion_printout) and (n_job_placed == min( (n_received+args.cores*2), max_jobs)):
+                    issued_completion_printout = True
+                    print("All jobs have now been sent!")
+                while n_job_placed < min( (n_received+args.cores*2), max_jobs):
+                    new_job = input_grid.readline().strip()
+                    #print("Placing new job #%d :\n%s"%(n_job_placed,new_job))
 
-            print("ME evaluation # %d / %d (%.2f%%) (%.2f pts/min) (n written out so far: %d) (n zombies: %s)\r"%(
-                n_received, max_jobs, 100.0*float(n_received)/float(max_jobs),
-                (float(n_received)/(time.time()-start_time))*60.0,next_job_to_add,
-                n_zombies.value
-            ), end="")
+                    job_queue.put((n_job_placed,new_job))
+                    n_job_placed +=1
+
+                result_ID, new_result = res_queue.get()
+
+                #print("Received new result #%d: %s"%(result_ID,new_result))
+                n_received+=1
+                job_results_to_add[result_ID] = new_result
+                # Now place the result of all jobs we can place
+                while next_job_to_add in job_results_to_add:
+                    #print("Added result #%d"%next_job_to_add)
+        #                ordered_job_results.append(job_results_to_add.pop(next_job_to_add))
+                    output_grid.write(job_results_to_add.pop(next_job_to_add)) 
+                    next_job_to_add += 1
+
+                print("ME evaluation # %d / %d (%.2f%%) (%.2f pts/min) (n written out so far: %d) (n zombies: %s)\r"%(
+                    n_received, max_jobs, 100.0*float(n_received)/float(max_jobs),
+                    (float(n_computed.value)/(time.time()-start_time))*60.0,next_job_to_add,
+                    n_zombies.value
+                ), end="")            
+
+            except KeyboardInterrupt:
+                if has_interrupted.is_set():
+                    raise
+                else:
+                    print("Interrupt detected, empyting queue now and filling up rest of processed grid with NaN.")                
+                    has_interrupted.set()
 
         print("All done, now terminating wokers!")
         for wid in range(args.cores):
