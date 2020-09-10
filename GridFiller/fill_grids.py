@@ -44,6 +44,7 @@ def worker(worker_ID,job_queue,res_queue):
         if has_interrupted.is_set():
             job_result = '%s %s'%(new_job, 'NaN\n')
             res_queue.put(tuple([job_ID,job_result]))
+            job_ID, new_job = job_queue.get()
             continue
 
         attempt_number = 0
@@ -148,7 +149,7 @@ def worker(worker_ID,job_queue,res_queue):
     job_log.close()
 
 def fifo_worker(wolfram_script_exe_path, fifo_path):
-    subprocess.call('%s %s'%(wolfram_script_exe_path, fifo_path), shell=True)
+    subprocess.run('%s %s'%(wolfram_script_exe_path, fifo_path), shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=""" Calls grid filler in parallel to compute real-emission 2-loop MEs.""")
@@ -183,19 +184,19 @@ if __name__ == '__main__':
             os.remove('./LI_at_NLO_proc')
         subprocess.call(['ln -s %s ./LI_at_NLO_proc'%args.proc], shell=True)
     
-    subprocess.call(['rm -f ./logs/worker_*.log'], shell=True)
+    subprocess.call(['rm -f stop ./logs/worker_*.log'], shell=True)
     
     subprocess.call(['make clean'], shell=True)
     subprocess.call(['make'], shell=True)
-
+    
     if args.fifo < 0:
         args.fifo = args.cores
-
+    
     fifo_pool = None
-    if args.fifo > 1:
+    if args.fifo > 0:
         # Start fifo listeners
         fifo_exe_path = os.path.abspath(os.path.join(root_path,os.path.pardir,
-                            'ComputationFormFacGGHGEW','mathematicaRoutines','expewmi_fifo.m'))
+                            'ComputationFormFacGGHGEW','mathematicaRoutines','expew_fifo.wls'))
         fifo_path = os.path.abspath(os.path.join(root_path,os.path.pardir,
                             'ComputationFormFacGGHGEW','mathematicaRoutines','mathematica_input.fifo'))
         if not os.path.isfile(fifo_exe_path):
@@ -207,8 +208,8 @@ if __name__ == '__main__':
         print("Starting %d concurrent fifo mathematica listeners."%args.fifo)
         fifo_pool = multiprocessing.Pool(args.fifo)
         fifo_pool.starmap_async(fifo_worker, [(fifo_exe_path, fifo_path) for wid in range(args.fifo)])     
-        print("Waiting 20 seconds for the mathematica listener to properly load.")
-        time.sleep(20.0)
+        print("Waiting 10 seconds for the mathematica listener to properly load.")
+        time.sleep(10.0)
 
     manager = multiprocessing.Manager()
     job_queue = manager.Queue()
@@ -249,42 +250,40 @@ if __name__ == '__main__':
 
         while n_received<max_jobs:
 
-            try:
+            if (not issued_completion_printout) and (n_job_placed == min( (n_received+args.cores*2), max_jobs)):
+                issued_completion_printout = True
+                print("All jobs have now been sent!")
+            while n_job_placed < min( (n_received+args.cores*2), max_jobs):
+                new_job = input_grid.readline().strip()
+                #print("Placing new job #%d :\n%s"%(n_job_placed,new_job))
 
-                if (not issued_completion_printout) and (n_job_placed == min( (n_received+args.cores*2), max_jobs)):
-                    issued_completion_printout = True
-                    print("All jobs have now been sent!")
-                while n_job_placed < min( (n_received+args.cores*2), max_jobs):
-                    new_job = input_grid.readline().strip()
-                    #print("Placing new job #%d :\n%s"%(n_job_placed,new_job))
+                job_queue.put((n_job_placed,new_job))
+                n_job_placed +=1
 
-                    job_queue.put((n_job_placed,new_job))
-                    n_job_placed +=1
+            # Test if we must abort
+            if not has_interrupted.is_set() and os.path.exists(os.path.join(root_path,'stop')):
+                print("WARNING: Order received of cleanly stopping all jobs.")
+                has_interrupted.set()
 
-                result_ID, new_result = res_queue.get()
+            result_ID, new_result = res_queue.get()
 
-                #print("Received new result #%d: %s"%(result_ID,new_result))
-                n_received+=1
-                job_results_to_add[result_ID] = new_result
-                # Now place the result of all jobs we can place
-                while next_job_to_add in job_results_to_add:
-                    #print("Added result #%d"%next_job_to_add)
-        #                ordered_job_results.append(job_results_to_add.pop(next_job_to_add))
-                    output_grid.write(job_results_to_add.pop(next_job_to_add)) 
-                    next_job_to_add += 1
+            #print("Received new result #%d: %s"%(result_ID,new_result))
+            n_received+=1
+            job_results_to_add[result_ID] = new_result
+            # Now place the result of all jobs we can place
+            while next_job_to_add in job_results_to_add:
+                #print("Added result #%d"%next_job_to_add)
+    #                ordered_job_results.append(job_results_to_add.pop(next_job_to_add))
+                output_grid.write(job_results_to_add.pop(next_job_to_add)) 
+                next_job_to_add += 1
 
-                print("ME evaluation # %d / %d (%.2f%%) (%.2f pts/min) (n written out so far: %d) (n zombies: %s)\r"%(
-                    n_received, max_jobs, 100.0*float(n_received)/float(max_jobs),
-                    (float(n_computed.value)/(time.time()-start_time))*60.0,next_job_to_add,
-                    n_zombies.value
-                ), end="")            
+d            print("ME evaluation # %d / %d (%.2f%%) (%d computed,  %.2f pts/min) (n written out so far: %d) (n zombies: %s)\r"%(
+                n_received, max_jobs, 100.0*float(n_received)/float(max_jobs),
+                n_computed.value,
+                (float(n_computed.value)/(time.time()-start_time))*60.0,next_job_to_add,
+                n_zombies.value
+            ), end="")
 
-            except KeyboardInterrupt:
-                if has_interrupted.is_set():
-                    raise
-                else:
-                    print("Interrupt detected, empyting queue now and filling up rest of processed grid with NaN.")                
-                    has_interrupted.set()
 
         print("All done, now terminating wokers!")
         for wid in range(args.cores):
