@@ -16,7 +16,8 @@ has_interrupted = multiprocessing.Event()
 root_path = os.path.dirname(os.path.realpath( __file__ ))
 
 def worker(worker_ID,job_queue,res_queue):
-    time.sleep((random.random()+0.1)*worker_ID)
+    if worker_ID != 0:
+        time.sleep(30.0+(random.random()*2+1.0)*worker_ID)
     #print("I am worker #%d"%worker_ID)
     job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')    
     job_log.write('Waiting for new job...\n')
