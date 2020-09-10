@@ -207,12 +207,13 @@ extern"C" void %(C_prefix)sget_gggh_tensor_coefs_ew_(const double *pInput,
 	ostr<<" "<<tmp_file;
 
 	std::string command = ostr.str();
-	std::cout<<"About to call wrapper with: "<<command<<std::endl;
+	std::cout<<"About to call wrapper with: "<<command<<std::endl<< std::flush;
 	int fd;
 	fd = open(mathematica_input_file.c_str(), O_WRONLY); 
 	write(fd, command.c_str(), strlen(command.c_str())); 
     close(fd);
-	
+	std::cout<<"Mathematica command sent and waiting for output."<<std::endl<<std::flush;
+
 	// Now read the result in a blocking fashion
 	char char_res[10000];
 	fd = open(tmp_file.c_str(), O_RDONLY);

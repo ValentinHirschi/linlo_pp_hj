@@ -16,7 +16,7 @@ has_interrupted = multiprocessing.Event()
 root_path = os.path.dirname(os.path.realpath( __file__ ))
 
 def worker(worker_ID,job_queue,res_queue):
-    time.sleep(0.1*worker_ID)
+    time.sleep((random.random()+0.1)*worker_ID)
     #print("I am worker #%d"%worker_ID)
     job_log = open('./logs/worker_%d_jobs.log'%worker_ID,'a')    
     job_log.write('Waiting for new job...\n')
@@ -149,6 +149,7 @@ def worker(worker_ID,job_queue,res_queue):
     job_log.close()
 
 def fifo_worker(wolfram_script_exe_path, fifo_path):
+    time.sleep(random.random())
     subprocess.run('%s %s'%(wolfram_script_exe_path, fifo_path), shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 if __name__ == '__main__':
@@ -190,7 +191,8 @@ if __name__ == '__main__':
     subprocess.call(['make'], shell=True)
     
     if args.fifo < 0:
-        args.fifo = args.cores
+        # Add five extra listener for safety to make sure the fifo pipe is always listened to
+        args.fifo = args.cores+5
     
     fifo_pool = None
     if args.fifo > 0:
@@ -277,7 +279,7 @@ if __name__ == '__main__':
                 output_grid.write(job_results_to_add.pop(next_job_to_add)) 
                 next_job_to_add += 1
 
-d            print("ME evaluation # %d / %d (%.2f%%) (%d computed,  %.2f pts/min) (n written out so far: %d) (n zombies: %s)\r"%(
+            print("ME evaluation # %d / %d (%.2f%%) (%d computed,  %.2f pts/min) (n written out so far: %d) (n zombies: %s)\r"%(
                 n_received, max_jobs, 100.0*float(n_received)/float(max_jobs),
                 n_computed.value,
                 (float(n_computed.value)/(time.time()-start_time))*60.0,next_job_to_add,
