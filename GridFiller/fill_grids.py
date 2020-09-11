@@ -50,8 +50,8 @@ def worker(worker_ID,job_queue,res_queue):
 
         attempt_number = 0
         MAX_ATTEMPTS = 3
-        BASE_TIME = 3600.0 # in seconds
-        TIME_INCREMENT = 300.0 # in seconds
+        BASE_TIME = 700.0 # in seconds
+        TIME_INCREMENT = 100.0 # in seconds
         SUCCESSFUL = False
         while (not SUCCESSFUL) and (attempt_number < MAX_ATTEMPTS):
             job_cmd = './grid_filler %s 2>&1 | tee -a ./logs/worker_%d.log > ./logs/worker_%d_current_res_attempt_%d.log'%(
@@ -150,8 +150,11 @@ def worker(worker_ID,job_queue,res_queue):
     job_log.close()
 
 def fifo_worker(wolfram_script_exe_path, fifo_path):
-    time.sleep(random.random())
-    subprocess.run('%s %s'%(wolfram_script_exe_path, fifo_path), shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    while True:
+        time.sleep(random.random())
+        # Reboot listener every 30 min in case they got stuck
+        subprocess.run('%s %s'%(wolfram_script_exe_path, fifo_path), shell=True, 
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=1800.0)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=""" Calls grid filler in parallel to compute real-emission 2-loop MEs.""")
