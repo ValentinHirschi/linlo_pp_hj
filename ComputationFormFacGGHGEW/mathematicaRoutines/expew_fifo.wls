@@ -54,10 +54,13 @@ While[True,
 fifoin={};
 While[
 Length[fifoin]=!=lenfifoin&&(Head/@fifoin)=!=ConstantArray[String, lenfifoin],
-Pause[0.5]; fifoin=StringSplit[RunProcess[{"cat",fifoFilename}]["StandardOutput"]]
+fifoproc=StartProcess[{"cat",fifoFilename}];
+While[ProcessStatus[fifoproc]==="Running",Pause[1]];
+fifoin=StringSplit[ReadString[fifoproc]];
+KillProcess[fifoproc]
 ];
+Print["fifo read! ", fifoin];
 
-print["fifo read! ", fifoin];
 
 
 outString="";
