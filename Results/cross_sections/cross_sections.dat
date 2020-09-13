@@ -18,6 +18,14 @@ NPOINTS = 30000
 HiggsDistribution_30k.HwU
 -> 0.3604161 +- 0.00655
 
+final_grids_10_x_15.tar.gz
+randinit r=1..10
+RESTART = -1
+NPOINTS = 15000
+HiggsDistribution_15k_all_runs.HwU
+HiggsDistribution_15k_runs.tar.gz
+-> 0.3735 +- 0.0051
+
 With uniform sampling grid:
 ---------------------------
 
