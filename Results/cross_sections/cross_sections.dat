@@ -26,6 +26,19 @@ HiggsDistribution_15k_all_runs.HwU
 HiggsDistribution_15k_runs.tar.gz
 -> 0.3735 +- 0.0051
 
+processed_v7_fm_grid_150k.tar.gz
+randinit r=38
+RESTART = -1
+NPOINTS = 150000
+HiggsDistribution_150k.HwU
+-> 0.3677 +- 0.0048 
+
+Using HEFT sampling grid, Combined 150k and 15x10k:
+---------------------------------------------------
+
+HiggsDistribution_150k.HwU
+-> 0.3706 +- 0.0035 
+
 With uniform sampling grid:
 ---------------------------
 
