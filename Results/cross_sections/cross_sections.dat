@@ -1,3 +1,11 @@
+LO:
+---
+
+MadFKS:
+-> 0.6878 +- 0.0016 [pb]
+MadNkLO
+-> 0.6873 +- 0.00013 [pb]
+
 MadFKS:
 -------
 
@@ -22,7 +30,7 @@ final_grids_10_x_15.tar.gz
 randinit r=1..10
 RESTART = -1
 NPOINTS = 15000
-HiggsDistribution_15k_all_runs.HwU
+HiggsDistribution_15k_all_runs_with_weights.HwU
 HiggsDistribution_15k_runs.tar.gz
 -> 0.3735 +- 0.0051
 
@@ -36,7 +44,7 @@ HiggsDistribution_150k.HwU
 Using HEFT sampling grid, Combined 150k and 15x10k:
 ---------------------------------------------------
 
-HiggsDistribution_150k.HwU
+HiggsDistribution_15k_and_150k_with_weights.HwU
 -> 0.3706 +- 0.0035 
 
 With uniform sampling grid:
@@ -68,16 +76,23 @@ V:
 BF1:
 2.46880e-01 +/- 3.35e-04 [pb]
 
-R: (using points from all_points_5_x_300_3_x_30k.database)
+R: (using points from all_points_5_x_300_3_x_3k.database)
 set_integrator_options VEGAS3 --n_iterations_survey=5 --n_points_survey=300 --n_iterations_refine=3 --n_points_refine=3000 --seed=1
 launch --itg=R --seed=1
-DEBUG:
+[...]
+itn   integral        wgt average     chi2/dof        Q
+-------------------------------------------------------
+  1   -0.0083(61)     -0.0083(61)         0.00     1.00
+  2   -0.0142(73)     -0.0107(47)         0.38     0.54
+  3   -0.0205(63)     -0.0142(38)         0.97     0.38
+  4   -0.133(42)      -0.0151(37)         3.29     0.02
+  5   -0.093(16)      -0.0190(36)         7.80     0.00
+[...]
 itn   integral        average         chi2/dof        Q
 -------------------------------------------------------
   1   -0.0996(34)     -0.0996(34)         0.00     1.00
   2   -0.0974(47)     -0.0985(29)         0.15     0.70
   3   -0.0953(40)     -0.0974(24)         0.28     0.75
-
 DEBUG: ===============================================================
 DEBUG: Total integration time: 4h12m29s
 DEBUG: Vegas3 used a total of 4868 function evaluations, on 25 core(s).
@@ -88,3 +103,18 @@ INFO:                 Cross-section of MadNkLO_pp_h_LI_at_NLO@R with integrator 
 INFO:                                    -9.74064e-02 +/- 2.35e-03 [pb]
 INFO: ====================================================================================================
 --> 0.3500 +- 0.0023
+
+R: (using points from all_points_5_x_1000_3_x_30k.database)
+set_integrator_options VEGAS3 --n_iterations_survey=5 --n_points_survey=1000 --n_iterations_refine=3 --n_points_refine=30000 --seed=2
+launch --itg=R --seed=2
+[...]
+itn   integral        wgt average     chi2/dof        Q
+-------------------------------------------------------
+  1   -0.016(14)      -0.016(14)          0.00     1.00
+  2   -0.144(98)      -0.018(14)          1.67     0.20
+  3   -0.067(16)      -0.039(10)          3.59     0.03
+  4   -0.106(10)      -0.0737(72)         9.70     0.00
+  5   -0.0991(48)     -0.0912(40)         9.43     0.00
+[...]
+
+
