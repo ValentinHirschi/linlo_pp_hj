@@ -73,8 +73,8 @@ B:
 V:
 -4.63327e-02 +/- 3.34e-06 [pb]
 
-BF1:
-2.46880e-01 +/- 3.35e-04 [pb]
+BF1=BF2:
+2.46549e-01 +/- 7.69e-05 [pb]
 
 R: (using points from all_points_5_x_300_3_x_3k.database)
 set_integrator_options VEGAS3 --n_iterations_survey=5 --n_points_survey=300 --n_iterations_refine=3 --n_points_refine=3000 --seed=1
@@ -104,7 +104,7 @@ INFO:                                    -9.74064e-02 +/- 2.35e-03 [pb]
 INFO: ====================================================================================================
 --> 0.3500 +- 0.0023
 
-R: (using points from all_points_5_x_1000_3_x_30k.database)
+R: (using points from all_points_RUN2_FINAL.database.tar.gz)
 set_integrator_options VEGAS3 --n_iterations_survey=5 --n_points_survey=1000 --n_iterations_refine=3 --n_points_refine=30000 --seed=2
 launch --itg=R --seed=2
 [...]
@@ -116,5 +116,19 @@ itn   integral        wgt average     chi2/dof        Q
   4   -0.106(10)      -0.0737(72)         9.70     0.00
   5   -0.0991(48)     -0.0912(40)         9.43     0.00
 [...]
+itn   integral        average         chi2/dof        Q
+-------------------------------------------------------
+  1   -0.09842(74)    -0.09842(74)        0.00     1.00
+  2   -0.0960(24)     -0.0972(12)         0.97     0.32
+  3   -0.09934(74)    -0.09791(86)        1.35     0.26
 
-
+DEBUG: ===============================================================
+DEBUG: Total integration time: 22h52m38s
+DEBUG: Vegas3 used a total of 43343 function evaluations, on 25 core(s).
+DEBUG: Vegas3 returned final results : -0.09791(86)
+DEBUG: ===============================================================
+INFO: ====================================================================================================
+INFO:                 Cross-section of MadNkLO_pp_h_LI_at_NLO@R with integrator 'Vegas3':
+INFO:                                    -9.79098e-02 +/- 8.64e-04 [pb]
+INFO: ====================================================================================================
+--> 0.3488 +- 0.0010
