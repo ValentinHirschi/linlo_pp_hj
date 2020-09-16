@@ -5,6 +5,7 @@ MadFKS:
 -> 0.6878 +- 0.0016 [pb]
 MadNkLO
 -> 0.6873 +- 0.00013 [pb]
+-> 0.687386(1)  [pb]
 
 MadFKS:
 -------
@@ -64,8 +65,8 @@ NPOINTS = 100000
 HiggsDistribution_100k_flat_grid.HwU
 -> 0.3626 +- 0.0081
 
-MadNkLO:
---------
+MadNkLO y0_prime=0.5:
+---------------------
 
 B:
 6.87320e-01 +/- 1.31e-04 [pb]
@@ -132,3 +133,55 @@ INFO:                 Cross-section of MadNkLO_pp_h_LI_at_NLO@R with integrator 
 INFO:                                    -9.79098e-02 +/- 8.64e-04 [pb]
 INFO: ====================================================================================================
 --> 0.3488 +- 0.0010
+
+
+MadNkLO y0_prime=1.0:
+---------------------
+
+set_integrator_options VEGAS3 --n_iterations_survey=5 --n_points_survey=300 --n_iterations_refine=3 --n_points_refine=3000 --seed=2
+
+BF1:
+2.78421e-01 +/- 5.43e-04 [pb]
+
+V:
+-8.18494e-02 +/- 4.85e-06 [pb]
+
+R:
+
+
+============= HEFT CROSS-CHECK =================
+
+MadFKS (vanilla), req_acc_FO:
+-----------------------------
+
+From plots:
++17.275(28)
+
+current best from rerun at req_acc_FO=0.0003:
+1.724e+01 +- 2.7e-02 pb
+
+MadNkLO y0_prime=0.5, High-stat:
+--------------------------------
+
+BF1=BF2:
+4.73260e+00 +/- 1.88e-03 [pb]
+V:
+7.95540e+00 +/- 1.34e-03 [pb]
+R:
+-1.59840e-01 +/- 3.96e-03 [pb]
+Sum = BF1+BF2+R+V:
+17.261(4) (0.02% uncertainty)
+
+MadNkLO y0_prime=1.0:
+---------------------
+
+set_integrator_options VEGAS3 --n_iterations_survey=5 --n_points_survey=300 --n_iterations_refine=3 --n_points_refine=3000 --seed=2
+BF1:
+5.35345e+00 +/- 1.16e-02 [pb]
+V:
+7.27478e+00 +/- 5.01e-04 [pb]
+R:
+-7.22900e-01 +/- 1.64e-02 [pb]
+Sum = BF1+BF2+R+V:
+17.25(2)
+
