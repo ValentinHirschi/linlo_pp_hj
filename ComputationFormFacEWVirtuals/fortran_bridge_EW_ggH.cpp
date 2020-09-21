@@ -27,7 +27,7 @@ extern"C" void %(C_prefix)sget_ggh_ew_coefs_fortran_(
 	double A0wwIm,ANLOFinwwIm;
 	double A0zzRe,  ANLOFinzzRe;
 	double A0zzIm,  ANLOFinzzIm;
-	double CA, beta0, nf, prefac3Lvs2L, prefacTensDiff;
+	double CA, beta0, nf, prefac3Lvs2L, prefacTensDiff,prefacFKS;
 	
 	double prefacI1Eps0Re,prefacI1Eps0Im;
 	
@@ -44,7 +44,8 @@ extern"C" void %(C_prefix)sget_ggh_ew_coefs_fortran_(
 	CA = 3.;
 	nf = 5.;
 	beta0 = 11./6.*CA-2./3.*1./2.*nf;
-
+	// FKS match prefac
+	prefacFKS = CA*pow(M_PI,2)*0.5;
 	// The 3Loop is differently normalized than the 2loop
 	prefac3Lvs2L = 8.;
 	// I have a different tensor structure then given in the
@@ -100,10 +101,10 @@ extern"C" void %(C_prefix)sget_ggh_ew_coefs_fortran_(
 
 	// The arrays are [value_for_Z, value_for_W]
 	// These are the NLO amplitudes renormailized in MSbar and catani subtracted
-		ewTensorNLORe[0]=ANLOFinzzRe;
-		ewTensorNLORe[1]= ANLOFinwwRe;
-		ewTensorNLOIm[0]=ANLOFinzzIm;
-		ewTensorNLOIm[1]=ANLOFinwwIm;
+		ewTensorNLORe[0]=ANLOFinzzRe+prefacFKS*A0zzRe;
+		ewTensorNLORe[1]= ANLOFinwwRe+prefacFKS*A0wwRe;
+		ewTensorNLOIm[0]=ANLOFinzzIm+prefacFKS*A0zzIm;
+		ewTensorNLOIm[1]=ANLOFinwwIm+prefacFKS*A0wwIm;
 		
 
 
