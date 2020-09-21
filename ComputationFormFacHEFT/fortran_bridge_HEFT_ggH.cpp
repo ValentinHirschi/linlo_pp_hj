@@ -45,7 +45,7 @@ extern"C" void %(C_prefix)sget_ggh_heft_coefs_fortran_(
 	// This is the IR-subtracted and MSbar-renormalized finite piece. 
 	// I also added the Nc*Pi^2 Mlo piece for matching to FKS
 	// (see: FKS_vs_DIPOLE_implementation_notes.pdf)
-	heftTensorRe[2] = 11.0/2.0+Nc*pow(M_PI,2);	
+	heftTensorRe[2] = 11.0/2.0+1/2.0*Nc*pow(M_PI,2);	
 	heftTensorIm[2] = b0*M_PI/2.0;
 
 
