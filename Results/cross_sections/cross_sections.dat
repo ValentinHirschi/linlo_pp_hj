@@ -6,6 +6,8 @@ MadFKS:
 MadNkLO
 -> 0.6873 +- 0.00013 [pb]
 -> 0.687386(1)  [pb]
+Reproduction:
+6.87563e-01 +/- 1.52e-04 [pb]
 
 MadFKS:
 -------
@@ -73,6 +75,13 @@ B:
 
 V:
 -4.63327e-02 +/- 3.34e-06 [pb]
+Reproduction:
+-4.63404e-02 +/- 8.33e-06 [pb]
+Vonly:
+3.97484e-02 +/- 6.50e-06 [pb]
+IR part:
+-8.60721e-02 +/- 2.10e-05 [pb
+
 
 BF1=BF2:
 2.46549e-01 +/- 7.69e-05 [pb]
@@ -133,7 +142,9 @@ INFO:                 Cross-section of MadNkLO_pp_h_LI_at_NLO@R with integrator 
 INFO:                                    -9.79098e-02 +/- 8.64e-04 [pb]
 INFO: ====================================================================================================
 --> 0.3488 +- 0.0010
-
+NEW Virtuals:
+0.3488 + 3.97484e-02*10.797473161104014
+=0.7779 +- 0.0010
 
 MadNkLO y0_prime=1.0:
 ---------------------
@@ -168,7 +179,32 @@ DEBUG: Vegas3 returned final results : -0.1243(17)
 DEBUG: ===============================================================
 -1.24250e-01 +/- 1.73e-03 [pb]
 --> 0.35074 +/-  0.0019 [pb]
+NEW Virtuals:
+0.35074 + 3.97484e-02*10.797473161104014
+=0.7800 +- 0.0019
 
+# NEW VIRTUAL! Add to the existing virtual piece the current pure virtuals piece of:
+
+3.97484e-02
+
+by 
+(3.6824078313995917E-004/3.1213530059474111E-005-1)
+=
+10.797473161104014
+
+or alternatively take the Born result:
+
+0.687386
+
+by
+
+(3.6824078313995917E-004/5.1508192663885107E-004)*(0.112636390033/0.118)
+=
+0.6824208536956466
+
+and add the [CT] for y0_prime=1.0:
+
+-0.1216078
 
 ============= HEFT CROSS-CHECK =================
 
@@ -176,10 +212,10 @@ MadFKS (vanilla), req_acc_FO:
 -----------------------------
 
 From plots:
-+17.275(28)
+17.275(28) pb
 
-current best from rerun at req_acc_FO=0.0003:
-1.724e+01 +- 2.7e-02 pb
+high-stat with req_acc_FO=0.0003:
+17.2768(42) pb
 
 MadNkLO y0_prime=0.5, High-stat:
 --------------------------------
