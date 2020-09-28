@@ -1,8 +1,6 @@
 (* ::Package:: *)
 
 (*TODO 
--re compute BC 000 and re-transport from BC QCDEW because of many changes....
-
 
 *)
 
@@ -221,7 +219,7 @@ DEFactors=(Table[DEFactorsin[[ii]]//RationalDen,{ii,Length@DEFactorsin}]//Flatte
 output=Table[
 toremove={vv[ii]-thrV[vv[ii]][[jj]],-vv[ii]+thrV[vv[ii]][[jj]]}/.vv[ii]->tominV[vv[ii]]//Expand;
 nophysfactors=DeleteCases[DEFactors,Alternatives@@toremove];
-xrep=Flatten@Solve[cov[[ii,2]]==thrV[vv[ii]][[jj]]&&(Min[pli[[1,1]],pli[[1,2]],pli[[1,3]]]-1/100)<x<(Max[pli[[-1,1]],pli[[-1,2]],pli[[-1,3]]]+1/100)];
+xrep=Flatten@Solve[cov[[ii,2]]==thrV[vv[ii]][[jj]]&&(Min[pli[[1,1]],pli[[1,2]],pli[[1,3]]]-10^(-acc/10))<x<(Max[pli[[-1,1]],pli[[-1,2]],pli[[-1,3]]]+10^(-acc/10))];
 zerotest=Times@@If[xrep==={},{1},Simplify[nophysfactors/.cov/.xrep]];
 If[zerotest==0,0,1]
 ,{ii,nvar},{jj,Length@thrV[vv[ii]]}]//Flatten;
