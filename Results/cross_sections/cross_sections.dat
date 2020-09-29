@@ -67,6 +67,14 @@ NPOINTS = 100000
 HiggsDistribution_100k_flat_grid.HwU
 -> 0.3626 +- 0.0081
 
+NEW virtuals (run that gave the distributions in the paper):
+processed_fm_grid_500k_no_grid_final.dat
+randinit r=38
+RESTART = 0
+NPOINTS = 500000
+NEW_HiggsDistribution_500k_flat.HwU
+-> 0.793715 +/- 0.00337
+
 MadNkLO y0_prime=0.5:
 ---------------------
 
