@@ -4,6 +4,7 @@
 
 *)
 
+(*Assumes that the cov is linear*)
 (*NOTE: singular boundary conditions must have only Log[x], no Log[-x] or Log[c x]*)
 
 
@@ -214,13 +215,18 @@ output},
 
 DEFactors=(Table[DEFactorsin[[ii]]//RationalDen,{ii,Length@DEFactorsin}]//Flatten//Union)/.jacobianslist;
 
+If[!FreeQ[DEFactors,a_^r_Rational],PrintAndSaveErrorAbort["Non-Rational alphabet during overlapping sing check"]];
+
 (*$DEF=DEFactors;*)
 
 output=Table[
 toremove={vv[ii]-thrV[vv[ii]][[jj]],-vv[ii]+thrV[vv[ii]][[jj]]}/.vv[ii]->tominV[vv[ii]]//Expand;
 nophysfactors=DeleteCases[DEFactors,Alternatives@@toremove];
-xrep=Flatten@Solve[cov[[ii,2]]==thrV[vv[ii]][[jj]]&&(Min[pli[[1,1]],pli[[1,2]],pli[[1,3]]]-10^(-acc/10))<x<(Max[pli[[-1,1]],pli[[-1,2]],pli[[-1,3]]]+10^(-acc/10))];
-zerotest=Times@@If[xrep==={},{1},Simplify[nophysfactors/.cov/.xrep]];
+(*Assumes that the cov is linear*)
+xrep=Flatten@Solve[cov[[ii,2]]==thrV[vv[ii]][[jj]]&&(Rationalize[Min[pli[[1,1]],pli[[1,2]],pli[[1,3]]]-10^(-acc/10),10^(-acc/2)]<x<Rationalize[Max[pli[[-1,1]],pli[[-1,2]],pli[[-1,3]]]+10^(-acc/10),10^(-acc/2)])];
+If[Length[xrep]>1,PrintAndSaveErrorAbort["multiple zeros while overlapping sing check"]];
+If[Accuracy[xrep]=!=Infinity,PrintAndSaveErrorAbort["Non exact solution while overlapping sing check"]];
+zerotest=Times@@If[xrep==={},{1},Simplify[Expand[nophysfactors/.cov/.xrep]]];
 If[zerotest==0,0,1]
 ,{ii,nvar},{jj,Length@thrV[vv[ii]]}]//Flatten;
 
@@ -587,6 +593,9 @@ If[(Length[pli]>1&&(Table[pli[[ii,1]]-pli[[ii-1,3]],{ii,2,Length@pli}]//Flatten/
 
 SetGlobalV[]:=Module[{},
 cov=Join[FindContourMV[p0,p1],Table[vv[ii]->tominV[vv[ii]]/.FindContourMV[p0,p1],{ii,nindvar+1,nvar}]];
+
+If[Accuracy[cov]=!=Infinity,PrintAndSaveErrorAbort["Non exact cov"]];
+
 (*-----------------------------*)
 boundary0=Get["BClist/BClist_"<>FileTag<>"_p"<>hashp0str<>".txt"][[2]]/.tovv/.cov//.Log[a_ b_]:>Log[a]+Log[b]//Expand;
 delta0=Get["BClist/BClist_"<>FileTag<>"_p"<>hashp0str<>".txt"][[3]];
