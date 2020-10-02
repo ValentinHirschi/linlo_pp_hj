@@ -1,0 +1,2 @@
+/Users/valentin/Documents/MG5/2.6.6/madgraph/various/histograms.py ../NEW_HiggsDistribution_500k_flat_with_weights.HwU --titles="Higgs  y" --rebin=2 --types=LO,NLO --only_stat --out=higgs_rapidity
+/Users/valentin/Documents/MG5/2.6.6/madgraph/various/histograms.py ../HiggsDistribution_HEFT.HwU ../NEW_HiggsDistribution_500k_flat_with_weights.HwU --types=PURENLOHEFT,PURENLO --titles="Higgs  pT" --rebin=8 --only_stat --n_ratios=1 --out=higgs_pt --simple_ratios 
