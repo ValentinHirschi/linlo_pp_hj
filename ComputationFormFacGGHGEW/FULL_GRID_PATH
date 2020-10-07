@@ -1,2 +1,2 @@
-scp fmoriell@princess:/scratch/francesco/ExpCan/QCDEW_24/Planar_EW1_24_B.tar.gz .
-scp fmoriell@princess:/scratch/francesco/ExpCan/QCDEW_24/NP_EW1_24_B.tar.gz .
+scp fmoriell@yoshi:/scratch/francesco/ExpCan/QCDEW/Planar_EW1_24_C.tar.gz .
+scp fmoriell@yoshi:/scratch/francesco/ExpCan/QCDEW/NP_EW1_24_C.tar.gz .
