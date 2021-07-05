@@ -17,24 +17,38 @@ extern"C" void %(C_prefix)sget_ggh_heft_coefs_fortran_(
 						double *heftTensorIm
 						)  {
 	// 1/eps-pole
-	double b0, Nf, Nc;
+	double allow_dev,b0, Nf, Nc,prefacFKS;
+	bool recomp;
+
+	recomp =false;
 	Nc =3.0;
 	Nf=5.0;
+	allow_dev = 1.e-004;
+	b0 = (11*Nc)/3. - (2*Nf)/3.;
+	// FKS match prefac
+	prefacFKS = Nc*pow(M_PI,2)*0.5;	
+
+	if (abs(massHiggs-muR)/massHiggs>allow_dev){
+		throw std::invalid_argument( "The renormalization scale does not match the higgs mass within the allowed deviation of: "+ std::to_string(allow_dev)
+		+"\n\tDeviation for muR from Higgs-mass "+ std::to_string(abs(massHiggs-muR)/massHiggs));
+		
+	}
 
 
 	// with renormalization of the wilson coefficient
-	b0 = (11*Nc)/3. - (2*Nf)/3.;						
+					
 	//1/eps^2
-	heftTensorRe[0] = -2*Nc;
+	heftTensorRe[0] = 0.0;
 	heftTensorIm[0] = 0.0;
 	//1/eps-pole
-	heftTensorRe[1] = -b0 + 2*Nc*log(pow(massHiggs,2)/pow(muR,2));
-	heftTensorIm[1] = -2*Nc*M_PI;
+	heftTensorRe[1] = 0.0;
+	heftTensorIm[1] = 0.0;
 	//eps^0
-	heftTensorRe[2] = 11 + Nc*pow(M_PI,2) - Nc*pow(log(pow(massHiggs,2)/pow(muR,2)),2);
-	// loop asMSBAR 11 + (7*Nc*pow(M_PI,2))/6. - Nc*pow(log(pow(massHiggs,2)/pow(muR,2)),2);
-	
-	heftTensorIm[2] = 2*Nc*M_PI*log(pow(massHiggs,2)/pow(muR,2));
+	// This is the IR-subtracted and MSbar-renormalized finite piece. 
+	// I also added the Nc*Pi^2 Mlo piece for matching to FKS
+	// (see: FKS_vs_DIPOLE_implementation_notes.pdf)
+	heftTensorRe[2] = 11.0/2.0+prefacFKS*1;	
+	heftTensorIm[2] = b0*M_PI/2.0;
 
 
 }

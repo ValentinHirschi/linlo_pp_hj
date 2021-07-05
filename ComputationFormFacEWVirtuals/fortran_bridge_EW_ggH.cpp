@@ -27,7 +27,7 @@ extern"C" void %(C_prefix)sget_ggh_ew_coefs_fortran_(
 	double A0wwIm,ANLOFinwwIm;
 	double A0zzRe,  ANLOFinzzRe;
 	double A0zzIm,  ANLOFinzzIm;
-	double CA, beta0, nf, prefac3Lvs2L, prefacTensDiff;
+	double CA, beta0, nf, prefac3Lvs2L, prefacTensDiff,prefacFKS;
 	
 	double prefacI1Eps0Re,prefacI1Eps0Im;
 	
@@ -36,7 +36,7 @@ extern"C" void %(C_prefix)sget_ggh_ew_coefs_fortran_(
 	// euler_gamma -- The Euler Mascheroni Constant
     // const double euler_gamma = 0.5772156649015328606065;
 	// allow for variation of the masses
-	allow_dev = 1.e-003;
+	allow_dev = 1.e-004;
 	// values used for computation
 	mH=125.09;
 	mW=80.385;
@@ -44,16 +44,14 @@ extern"C" void %(C_prefix)sget_ggh_ew_coefs_fortran_(
 	CA = 3.;
 	nf = 5.;
 	beta0 = 11./6.*CA-2./3.*1./2.*nf;
-
+	// FKS match prefac
+	prefacFKS = CA*pow(M_PI,2)*0.5;
 	// The 3Loop is differently normalized than the 2loop
 	prefac3Lvs2L = 8.;
 	// I have a different tensor structure then given in the
 	// papers on the virtuals
 	prefacTensDiff =-2./pow(mH,2);
 
-	// catani (E^(eps (euler_gamma+I \[M_PI])) (CA+beta0 eps))/(eps^3 Gamma[-eps])
-	prefacI1Eps0Re= (7*CA*pow(M_PI,2))/12.;
-	prefacI1Eps0Im= -beta0;
 
 
 	recomp =false;
@@ -102,11 +100,11 @@ extern"C" void %(C_prefix)sget_ggh_ew_coefs_fortran_(
 		
 
 	// The arrays are [value_for_Z, value_for_W]
-	// These are the NLO amplitudes for FKS subtraction
-		ewTensorNLORe[0]=ANLOFinzzRe-(-(A0zzIm*prefacI1Eps0Im) + A0zzRe*prefacI1Eps0Re);
-		ewTensorNLORe[1]= ANLOFinwwRe-(-(A0wwIm*prefacI1Eps0Im) + A0wwRe*prefacI1Eps0Re);
-		ewTensorNLOIm[0]=ANLOFinzzIm-(A0zzRe*prefacI1Eps0Im + A0zzIm*prefacI1Eps0Re);
-		ewTensorNLOIm[1]=ANLOFinwwIm-(A0wwRe*prefacI1Eps0Im + A0wwIm*prefacI1Eps0Re);
+	// These are the NLO amplitudes renormailized in MSbar and catani subtracted
+		ewTensorNLORe[0]=ANLOFinzzRe+prefacFKS*A0zzRe;
+		ewTensorNLORe[1]= ANLOFinwwRe+prefacFKS*A0wwRe;
+		ewTensorNLOIm[0]=ANLOFinzzIm+prefacFKS*A0zzIm;
+		ewTensorNLOIm[1]=ANLOFinwwIm+prefacFKS*A0wwIm;
 		
 
 

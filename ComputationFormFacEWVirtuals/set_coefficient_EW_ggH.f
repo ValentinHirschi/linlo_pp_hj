@@ -288,16 +288,13 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
             MDL_GGHEWZZ2L_ForFac1_IM=EWLOIm(1);
           endif
           if ((nint(nloops)).EQ.3) THEN
-            MDL_GGHEWZZ3L_ForFac1_RE=EWNLORe(2);
-            MDL_GGHEWZZ3L_ForFac1_IM=EWNLOIm(2);
+            MDL_GGHEWZZ3L_ForFac1_RE=EWNLORe(1);
+            MDL_GGHEWZZ3L_ForFac1_IM=EWNLOIm(1);
           endif
           if ((nint(nloops)).EQ.99) THEN
             MDL_GGHEWZZ2L_ForFac1_RE=EWLORe(1);
             MDL_GGHEWZZ2L_ForFac1_IM=EWLOIm(1);
-            MDL_GGHEWZZ3L_ForFac1_RE=EWNLORe(2);
-            MDL_GGHEWZZ3L_ForFac1_IM=EWNLOIm(2);
+            MDL_GGHEWZZ3L_ForFac1_RE=EWNLORe(1);
+            MDL_GGHEWZZ3L_ForFac1_IM=EWNLOIm(1);
           endif
-!         Update couplings
-          call COUP()
- 
         end subroutine setGGHEWCoeffsZZ
