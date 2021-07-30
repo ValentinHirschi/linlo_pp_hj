@@ -94,6 +94,128 @@ GGGHQCD_C4 = Coupling(name = 'GGGHQCD_C4',
                 value = '(AllGGGHQCDCoup)*(GGGHQCD_ForFac4_RE+complex(0,1)*GGGHQCD_ForFac4_IM)',
                 order = {'GGGHQCD':1,"QCD":3,"QED":1})
 
+# ==========================
+# PPHJ implementation 
+# ===========================
+
+# GGGHHEFT LO 0L
+
+GGGH0LHEFT_C1 = Coupling(name = 'GGGH0LHEFT_C1',
+                value = '(AllGGGH0LHEFTCoup)*(GGGH0LHEFT_ForFac1_RE+complex(0,1)*GGGH0LHEFT_ForFac1_IM)',
+                order = {'PPHJ':1,'GGHG0LHEFT':1,"QCD":5,"QED":1})
+
+GGGH0LHEFT_C2 = Coupling(name = 'GGGH0LHEFT_C2',
+                value = '(AllGGGH0LHEFTCoup)*(GGGH0LHEFT_ForFac2_RE+complex(0,1)*GGGH0LHEFT_ForFac2_IM)',
+                order = {'PPHJ':1,'GGHG0LHEFT':1,"QCD":5,"QED":1})
+
+GGGH0LHEFT_C3 = Coupling(name = 'GGGH0LHEFT_C3',
+                value = '(AllGGGH0LHEFTCoup)*(GGGH0LHEFT_ForFac3_RE+complex(0,1)*GGGH0LHEFT_ForFac3_IM)',
+                order = {'PPHJ':1,'GGHG0LHEFT':1,"QCD":5,"QED":1})
+
+GGGH0LHEFT_C4 = Coupling(name = 'GGGH0LHEFT_C4',
+                value = '(AllGGGH0LHEFTCoup)*(GGGH0LHEFT_ForFac4_RE+complex(0,1)*GGGH0LHEFT_ForFac4_IM)',
+                order = {'PPHJ':1,'GGHG0LHEFT':1,"QCD":5,"QED":1})
+
+# GGGHHEFT NLO 1L
+
+GGGH1LHEFT_C1 = Coupling(name = 'GGGH1LHEFT_C1',
+                value = '(AllGGGH1LHEFTCoup)*(GGGH1LHEFT_ForFac1_RE+complex(0,1)*GGGH1LHEFT_ForFac1_IM)',
+                order = {'PPHJ':1,'GGHG1LHEFT':1,"QCD":5,"QED":1})
+
+GGGH1LHEFT_C2 = Coupling(name = 'GGGH1LHEFT_C2',
+                value = '(AllGGGH1LHEFTCoup)*(GGGH1LHEFT_ForFac2_RE+complex(0,1)*GGGH1LHEFT_ForFac2_IM)',
+                order = {'PPHJ':1,'GGHG1LHEFT':1,"QCD":5,"QED":1})
+
+GGGH1LHEFT_C3 = Coupling(name = 'GGGH1LHEFT_C3',
+                value = '(AllGGGH1LHEFTCoup)*(GGGH1LHEFT_ForFac3_RE+complex(0,1)*GGGH1LHEFT_ForFac3_IM)',
+                order = {'PPHJ':1,'GGHG1LHEFT':1,"QCD":5,"QED":1})
+
+GGGH1LHEFT_C4 = Coupling(name = 'GGGH1LHEFT_C4',
+                value = '(AllGGGH1LHEFTCoup)*(GGGH1LHEFT_ForFac4_RE+complex(0,1)*GGGH1LHEFT_ForFac4_IM)',
+                order = {'PPHJ':1,'GGHG1LHEFT':1,"QCD":5,"QED":1})
+
+# GGGHQCD LO 1L
+
+GGGH1LQCD_C1 = Coupling(name = 'GGGH1LQCD_C1',
+                value = '(AllGGGH1LQCDCoup)*(GGGH1LQCD_ForFac1_RE+complex(0,1)*GGGH1LQCD_ForFac1_IM)',
+                order = {'PPHJ':1,'GGHG1LQCD':1,"QCD":5,"QED":1})
+
+GGGH1LQCD_C2 = Coupling(name = 'GGGH1LQCD_C2',
+                value = '(AllGGGH1LQCDCoup)*(GGGH1LQCD_ForFac2_RE+complex(0,1)*GGGH1LQCD_ForFac2_IM)',
+                order = {'PPHJ':1,'GGHG1LQCD':1,"QCD":5,"QED":1})
+
+GGGH1LQCD_C3 = Coupling(name = 'GGGH1LQCD_C3',
+                value = '(AllGGGH1LQCDCoup)*(GGGH1LQCD_ForFac3_RE+complex(0,1)*GGGH1LQCD_ForFac3_IM)',
+                order = {'PPHJ':1,'GGHG1LQCD':1,"QCD":5,"QED":1})
+
+GGGH1LQCD_C4 = Coupling(name = 'GGGH1LQCD_C4',
+                value = '(AllGGGH1LQCDCoup)*(GGGH1LQCD_ForFac4_RE+complex(0,1)*GGGH1LQCD_ForFac4_IM)',
+                order = {'PPHJ':1,'GGHG1LQCD':1,"QCD":5,"QED":1})
+
+# GGGHQCD NLO 2L
+
+GGGH2LQCD_C1 = Coupling(name = 'GGGH2LQCD_C1',
+                value = '(AllGGGH2LQCDCoup)*(GGGH2LQCD_ForFac1_RE+complex(0,1)*GGGH2LQCD_ForFac1_IM)',
+                order = {'PPHJ':1,'GGHG2LQCD':1,"QCD":5,"QED":1})
+
+GGGH2LQCD_C2 = Coupling(name = 'GGGH2LQCD_C2',
+                value = '(AllGGGH2LQCDCoup)*(GGGH2LQCD_ForFac2_RE+complex(0,1)*GGGH2LQCD_ForFac2_IM)',
+                order = {'PPHJ':1,'GGHG2LQCD':1,"QCD":5,"QED":1})
+
+GGGH2LQCD_C3 = Coupling(name = 'GGGH2LQCD_C3',
+                value = '(AllGGGH2LQCDCoup)*(GGGH2LQCD_ForFac3_RE+complex(0,1)*GGGH2LQCD_ForFac3_IM)',
+                order = {'PPHJ':1,'GGHG2LQCD':1,"QCD":5,"QED":1})
+
+GGGH2LQCD_C4 = Coupling(name = 'GGGH2LQCD_C4',
+                value = '(AllGGGH2LQCDCoup)*(GGGH2LQCD_ForFac4_RE+complex(0,1)*GGGH2LQCD_ForFac4_IM)',
+                order = {'PPHJ':1,'GGHG2LQCD':1,"QCD":5,"QED":1})
+
+# GGHQCD 3L
+
+GGH3LQCD_C1 = Coupling(name = 'GGH3LQCD_C1',
+                value = '(AllGGH3LQCDCoup)*(GGH3LQCD_ForFac1_RE+complex(0,1)*GGH3LQCD_ForFac1_IM)',
+                order = {'PPHJ':1,'GGH3LQCD':1,"QCD":5,"QED":1})
+
+# QQGH HEFT 0L
+
+
+QQGH0LHEFT_C1 = Coupling(name = 'QQGH0LHEFT_C1',
+                value = '(AllQQGH0LHEFTCoup)*(QQGH0LHEFT_ForFac1_RE+complex(0,1)*QQGH0LHEFT_ForFac1_IM)',
+                order = {'PPHJ':1,'QQHG0LHEFT':1,"QCD":5,"QED":1})
+
+QQGH0LHEFT_C2 = Coupling(name = 'QQGH0LHEFT_C2',
+                value = '(AllQQGH0LHEFTCoup)*(QQGH0LHEFT_ForFac2_RE+complex(0,1)*QQGH0LHEFT_ForFac2_IM)',
+                order = {'PPHJ':1,'QQHG0LHEFT':1,"QCD":5,"QED":1})
+
+# QQGH HEFT 1L
+
+QQGH1LHEFT_C1 = Coupling(name = 'QQGH1LHEFT_C1',
+                value = '(AllQQGH1LHEFTCoup)*(QQGH1LHEFT_ForFac1_RE+complex(0,1)*QQGH1LHEFT_ForFac1_IM)',
+                order = {'PPHJ':1,'QQHG1LHEFT':1,"QCD":5,"QED":1})
+
+QQGH1LHEFT_C2 = Coupling(name = 'QQGH1LHEFT_C2',
+                value = '(AllQQGH1LHEFTCoup)*(QQGH1LHEFT_ForFac2_RE+complex(0,1)*QQGH1LHEFT_ForFac2_IM)',
+                order = {'PPHJ':1,'QQHG1LHEFT':1,"QCD":5,"QED":1})
+
+# QQGH QCD 1L
+
+QQGH1LQCD_C1 = Coupling(name = 'QQGH1LQCD_C1',
+                value = '(AllQQGH1LQCDCoup)*(QQGH1LQCD_ForFac1_RE+complex(0,1)*QQGH1LQCD_ForFac1_IM)',
+                order = {'PPHJ':1,'QQHG1LQCD':1,"QCD":5,"QED":1})
+
+QQGH1LQCD_C2 = Coupling(name = 'QQGH1LQCD_C2',
+                value = '(AllQQGH1LQCDCoup)*(QQGH1LQCD_ForFac2_RE+complex(0,1)*QQGH1LQCD_ForFac2_IM)',
+                order = {'PPHJ':1,'QQHG1LQCD':1,"QCD":5,"QED":1})
+
+# QQGH QCD 2L
+
+QQGH2LQCD_C1 = Coupling(name = 'QQGH2LQCD_C1',
+                value = '(AllQQGH2LQCDCoup)*(QQGH2LQCD_ForFac1_RE+complex(0,1)*QQGH2LQCD_ForFac1_IM)',
+                order = {'PPHJ':1,'QQHG2LQCD':1,"QCD":5,"QED":1})
+
+QQGH2LQCD_C2 = Coupling(name = 'QQGH2LQCD_C2',
+                value = '(AllQQGH2LQCDCoup)*(QQGH2LQCD_ForFac2_RE+complex(0,1)*QQGH2LQCD_ForFac2_IM)',
+                order = {'PPHJ':1,'QQHG2LQCD':1,"QCD":5,"QED":1})
 
 # =========================================================================
 # Effective fake couplings for each of the 4 tensors in GGHG EW ZZ-exchange

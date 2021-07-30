@@ -8,6 +8,89 @@ import particles as P
 import couplings as C
 import lorentz as L
 
+# ======================================================================
+# PPHJ project effective fake vertices
+# ======================================================================
+
+GGHG1LQCD = Vertex(name = 'GGHG1LQCD',
+                particles = [ P.G, P.G, P.G, P.H ],
+                color = [ 'f(1,2,3)' ],
+                lorentz = [ L.gggHTensStruc1QCD1L, L.gggHTensStruc2QCD1L,
+                            L.gggHTensStruc3QCD1L, L.gggHTensStruc4QCD1L
+                           ],
+                couplings = {(0,0):C.GGGH1LQCD_C1, (0,1):C.GGGH1LQCD_C2,
+                             (0,2):C.GGGH1LQCD_C3, (0,3):C.GGGH1LQCD_C4
+                             }
+                )
+
+GGHG2LQCD = Vertex(name = 'GGHG2LQCD',
+                particles = [ P.G, P.G, P.G, P.H ],
+                color = [ 'f(1,2,3)' ],
+                lorentz = [ L.gggHTensStruc1QCD2L, L.gggHTensStruc2QCD2L,
+                            L.gggHTensStruc3QCD2L, L.gggHTensStruc4QCD2L
+                           ],
+                couplings = {(0,0):C.GGGH2LQCD_C1, (0,1):C.GGGH2LQCD_C2,
+                             (0,2):C.GGGH2LQCD_C3, (0,3):C.GGGH2LQCD_C4
+                             }
+                )
+
+GGHG0LHEFT = Vertex(name = 'GGHG0LHEFT',
+                particles = [ P.G, P.G, P.G, P.H ],
+                color = [ 'f(1,2,3)' ],
+                lorentz = [ L.gggHTensStruc1HEFT0L, L.gggHTensStruc2HEFT0L,
+                            L.gggHTensStruc3HEFT0L, L.gggHTensStruc4HEFT0L
+                           ],
+                couplings = {(0,0):C.GGGH0LHEFT_C1, (0,1):C.GGGH0LHEFT_C2,
+                             (0,2):C.GGGH0LHEFT_C3, (0,3):C.GGGH0LHEFT_C4
+                             }
+                )
+
+GGHG1LHEFT = Vertex(name = 'GGHG1LHEFT',
+                particles = [ P.G, P.G, P.G, P.H ],
+                color = [ 'f(1,2,3)' ],
+                lorentz = [ L.gggHTensStruc1HEFT1L, L.gggHTensStruc2HEFT1L,
+                            L.gggHTensStruc3HEFT1L, L.gggHTensStruc4HEFT1L
+                           ],
+                couplings = {(0,0):C.GGGH1LHEFT_C1, (0,1):C.GGGH1LHEFT_C2,
+                             (0,2):C.GGGH1LHEFT_C3, (0,3):C.GGGH1LHEFT_C4
+                             }
+            )
+
+GGH3LQCD = Vertex(name = 'GGH3LQCD',
+                particles = [ P.G, P.G, P.H ],
+                color = [ 'Identity(1,2)' ],
+                lorentz = [ L.ggHTensStruc1 ],
+                couplings = { (0,0):C.GGH3LQCD_C1 }
+            )
+
+QQHG0LHEFT = Vertex(name = 'QQHG0LHEFT',
+                particles = [ P.d__tilde__, P.d, P.G, P.H  ],
+                color = [ 'T(3,2,1)' ],
+                lorentz = [ L.qqgHTensStruc1HEFT0L, L.qqgHTensStruc2HEFT0L ],
+                couplings = { (0,0):C.QQGH0LHEFT_C1, (0,1):C.QQGH0LHEFT_C2 }
+            )
+
+QQHG1LHEFT = Vertex(name = 'QQHG1LHEFT',
+                particles = [ P.d__tilde__, P.d, P.G, P.H  ],
+                color = [ 'T(3,2,1)' ],
+                lorentz = [ L.qqgHTensStruc1HEFT1L, L.qqgHTensStruc2HEFT1L ],
+                couplings = { (0,0):C.QQGH1LHEFT_C1, (0,1):C.QQGH1LHEFT_C2 }
+            )
+
+QQHG1LQCD = Vertex(name = 'QQHG1LQCD',
+                particles = [ P.d__tilde__, P.d, P.G, P.H  ],
+                color = [ 'T(3,2,1)' ],
+                lorentz = [ L.qqgHTensStruc1QCD1L, L.qqgHTensStruc2QCD1L ],
+                couplings = { (0,0):C.QQGH1LQCD_C1, (0,1):C.QQGH1LQCD_C2 }
+            )
+
+QQHG2LQCD = Vertex(name = 'QQHG2LQCD',
+                particles = [ P.d__tilde__, P.d, P.G, P.H  ],
+                color = [ 'T(3,2,1)' ],
+                lorentz = [ L.qqgHTensStruc1QCD2L, L.qqgHTensStruc2QCD2L ],
+                couplings = { (0,0):C.QQGH2LQCD_C1, (0,1):C.QQGH2LQCD_C2 }
+            )
+
 # =============================================================================
 # Effective fake vertex for ggH EW 1 and 2 Loop see 1711.1113v2 eq: (2.6), (6.3)
 # =============================================================================

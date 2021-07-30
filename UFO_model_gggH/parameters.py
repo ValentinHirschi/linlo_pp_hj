@@ -1030,6 +1030,706 @@ AllGGGHEWZZCoup = Parameter(name='AllGGGHEWWWCoup',
                             texname='AllGGGHEWWWCoup',
                             lhablock='GGGHEWWW',
                             lhacode=[88000])
+
+# ===============================================================================
+# PPHJ parameters
+# ===============================================================================
+
+AllGGGH0LHEFTCoup = Parameter(name='AllGGGH0LHEFTCoup',
+                           nature='internal',
+                           type='complex',
+                           value='((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
+                           texname='AllGGGH0LHEFTCoup',
+                           lhablock='GGGH0LHEFT',
+                           lhacode=[10100])
+
+AllGGGH1LHEFTCoup = Parameter(name='AllGGGH1LHEFTCoup',
+                           nature='internal',
+                           type='complex',
+                           value='((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
+                           texname='AllGGGH1LHEFTCoup',
+                           lhablock='GGGH1LHEFT',
+                           lhacode=[10200])
+
+AllGGGH1LQCDCoup = Parameter(name='AllGGGH1LQCDCoup',
+                           nature='internal',
+                           type='complex',
+                           value='((complex(0,1))/cmath.sqrt(2))*G**3',
+                           texname='AllGGGH1LQCDCoup',
+                           lhablock='GGGH1LQCD',
+                           lhacode=[10300])
+
+AllGGGH2LQCDCoup = Parameter(name='AllGGGH2LQCDCoup',
+                           nature='internal',
+                           type='complex',
+                           value='((complex(0,1))/cmath.sqrt(2))*G**5',
+                           texname='AllGGGH2LQCDCoup',
+                           lhablock='GGGH2LQCD',
+                           lhacode=[10400])
+
+AllGGH3LQCDCoup = Parameter(name='AllGGH3LQCDCoup',
+                           nature='internal',
+                           type='complex',
+                           value='((complex(0,1))/cmath.sqrt(2))*G**5',
+                           texname='AllGGH3LQCDCoup',
+                           lhablock='GGH3LQCD',
+                           lhacode=[10500])
+
+AllQQGH0LHEFTCoup = Parameter(name='AllQQGH0LHEFTCoup',
+                           nature='internal',
+                           type='complex',
+                           value='((complex(0,1)*yt)/cmath.sqrt(2))*G**3',
+                           texname='AllQQGH0LHEFTCoup',
+                           lhablock='QQGH0LHEFT',
+                           lhacode=[10600])
+
+AllQQGH1LHEFTCoup = Parameter(name='AllQQGH1LHEFTCoup',
+                           nature='internal',
+                           type='complex',
+                           value='((complex(0,1)*yt)/cmath.sqrt(2))*G**5',
+                           texname='AllQQGH1LHEFTCoup',
+                           lhablock='QQGH1LHEFT',
+                           lhacode=[10700])
+
+AllQQGH1LQCDCoup = Parameter(name='AllQQGH1LQCDCoup',
+                           nature='internal',
+                           type='complex',
+                           value='((complex(0,1))/cmath.sqrt(2))*G**3',
+                           texname='AllQQGH1LQCDCoup',
+                           lhablock='QQGH1LQCD',
+                           lhacode=[10800])
+
+AllQQGH2LQCDCoup = Parameter(name='AllQQGH2LQCDCoup',
+                           nature='internal',
+                           type='complex',
+                           value='((complex(0,1))/cmath.sqrt(2))*G**5',
+                           texname='AllQQGH2LQCDCoup',
+                           lhablock='QQGH2LQCD',
+                           lhacode=[10900])
+
+# ===============================================================================
+# PPHJ Form Factors
+# ===============================================================================
+
+# --- General PPHJ parameters
+
+PPHJ_nf = Parameter(name='PPHJ_nf',
+                     nature='external',
+                     type='real',
+                     value=4.0,
+                     texname='\\text{PPHJ_nf}',
+                     lhablock='PPHJ',
+                     lhacode=[10010])
+
+# ----
+
+GGGH1LQCD_inc_yt = Parameter(name='GGGH1LQCD_inc_yt',
+                           nature='external',
+                           type='real',
+                           value=1.0000000001,
+                           texname='\\text{GGGH1LQCD_inc_yt}',
+                           lhablock='GGGH1LQCD',
+                           lhacode=[10310])
+
+GGGH1LQCD_inc_yb = Parameter(name='GGGH1LQCD_inc_yb',
+                           nature='external',
+                           type='real',
+                           value=1.0000000002,
+                           texname='\\text{GGGH1LQCD_inc_yb}',
+                           lhablock='GGGH1LQCD',
+                           lhacode=[10311])
+
+# ----
+
+GGGH2LQCD_inc_ytqcd = Parameter(name='GGGH2LQCD_inc_ytqcd',
+                           nature='external',
+                           type='real',
+                           value=1.0000000003,
+                           texname='\\text{GGGH2LQCD_inc_ytqcd}',
+                           lhablock='GGGH2LQCD',
+                           lhacode=[10410])
+
+GGGH2LQCD_inc_ytmb = Parameter(name='GGGH2LQCD_inc_ytmb',
+                           nature='external',
+                           type='real',
+                           value=1.0000000004,
+                           texname='\\text{GGGH2LQCD_inc_ytmb}',
+                           lhablock='GGGH2LQCD',
+                           lhacode=[10411])
+
+GGGH2LQCD_inc_ytmt = Parameter(name='GGGH2LQCD_inc_ytmt',
+                           nature='external',
+                           type='real',
+                           value=1.0000000005,
+                           texname='\\text{GGGH2LQCD_inc_ytmt}',
+                           lhablock='GGGH2LQCD',
+                           lhacode=[10412])
+
+GGGH2LQCD_inc_ybqcd = Parameter(name='GGGH2LQCD_inc_ybqcd',
+                           nature='external',
+                           type='real',
+                           value=1.0000000006,
+                           texname='\\text{GGGH2LQCD_inc_ybqcd}',
+                           lhablock='GGGH2LQCD',
+                           lhacode=[10413])
+
+GGGH2LQCD_inc_ybmb = Parameter(name='GGGH2LQCD_inc_ybmb',
+                           nature='external',
+                           type='real',
+                           value=1.0000000007,
+                           texname='\\text{GGGH2LQCD_inc_ybmb}',
+                           lhablock='GGGH2LQCD',
+                           lhacode=[10414])
+
+GGGH2LQCD_inc_ybmt = Parameter(name='GGGH2LQCD_inc_ybmt',
+                           nature='external',
+                           type='real',
+                           value=1.0000000008,
+                           texname='\\text{GGGH2LQCD_inc_ybmt}',
+                           lhablock='GGGH2LQCD',
+                           lhacode=[10415])
+
+# ---
+
+GGH3LQCD_inc_ytqcd = Parameter(name='GGH3LQCD_inc_ytqcd',
+                           nature='external',
+                           type='real',
+                           value=1.0000000009,
+                           texname='\\text{GGH3LQCD_inc_ytqcd}',
+                           lhablock='GGH3LQCD',
+                           lhacode=[10510])
+
+GGH3LQCD_inc_ytmb = Parameter(name='GGH3LQCD_inc_ytmb',
+                           nature='external',
+                           type='real',
+                           value=1.0000000010,
+                           texname='\\text{GGH3LQCD_inc_ytmb}',
+                           lhablock='GGH3LQCD',
+                           lhacode=[10511])
+
+GGH3LQCD_inc_ytmt = Parameter(name='GGH3LQCD_inc_ytmt',
+                           nature='external',
+                           type='real',
+                           value=1.0000000011,
+                           texname='\\text{GGH3LQCD_inc_ytmt}',
+                           lhablock='GGH3LQCD',
+                           lhacode=[10512])
+
+GGH3LQCD_inc_ybqcd = Parameter(name='GGH3LQCD_inc_ybqcd',
+                           nature='external',
+                           type='real',
+                           value=1.0000000012,
+                           texname='\\text{GGH3LQCD_inc_ybqcd}',
+                           lhablock='GGH3LQCD',
+                           lhacode=[10513])
+
+GGH3LQCD_inc_ybmb = Parameter(name='GGH3LQCD_inc_ybmb',
+                           nature='external',
+                           type='real',
+                           value=1.0000000013,
+                           texname='\\text{GGH3LQCD_inc_ybmb}',
+                           lhablock='GGH3LQCD',
+                           lhacode=[10514])
+
+GGH3LQCD_inc_ybmt = Parameter(name='GGH3LQCD_inc_ybmt',
+                           nature='external',
+                           type='real',
+                           value=1.0000000014,
+                           texname='\\text{GGH3LQCD_inc_ybmt}',
+                           lhablock='GGH3LQCD',
+                           lhacode=[10515])
+
+# ----
+
+QQGH1LQCD_inc_yt = Parameter(name='QQGH1LQCD_inc_yt',
+                           nature='external',
+                           type='real',
+                           value=1.0000000015,
+                           texname='\\text{QQGH1LQCD_inc_yt}',
+                           lhablock='QQGH1LQCD',
+                           lhacode=[10810])
+
+QQGH1LQCD_inc_yb = Parameter(name='QQGH1LQCD_inc_yb',
+                           nature='external',
+                           type='real',
+                           value=1.0000000016,
+                           texname='\\text{QQGH1LQCD_inc_yb}',
+                           lhablock='QQGH1LQCD',
+                           lhacode=[10811])
+
+# ----
+
+QQGH2LQCD_inc_ytqcd = Parameter(name='QQGH2LQCD_inc_ytqcd',
+                           nature='external',
+                           type='real',
+                           value=1.0000000017,
+                           texname='\\text{QQGH2LQCD_inc_ytqcd}',
+                           lhablock='QQGH2LQCD',
+                           lhacode=[10910])
+
+QQGH2LQCD_inc_ytmb = Parameter(name='QQGH2LQCD_inc_ytmb',
+                           nature='external',
+                           type='real',
+                           value=1.0000000018,
+                           texname='\\text{QQGH2LQCD_inc_ytmb}',
+                           lhablock='QQGH2LQCD',
+                           lhacode=[10911])
+
+QQGH2LQCD_inc_ytmt = Parameter(name='QQGH2LQCD_inc_ytmt',
+                           nature='external',
+                           type='real',
+                           value=1.0000000019,
+                           texname='\\text{QQGH2LQCD_inc_ytmt}',
+                           lhablock='QQGH2LQCD',
+                           lhacode=[10912])
+
+QQGH2LQCD_inc_ybqcd = Parameter(name='QQGH2LQCD_inc_ybqcd',
+                           nature='external',
+                           type='real',
+                           value=1.0000000020,
+                           texname='\\text{QQGH2LQCD_inc_ybqcd}',
+                           lhablock='QQGH2LQCD',
+                           lhacode=[10913])
+
+QQGH2LQCD_inc_ybmt = Parameter(name='QQGH2LQCD_inc_ybmt',
+                           nature='external',
+                           type='real',
+                           value=1.0000000021,
+                           texname='\\text{QQGH2LQCD_inc_ybmt}',
+                           lhablock='QQGH2LQCD',
+                           lhacode=[10914])
+
+QQGH2LQCD_inc_ybmb = Parameter(name='QQGH2LQCD_inc_ybmb',
+                           nature='external',
+                           type='real',
+                           value=1.0000000022,
+                           texname='\\text{QQGH2LQCD_inc_ybmb}',
+                           lhablock='QQGH2LQCD',
+                           lhacode=[10915])
+
+# ---
+# === form factors
+# ---
+
+GGGH0LHEFT_ForFac1_RE = Parameter(name='GGGH0LHEFT_ForFac1_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.001,
+                               texname='\\text{GGGH0LHEFT_ForFac1_RE}',
+                               lhablock='GGGH0LHEFT',
+                               lhacode=[10101])
+
+GGGH0LHEFT_ForFac1_IM = Parameter(name='GGGH0LHEFT_ForFac1_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.002,
+                               texname='\\text{GGGH0LHEFT_ForFac1_IM}',
+                               lhablock='GGGH0LHEFT',
+                               lhacode=[10102])
+
+GGGH0LHEFT_ForFac2_RE = Parameter(name='GGGH0LHEFT_ForFac2_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.003,
+                               texname='\\text{GGGH0LHEFT_ForFac2_RE}',
+                               lhablock='GGGH0LHEFT',
+                               lhacode=[10103])
+
+GGGH0LHEFT_ForFac2_IM = Parameter(name='GGGH0LHEFT_ForFac2_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.004,
+                               texname='\\text{GGGH0LHEFT_ForFac2_IM}',
+                               lhablock='GGGH0LHEFT',
+                               lhacode=[10104])
+
+GGGH0LHEFT_ForFac3_RE = Parameter(name='GGGH0LHEFT_ForFac3_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.005,
+                               texname='\\text{GGGH0LHEFT_ForFac3_RE}',
+                               lhablock='GGGH0LHEFT',
+                               lhacode=[10105])
+
+GGGH0LHEFT_ForFac3_IM = Parameter(name='GGGH0LHEFT_ForFac3_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.006,
+                               texname='\\text{GGGH0LHEFT_ForFac3_IM}',
+                               lhablock='GGGH0LHEFT',
+                               lhacode=[10106])
+
+GGGH0LHEFT_ForFac4_RE = Parameter(name='GGGH0LHEFT_ForFac4_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.007,
+                               texname='\\text{GGGH0LHEFT_ForFac4_RE}',
+                               lhablock='GGGH0LHEFT',
+                               lhacode=[10107])
+
+GGGH0LHEFT_ForFac4_IM = Parameter(name='GGGH0LHEFT_ForFac4_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.008,
+                               texname='\\text{GGGH0LHEFT_ForFac4_IM}',
+                               lhablock='GGGH0LHEFT',
+                               lhacode=[10108])
+
+# ---
+
+GGGH1LHEFT_ForFac1_RE = Parameter(name='GGGH1LHEFT_ForFac1_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.009,
+                               texname='\\text{GGGH1LHEFT_ForFac1_RE}',
+                               lhablock='GGGH1LHEFT',
+                               lhacode=[10201])
+
+GGGH1LHEFT_ForFac1_IM = Parameter(name='GGGH1LHEFT_ForFac1_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.010,
+                               texname='\\text{GGGH1LHEFT_ForFac1_IM}',
+                               lhablock='GGGH1LHEFT',
+                               lhacode=[10202])
+
+GGGH1LHEFT_ForFac2_RE = Parameter(name='GGGH1LHEFT_ForFac2_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.011,
+                               texname='\\text{GGGH1LHEFT_ForFac2_RE}',
+                               lhablock='GGGH1LHEFT',
+                               lhacode=[10203])
+
+GGGH1LHEFT_ForFac2_IM = Parameter(name='GGGH1LHEFT_ForFac2_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.012,
+                               texname='\\text{GGGH1LHEFT_ForFac2_IM}',
+                               lhablock='GGGH1LHEFT',
+                               lhacode=[10204])
+
+GGGH1LHEFT_ForFac3_RE = Parameter(name='GGGH1LHEFT_ForFac3_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.013,
+                               texname='\\text{GGGH1LHEFT_ForFac3_RE}',
+                               lhablock='GGGH1LHEFT',
+                               lhacode=[10205])
+
+GGGH1LHEFT_ForFac3_IM = Parameter(name='GGGH1LHEFT_ForFac3_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.014,
+                               texname='\\text{GGGH1LHEFT_ForFac3_IM}',
+                               lhablock='GGGH1LHEFT',
+                               lhacode=[10206])
+
+GGGH1LHEFT_ForFac4_RE = Parameter(name='GGGH1LHEFT_ForFac4_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.015,
+                               texname='\\text{GGGH1LHEFT_ForFac4_RE}',
+                               lhablock='GGGH1LHEFT',
+                               lhacode=[10207])
+
+GGGH1LHEFT_ForFac4_IM = Parameter(name='GGGH1LHEFT_ForFac4_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.016,
+                               texname='\\text{GGGH1LHEFT_ForFac4_IM}',
+                               lhablock='GGGH1LHEFT',
+                               lhacode=[10208])
+
+# ---
+
+
+GGGH1LQCD_ForFac1_RE = Parameter(name='GGGH1LQCD_ForFac1_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.017,
+                               texname='\\text{GGGH1LQCD_ForFac1_RE}',
+                               lhablock='GGGH1LQCD',
+                               lhacode=[10301])
+
+GGGH1LQCD_ForFac1_IM = Parameter(name='GGGH1LQCD_ForFac1_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.018,
+                               texname='\\text{GGGH1LQCD_ForFac1_IM}',
+                               lhablock='GGGH1LQCD',
+                               lhacode=[10302])
+
+GGGH1LQCD_ForFac2_RE = Parameter(name='GGGH1LQCD_ForFac2_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.019,
+                               texname='\\text{GGGH1LQCD_ForFac2_RE}',
+                               lhablock='GGGH1LQCD',
+                               lhacode=[10303])
+
+GGGH1LQCD_ForFac2_IM = Parameter(name='GGGH1LQCD_ForFac2_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.020,
+                               texname='\\text{GGGH1LQCD_ForFac2_IM}',
+                               lhablock='GGGH1LQCD',
+                               lhacode=[10304])
+
+GGGH1LQCD_ForFac3_RE = Parameter(name='GGGH1LQCD_ForFac3_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.021,
+                               texname='\\text{GGGH1LQCD_ForFac3_RE}',
+                               lhablock='GGGH1LQCD',
+                               lhacode=[10305])
+
+GGGH1LQCD_ForFac3_IM = Parameter(name='GGGH1LQCD_ForFac3_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.022,
+                               texname='\\text{GGGH1LQCD_ForFac3_IM}',
+                               lhablock='GGGH1LQCD',
+                               lhacode=[10306])
+
+GGGH1LQCD_ForFac4_RE = Parameter(name='GGGH1LQCD_ForFac4_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.023,
+                               texname='\\text{GGGH1LQCD_ForFac4_RE}',
+                               lhablock='GGGH1LQCD',
+                               lhacode=[10307])
+
+GGGH1LQCD_ForFac4_IM = Parameter(name='GGGH1LQCD_ForFac4_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.024,
+                               texname='\\text{GGGH1LQCD_ForFac4_IM}',
+                               lhablock='GGGH1LQCD',
+                               lhacode=[10308])
+
+# ---
+
+
+GGGH2LQCD_ForFac1_RE = Parameter(name='GGGH2LQCD_ForFac1_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.025,
+                               texname='\\text{GGGH2LQCD_ForFac1_RE}',
+                               lhablock='GGGH2LQCD',
+                               lhacode=[10401])
+
+GGGH2LQCD_ForFac1_IM = Parameter(name='GGGH2LQCD_ForFac1_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.026,
+                               texname='\\text{GGGH2LQCD_ForFac1_IM}',
+                               lhablock='GGGH2LQCD',
+                               lhacode=[10402])
+
+GGGH2LQCD_ForFac2_RE = Parameter(name='GGGH2LQCD_ForFac2_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.027,
+                               texname='\\text{GGGH2LQCD_ForFac2_RE}',
+                               lhablock='GGGH2LQCD',
+                               lhacode=[10403])
+
+GGGH2LQCD_ForFac2_IM = Parameter(name='GGGH2LQCD_ForFac2_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.028,
+                               texname='\\text{GGGH2LQCD_ForFac2_IM}',
+                               lhablock='GGGH2LQCD',
+                               lhacode=[10404])
+
+GGGH2LQCD_ForFac3_RE = Parameter(name='GGGH2LQCD_ForFac3_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.029,
+                               texname='\\text{GGGH2LQCD_ForFac3_RE}',
+                               lhablock='GGGH2LQCD',
+                               lhacode=[10405])
+
+GGGH2LQCD_ForFac3_IM = Parameter(name='GGGH2LQCD_ForFac3_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.030,
+                               texname='\\text{GGGH2LQCD_ForFac3_IM}',
+                               lhablock='GGGH2LQCD',
+                               lhacode=[10406])
+
+GGGH2LQCD_ForFac4_RE = Parameter(name='GGGH2LQCD_ForFac4_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.031,
+                               texname='\\text{GGGH2LQCD_ForFac4_RE}',
+                               lhablock='GGGH2LQCD',
+                               lhacode=[10407])
+
+GGGH2LQCD_ForFac4_IM = Parameter(name='GGGH2LQCD_ForFac4_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.032,
+                               texname='\\text{GGGH2LQCD_ForFac4_IM}',
+                               lhablock='GGGH2LQCD',
+                               lhacode=[10408])
+
+# ---
+
+GGH3LQCD_ForFac1_RE = Parameter(name='GGH3LQCD_ForFac1_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.033,
+                               texname='\\text{GGH3LQCD_ForFac1_RE}',
+                               lhablock='GGH3LQCD',
+                               lhacode=[10501])
+
+GGH3LQCD_ForFac1_IM = Parameter(name='GGH3LQCD_ForFac1_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.034,
+                               texname='\\text{GGH3LQCD_ForFac1_IM}',
+                               lhablock='GGH3LQCD',
+                               lhacode=[10502])
+# ----
+
+QQGH0LHEFT_ForFac1_RE = Parameter(name='QQGH0LHEFT_ForFac1_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.035,
+                               texname='\\text{QQGH0LHEFT_ForFac1_RE}',
+                               lhablock='QQGH0LHEFT',
+                               lhacode=[10601])
+
+QQGH0LHEFT_ForFac1_IM = Parameter(name='QQGH0LHEFT_ForFac1_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.036,
+                               texname='\\text{QQGH0LHEFT_ForFac1_IM}',
+                               lhablock='QQGH0LHEFT',
+                               lhacode=[10602])
+
+QQGH0LHEFT_ForFac2_RE = Parameter(name='QQGH0LHEFT_ForFac2_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.037,
+                               texname='\\text{QQGH0LHEFT_ForFac2_RE}',
+                               lhablock='QQGH0LHEFT',
+                               lhacode=[10603])
+
+QQGH0LHEFT_ForFac2_IM = Parameter(name='QQGH0LHEFT_ForFac2_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.038,
+                               texname='\\text{QQGH0LHEFT_ForFac2_IM}',
+                               lhablock='QQGH0LHEFT',
+                               lhacode=[10604])
+
+# ----
+
+QQGH1LHEFT_ForFac1_RE = Parameter(name='QQGH1LHEFT_ForFac1_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.035,
+                               texname='\\text{QQGH1LHEFT_ForFac1_RE}',
+                               lhablock='QQGH1LHEFT',
+                               lhacode=[10701])
+
+QQGH1LHEFT_ForFac1_IM = Parameter(name='QQGH1LHEFT_ForFac1_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.036,
+                               texname='\\text{QQGH1LHEFT_ForFac1_IM}',
+                               lhablock='QQGH1LHEFT',
+                               lhacode=[10702])
+
+QQGH1LHEFT_ForFac2_RE = Parameter(name='QQGH1LHEFT_ForFac2_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.037,
+                               texname='\\text{QQGH1LHEFT_ForFac2_RE}',
+                               lhablock='QQGH1LHEFT',
+                               lhacode=[10703])
+
+QQGH1LHEFT_ForFac2_IM = Parameter(name='QQGH1LHEFT_ForFac2_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.038,
+                               texname='\\text{QQGH1LHEFT_ForFac2_IM}',
+                               lhablock='QQGH1LHEFT',
+                               lhacode=[10704])
+
+# ----
+
+
+QQGH1LQCD_ForFac1_RE = Parameter(name='QQGH1LQCD_ForFac1_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.039,
+                               texname='\\text{QQGH1LQCD_ForFac1_RE}',
+                               lhablock='QQGH1LQCD',
+                               lhacode=[10801])
+
+QQGH1LQCD_ForFac1_IM = Parameter(name='QQGH1LQCD_ForFac1_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.040,
+                               texname='\\text{QQGH1LQCD_ForFac1_IM}',
+                               lhablock='QQGH1LQCD',
+                               lhacode=[10802])
+
+QQGH1LQCD_ForFac2_RE = Parameter(name='QQGH1LQCD_ForFac2_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.041,
+                               texname='\\text{QQGH1LQCD_ForFac2_RE}',
+                               lhablock='QQGH1LQCD',
+                               lhacode=[10803])
+
+QQGH1LQCD_ForFac2_IM = Parameter(name='QQGH1LQCD_ForFac2_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.042,
+                               texname='\\text{QQGH1LQCD_ForFac2_IM}',
+                               lhablock='QQGH1LQCD',
+                               lhacode=[10804])
+
+# ----
+
+
+QQGH2LQCD_ForFac1_RE = Parameter(name='QQGH2LQCD_ForFac1_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.043,
+                               texname='\\text{QQGH2LQCD_ForFac1_RE}',
+                               lhablock='QQGH2LQCD',
+                               lhacode=[10901])
+
+QQGH2LQCD_ForFac1_IM = Parameter(name='QQGH2LQCD_ForFac1_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.044,
+                               texname='\\text{QQGH2LQCD_ForFac1_IM}',
+                               lhablock='QQGH2LQCD',
+                               lhacode=[10902])
+
+QQGH2LQCD_ForFac2_RE = Parameter(name='QQGH2LQCD_ForFac2_RE',
+                               nature='external',
+                               type='complex',
+                               value=66.045,
+                               texname='\\text{QQGH2LQCD_ForFac2_RE}',
+                               lhablock='QQGH2LQCD',
+                               lhacode=[10903])
+
+QQGH2LQCD_ForFac2_IM = Parameter(name='QQGH2LQCD_ForFac2_IM',
+                               nature='external',
+                               type='complex',
+                               value=66.046,
+                               texname='\\text{QQGH2LQCD_ForFac2_IM}',
+                               lhablock='QQGH2LQCD',
+                               lhacode=[10904])
+
 # ===============================================================================
 # Form Factors for ggH
 # ===============================================================================

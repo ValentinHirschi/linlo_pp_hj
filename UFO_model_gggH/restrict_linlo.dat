@@ -41,11 +41,11 @@ Block MASS
 ###################################
 ## INFORMATION FOR DECAY
 ###################################
-DECAY   6 1.508336e+00 
-DECAY  15 2.270000e-12 
-DECAY  23 2.441404e+00 
-DECAY  24 2.047600e+00 
-DECAY  25 6.382339e-03 
+DECAY   6 0.000000e+00 
+DECAY  15 0.000000e+00 
+DECAY  23 0.000000e+00 
+DECAY  24 0.000000e+00 
+DECAY  25 0.000000e+00 
 ##  Not dependent paramater.
 ## Those values should be edited following analytical the 
 ## analytical expression. Some generator could simply ignore 
@@ -63,6 +63,66 @@ DECAY  16 0.000000 # vt : 0.0
 DECAY  22 0.000000 # A : 0.0 
 DECAY  11 0.000000 # e- : 0.0 
 DECAY  13 0.000000 # m- : 0.0 
+
+###################################
+## INFORMATION FOR GGGH0LHEFT
+###################################
+Block GGGH0LHEFT 
+  10101 6.600100e+01 # GGGH0LHEFT_ForFac1_RE 
+  10102 6.600200e+01 # GGGH0LHEFT_ForFac1_IM 
+  10103 6.600300e+01 # GGGH0LHEFT_ForFac2_RE 
+  10104 6.600400e+01 # GGGH0LHEFT_ForFac2_IM 
+  10105 6.600500e+01 # GGGH0LHEFT_ForFac3_RE 
+  10106 6.600600e+01 # GGGH0LHEFT_ForFac3_IM 
+  10107 6.600700e+01 # GGGH0LHEFT_ForFac4_RE 
+  10108 6.600800e+01 # GGGH0LHEFT_ForFac4_IM 
+
+###################################
+## INFORMATION FOR GGGH1LHEFT
+###################################
+Block GGGH1LHEFT 
+  10201 6.600900e+01 # GGGH1LHEFT_ForFac1_RE 
+  10202 6.601000e+01 # GGGH1LHEFT_ForFac1_IM 
+  10203 6.601100e+01 # GGGH1LHEFT_ForFac2_RE 
+  10204 6.601200e+01 # GGGH1LHEFT_ForFac2_IM 
+  10205 6.601300e+01 # GGGH1LHEFT_ForFac3_RE 
+  10206 6.601400e+01 # GGGH1LHEFT_ForFac3_IM 
+  10207 6.601500e+01 # GGGH1LHEFT_ForFac4_RE 
+  10208 6.601600e+01 # GGGH1LHEFT_ForFac4_IM 
+
+###################################
+## INFORMATION FOR GGGH1LQCD
+###################################
+Block GGGH1LQCD 
+  10301 6.601700e+01 # GGGH1LQCD_ForFac1_RE 
+  10302 6.601800e+01 # GGGH1LQCD_ForFac1_IM 
+  10303 6.601900e+01 # GGGH1LQCD_ForFac2_RE 
+  10304 6.602000e+01 # GGGH1LQCD_ForFac2_IM 
+  10305 6.602100e+01 # GGGH1LQCD_ForFac3_RE 
+  10306 6.602200e+01 # GGGH1LQCD_ForFac3_IM 
+  10307 6.602300e+01 # GGGH1LQCD_ForFac4_RE 
+  10308 6.602400e+01 # GGGH1LQCD_ForFac4_IM 
+  10310 1.00000001e+00 # GGGH1LQCD_inc_yt 
+  10311 1.00000002e+00 # GGGH1LQCD_inc_yb 
+
+###################################
+## INFORMATION FOR GGGH2LQCD
+###################################
+Block GGGH2LQCD 
+  10401 6.602500e+01 # GGGH2LQCD_ForFac1_RE 
+  10402 6.602600e+01 # GGGH2LQCD_ForFac1_IM 
+  10403 6.602700e+01 # GGGH2LQCD_ForFac2_RE 
+  10404 6.602800e+01 # GGGH2LQCD_ForFac2_IM 
+  10405 6.602900e+01 # GGGH2LQCD_ForFac3_RE 
+  10406 6.603000e+01 # GGGH2LQCD_ForFac3_IM 
+  10407 6.603100e+01 # GGGH2LQCD_ForFac4_RE 
+  10408 6.603200e+01 # GGGH2LQCD_ForFac4_IM 
+  10410 1.00000003e+00 # GGGH2LQCD_inc_ytqcd 
+  10411 1.00000004e+00 # GGGH2LQCD_inc_ytmb 
+  10412 1.00000005e+00 # GGGH2LQCD_inc_ytmt 
+  10413 1.00000006e+00 # GGGH2LQCD_inc_ybqcd 
+  10414 1.00000007e+00 # GGGH2LQCD_inc_ybmb 
+  10415 1.00000008e+00 # GGGH2LQCD_inc_ybmt 
 
 ###################################
 ## INFORMATION FOR GGGHEWWW
@@ -113,6 +173,19 @@ Block GGGHQCD
   66008 6.600800e+01 # GGGHQCD_ForFac4_IM 
 
 ###################################
+## INFORMATION FOR GGH3LQCD
+###################################
+Block GGH3LQCD 
+  10501 6.603300e+01 # GGH3LQCD_ForFac1_RE 
+  10502 6.603400e+01 # GGH3LQCD_ForFac1_IM 
+  10510 1.00000009e+00 # GGH3LQCD_inc_ytqcd 
+  10511 1.00000010e+00 # GGH3LQCD_inc_ytmb 
+  10512 1.00000011e+00 # GGH3LQCD_inc_ytmt 
+  10513 1.00000012e+00 # GGH3LQCD_inc_ybqcd 
+  10514 1.00000013e+00 # GGH3LQCD_inc_ybmb 
+  10515 1.00000014e+00 # GGH3LQCD_inc_ybmt 
+
+###################################
 ## INFORMATION FOR GGHEW
 ###################################
 Block GGHEW 
@@ -156,6 +229,56 @@ Block LOOP
     1 1.250900e+02 # MU_R 
 
 ###################################
+## INFORMATION FOR PPHJ
+###################################
+Block PPHJ 
+  10010 4.00000033e+00 # PPHJ_nf 
+
+###################################
+## INFORMATION FOR QQGH0LHEFT
+###################################
+Block QQGH0LHEFT 
+  10601 6.603500e+01 # QQGH0LHEFT_ForFac1_RE 
+  10602 6.603600e+01 # QQGH0LHEFT_ForFac1_IM 
+  10603 6.603700e+01 # QQGH0LHEFT_ForFac2_RE 
+  10604 6.603800e+01 # QQGH0LHEFT_ForFac2_IM 
+
+###################################
+## INFORMATION FOR QQGH1LHEFT
+###################################
+Block QQGH1LHEFT 
+  10701 6.603500e+01 # QQGH1LHEFT_ForFac1_RE 
+  10702 6.603600e+01 # QQGH1LHEFT_ForFac1_IM 
+  10703 6.603700e+01 # QQGH1LHEFT_ForFac2_RE 
+  10704 6.603800e+01 # QQGH1LHEFT_ForFac2_IM 
+
+###################################
+## INFORMATION FOR QQGH1LQCD
+###################################
+Block QQGH1LQCD 
+  10801 6.603900e+01 # QQGH1LQCD_ForFac1_RE 
+  10802 6.604000e+01 # QQGH1LQCD_ForFac1_IM 
+  10803 6.604100e+01 # QQGH1LQCD_ForFac2_RE 
+  10804 6.604200e+01 # QQGH1LQCD_ForFac2_IM 
+  10810 1.00000015e+00 # QQGH1LQCD_inc_yt 
+  10811 1.00000016e+00 # QQGH1LQCD_inc_yb 
+
+###################################
+## INFORMATION FOR QQGH2LQCD
+###################################
+Block QQGH2LQCD 
+  10901 6.604300e+01 # QQGH2LQCD_ForFac1_RE 
+  10902 6.604400e+01 # QQGH2LQCD_ForFac1_IM 
+  10903 6.604500e+01 # QQGH2LQCD_ForFac2_RE 
+  10904 6.604600e+01 # QQGH2LQCD_ForFac2_IM 
+  10910 1.00000017e+00 # QQGH2LQCD_inc_ytqcd 
+  10911 1.00000018e+00 # QQGH2LQCD_inc_ytmb 
+  10912 1.00000019e+00 # QQGH2LQCD_inc_ytmt 
+  10913 1.00000020e+00 # QQGH2LQCD_inc_ybqcd 
+  10914 1.00000021e+00 # QQGH2LQCD_inc_ybmt 
+  10915 1.00000022e+00 # QQGH2LQCD_inc_ybmb 
+
+###################################
 ## INFORMATION FOR WOLFENSTEIN
 ###################################
 Block Wolfenstein 
@@ -168,12 +291,12 @@ Block Wolfenstein
 ## INFORMATION FOR YUKAWA
 ###################################
 Block YUKAWA 
-    4 1.270000e+00 # ymc 
+    4 0.000000e+00 # ymc 
     5 4.200000e+00 # ymb 
     6 1.730000e+02 # ymt 
-   11 5.110000e-04 # yme 
-   13 1.056600e-01 # ymm 
-   15 1.777000e+00 # ymtau 
+   11 0.000000e+00 # yme 
+   13 0.000000e+00 # ymm 
+   15 0.000000e+00 # ymtau 
 #===========================================================
 # QUANTUM NUMBERS OF NEW STATE(S) (NON SM PDG CODE)
 #===========================================================

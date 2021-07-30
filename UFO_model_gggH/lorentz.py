@@ -1,4 +1,153 @@
 from object_library import all_lorentz, Lorentz
+
+###################################################
+# PPHJ-tensor structures
+###################################################
+
+gggHTensStruc1_expr = '-1*(((-(Metric(1, 2)*P(-6, 1)*P(-6, 2)) + P(1, 2)*P(2, 1))*(-(P(-15, 2)*P(-15, 3)*P(3, 1)) + P(-10, 1)*P(-10, 3)*P(3, 2)))/(P(-15, 2)*P(-15, 3)))'
+gggHTensStruc2_expr = '-1*(((P(-10, 1)*P(-10, 3)*P(1, 2) - P(-6, 1)*P(-6, 2)*P(1, 3))*(-(Metric(2, 3)*P(-15, 2)*P(-15, 3)) + P(2, 3)*P(3, 2)))/(P(-10, 1)*P(-10, 3)))'
+gggHTensStruc3_expr = '-1*(((P(-15, 2)*P(-15, 3)*P(2, 1) - P(-6, 1)*P(-6, 2)*P(2, 3))*(-(Metric(1, 3)*P(-10, 1)*P(-10, 3)) + P(1, 3)*P(3, 1)))/(P(-15, 2)*P(-15, 3)))'
+gggHTensStruc4_expr = '-1*(-(Metric(1, 3)*P(-15, 2)*P(-15, 3)*P(2, 1)) + Metric(1, 3)*P(-6, 1)*P(-6, 2)*P(2, 3) + Metric(1, 2)*P(-15, 2)*P(-15, 3)*P(3, 1) + P(1, 2)*(Metric(2, 3)*P(-10, 1)*P(-10, 3) - P(2, 3)*P(3, 1)) - Metric(1, 2)*P(-10, 1)*P(-10, 3)*P(3, 2) + P(1, 3)*(-(Metric(2, 3)*P(-6, 1)*P(-6, 2)) + P(2, 1)*P(3, 2)))'
+
+qqgHTensStruc1_expr = 'Gamma(3,2,1)' #TODO
+qqgHTensStruc2_expr = 'Gamma(3,2,1)' #TODO
+
+# Heft 0L
+
+gggHTensStruc1HEFT0L = Lorentz(
+    name='gggHTensStruc1HEFT0L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc1_expr
+)
+gggHTensStruc2HEFT0L = Lorentz(
+    name='gggHTensStruc2HEFT0L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc2_expr
+)
+gggHTensStruc3HEFT0L = Lorentz(
+    name='gggHTensStruc3HEFT0L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc3_expr
+)
+gggHTensStruc4HEFT0L = Lorentz(
+    name='gggHTensStruc4HEFT0L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc4_expr
+)
+
+qqgHTensStruc1HEFT0L = Lorentz(
+    name='qqgHTensStruc1HEFT0L',
+    spins=[2, 2, 3, 1],
+    structure=qqgHTensStruc1_expr
+)
+qqgHTensStruc2HEFT0L = Lorentz(
+    name='qqgHTensStruc2HEFT0L',
+    spins=[2, 2, 3, 1],
+    structure=qqgHTensStruc2_expr
+)
+
+# Heft 1L
+
+gggHTensStruc1HEFT1L = Lorentz(
+    name='gggHTensStruc1HEFT1L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc1_expr
+)
+gggHTensStruc2HEFT1L = Lorentz(
+    name='gggHTensStruc2HEFT1L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc2_expr
+)
+gggHTensStruc3HEFT1L = Lorentz(
+    name='gggHTensStruc3HEFT1L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc3_expr
+)
+gggHTensStruc4HEFT1L = Lorentz(
+    name='gggHTensStruc4HEFT1L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc4_expr
+)
+
+qqgHTensStruc1HEFT1L = Lorentz(
+    name='qqgHTensStruc1HEFT1L',
+    spins=[2, 2, 3, 1],
+    structure=qqgHTensStruc1_expr
+)
+qqgHTensStruc2HEFT1L = Lorentz(
+    name='qqgHTensStruc2HEFT1L',
+    spins=[2, 2, 3, 1],
+    structure=qqgHTensStruc2_expr
+)
+
+# QCD 1L
+
+gggHTensStruc1QCD1L = Lorentz(
+    name='gggHTensStruc1QCD1L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc1_expr
+)
+gggHTensStruc2QCD1L = Lorentz(
+    name='gggHTensStruc2QCD1L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc2_expr
+)
+gggHTensStruc3QCD1L = Lorentz(
+    name='gggHTensStruc3QCD1L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc3_expr
+)
+gggHTensStruc4QCD1L = Lorentz(
+    name='gggHTensStruc4QCD1L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc4_expr
+)
+
+qqgHTensStruc1QCD1L = Lorentz(
+    name='qqgHTensStruc1QCD1L',
+    spins=[2, 2, 3, 1],
+    structure=qqgHTensStruc1_expr
+)
+qqgHTensStruc2QCD1L = Lorentz(
+    name='qqgHTensStruc2QCD1L',
+    spins=[2, 2, 3, 1],
+    structure=qqgHTensStruc2_expr
+)
+
+# QCD 2L
+
+gggHTensStruc1QCD2L = Lorentz(
+    name='gggHTensStruc1QCD2L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc1_expr
+)
+gggHTensStruc2QCD2L = Lorentz(
+    name='gggHTensStruc2QCD2L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc2_expr
+)
+gggHTensStruc3QCD2L = Lorentz(
+    name='gggHTensStruc3QCD2L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc3_expr
+)
+gggHTensStruc4QCD2L = Lorentz(
+    name='gggHTensStruc4QCD2L',
+    spins=[3, 3, 3, 1],
+    structure=gggHTensStruc4_expr
+)
+
+qqgHTensStruc1QCD2L = Lorentz(
+    name='qqgHTensStruc1QCD2L',
+    spins=[2, 2, 3, 1],
+    structure=qqgHTensStruc1_expr
+)
+qqgHTensStruc2QCD2L = Lorentz(
+    name='qqgHTensStruc2QCD2L',
+    spins=[2, 2, 3, 1],
+    structure=qqgHTensStruc2_expr
+)
+
 ###################################################
 # GGGH-tensor structures
 ###################################################
@@ -22,6 +171,8 @@ gggHTensStruc4 = Lorentz(
     spins=[3, 3, 3, 1],
     structure='-1*(-(Metric(1, 3)*P(-15, 2)*P(-15, 3)*P(2, 1)) + Metric(1, 3)*P(-6, 1)*P(-6, 2)*P(2, 3) + Metric(1, 2)*P(-15, 2)*P(-15, 3)*P(3, 1) + P(1, 2)*(Metric(2, 3)*P(-10, 1)*P(-10, 3) - P(2, 3)*P(3, 1)) - Metric(1, 2)*P(-10, 1)*P(-10, 3)*P(3, 2) + P(1, 3)*(-(Metric(2, 3)*P(-6, 1)*P(-6, 2)) + P(2, 1)*P(3, 2)))'
 )
+
+
 ###################################################
 # GGH-tensor structures
 ###################################################

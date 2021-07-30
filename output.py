@@ -17,9 +17,11 @@ import re
 
 pjoin = os.path.join
 
-_file_path = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0] + '/higgsew/'
+#_file_path = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0] + '/higgsew/'
+_file_path = os.path.dirname(os.path.realpath(__file__))
 _iolibpath= os.path.normpath(pjoin(os.path.dirname(__file__), '../../madgraph/iolibs/'))+'/'
-_plugin_path = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0] + '/higgsew'
+#_plugin_path = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0] + '/higgsew'
+_plugin_path = os.path.dirname(os.path.realpath(__file__))
 _tmp_dir = 'Templates'
 
 logger = logging.getLogger('madgraph.export_v4')
@@ -207,6 +209,15 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
             p_prefix = pjoin(_plugin_path,possible_procs[proc]['directory'])
             c_prefix = "proc_"+str(matrix_element.get('processes')[0].get('id'))+"_"
             if set(possible_procs[proc]['associated_coupling'])<=set(involved_couplings):
+                
+                for otherproc in needed_procs.keys():
+                    if (
+                        possible_procs[otherproc]['directory']==possible_procs[proc]['directory'] and
+                        possible_procs[otherproc]['fortran_bridge']==possible_procs[proc]['fortran_bridge'] and
+                        possible_procs[otherproc]['fortran_evaluation']==possible_procs[proc]['fortran_evaluation'] ):
+                        self.relevant_processes[proc] = copy.deepcopy(possible_procs[proc])
+                        write = False
+
                 # we do that for the coupling splitting of the EW corrections
                 for otherproc in self.available_processes:
                     if set(possible_procs[otherproc]['associated_coupling'])<=set(involved_couplings) and set(possible_procs[otherproc]['associated_coupling']) > set(possible_procs[proc]['associated_coupling']):
@@ -236,6 +247,7 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                     # handle the fortran evaluation
                     old_file = pjoin(_plugin_path,possible_procs[proc]['directory'],possible_procs[proc]['fortran_evaluation'])
                     new_file = prefix+"_"+ possible_procs[proc]['fortran_evaluation']
+                        
                     # apply the C_prefix
                     file = open(old_file,'r') 
                     file_source = file.read()
@@ -252,14 +264,11 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
                     # copy cache file
                     cp(path1=pjoin(target_dir,repl_dict['fortran_cache']),path2=pjoin(self.dir_path, 'Source','MODEL'))
 
-
                     self.relevant_processes.update(copy.deepcopy(needed_procs))
                     self.fortran_routines +=[repl_dict['fortran_evaluation'].replace('.f','.o')]
                     self.cpp_routines +=[repl_dict['fortran_bridge'].replace('.cpp','.o')]
                     #self.create_lib(pjoin(_plugin_path, possible_procs[proc]['directory']),needed_procs[prefix])
                 
-
-    
     def get_helicity_lines(self, matrix_element,array_name='NHEL'):
         """Return the Helicity matrix definition lines for this matrix element"""
 
