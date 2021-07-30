@@ -52,8 +52,8 @@ outFilename=fifoin[[-1]];
 
 Print["Arguments received: "<>ToString[fifoin]];
 floatArgs = Table[ SetPrecision[ImportString[fifoin[[i+1]],"CSV"][[1]][[1]],precinput], {i, 7} ];
-intArgs = Table[ ImportString[fifoin[[i+8]],"CSV"][[1]][[1]], {i, 1} ];
-boolArgs = Table[ (ImportString[fifoin[[i+9]],"CSV"][[1]][[1]]>0), {i, 7} ];
+intArgs = Table[ ImportString[fifoin[[i+8]],"CSV"][[1]][[1]], {i, 2} ];
+boolArgs = Table[ (ImportString[fifoin[[i+10]],"CSV"][[1]][[1]]>0), {i, 7} ];
 args = <| 
   "s" -> floatArgs[[1]],
   "t" -> floatArgs[[2]],
@@ -63,6 +63,7 @@ args = <|
   "yb" -> floatArgs[[4]],
   "yt" -> floatArgs[[5]],
   "nloop" -> intArgs[[1]],
+  "nf" -> intArgs[[2]],
   "is_HEFT" -> boolArgs[[1]],
   "inc_ytqcd" -> boolArgs[[1]],
   "inc_ytmb" -> boolArgs[[2]],

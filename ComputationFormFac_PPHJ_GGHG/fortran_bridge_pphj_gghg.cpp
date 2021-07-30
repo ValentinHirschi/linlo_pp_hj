@@ -146,6 +146,7 @@ inline bool %(C_prefix)spphj_gghg_exists (const std::string& name) {
 extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
 		                const bool & HEFT_selected,
 						const int & nloop,
+						const int & nf,
 						const bool & inc_ytqcd,
 						const bool & inc_ytmb,
 						const bool & inc_ytmt,
@@ -205,6 +206,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
     ostr<<yb<<" ";
     ostr<<yt<<" ";
     ostr<<nloop<<" ";    
+	ostr<<nf<<" ";
 	ostr<<HEFT_selected<<" ";
     ostr<<inc_ytqcd<<" ";
     ostr<<inc_ytmb<<" ";
