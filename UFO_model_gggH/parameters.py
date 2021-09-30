@@ -1054,7 +1054,7 @@ AllGGGH1LHEFTCoup = Parameter(name='AllGGGH1LHEFTCoup',
 AllGGGH1LQCDCoup = Parameter(name='AllGGGH1LQCDCoup',
                            nature='internal',
                            type='complex',
-                           value='((complex(0,1))/cmath.sqrt(2))*G**3',
+                           value='((complex(0,1)))*G**3',
                            texname='AllGGGH1LQCDCoup',
                            lhablock='GGGH1LQCD',
                            lhacode=[10300])
@@ -1062,7 +1062,7 @@ AllGGGH1LQCDCoup = Parameter(name='AllGGGH1LQCDCoup',
 AllGGGH2LQCDCoup = Parameter(name='AllGGGH2LQCDCoup',
                            nature='internal',
                            type='complex',
-                           value='((complex(0,1))/cmath.sqrt(2))*G**5',
+                           value='((complex(0,1)))*G**5',
                            texname='AllGGGH2LQCDCoup',
                            lhablock='GGGH2LQCD',
                            lhacode=[10400])
@@ -1070,7 +1070,7 @@ AllGGGH2LQCDCoup = Parameter(name='AllGGGH2LQCDCoup',
 AllGGH3LQCDCoup = Parameter(name='AllGGH3LQCDCoup',
                            nature='internal',
                            type='complex',
-                           value='((complex(0,1))/cmath.sqrt(2))*G**5',
+                           value='((complex(0,1)))*G**5',
                            texname='AllGGH3LQCDCoup',
                            lhablock='GGH3LQCD',
                            lhacode=[10500])
@@ -1094,7 +1094,7 @@ AllQQGH1LHEFTCoup = Parameter(name='AllQQGH1LHEFTCoup',
 AllQQGH1LQCDCoup = Parameter(name='AllQQGH1LQCDCoup',
                            nature='internal',
                            type='complex',
-                           value='((complex(0,1))/cmath.sqrt(2))*G**3',
+                           value='((complex(0,1)))*G**3',
                            texname='AllQQGH1LQCDCoup',
                            lhablock='QQGH1LQCD',
                            lhacode=[10800])
@@ -1102,7 +1102,7 @@ AllQQGH1LQCDCoup = Parameter(name='AllQQGH1LQCDCoup',
 AllQQGH2LQCDCoup = Parameter(name='AllQQGH2LQCDCoup',
                            nature='internal',
                            type='complex',
-                           value='((complex(0,1))/cmath.sqrt(2))*G**5',
+                           value='((complex(0,1)))*G**5',
                            texname='AllQQGH2LQCDCoup',
                            lhablock='QQGH2LQCD',
                            lhacode=[10900])
@@ -1189,6 +1189,13 @@ GGGH2LQCD_inc_ybmt = Parameter(name='GGGH2LQCD_inc_ybmt',
                            lhablock='GGGH2LQCD',
                            lhacode=[10415])
 
+GGGH2LQCD_eps_order = Parameter(name='GGGH2LQCD_eps_order',
+                           nature='external',
+                           type='real',
+                           value=0.0000000008,
+                           texname='\\text{GGGH2LQCD_eps_order}',
+                           lhablock='GGGH2LQCD',
+                           lhacode=[10416])
 # ---
 
 GGH3LQCD_inc_ytqcd = Parameter(name='GGH3LQCD_inc_ytqcd',
@@ -1508,6 +1515,14 @@ GGGH1LQCD_ForFac4_IM = Parameter(name='GGGH1LQCD_ForFac4_IM',
                                lhablock='GGGH1LQCD',
                                lhacode=[10308])
 
+GGGH1LQCD_eps_order = Parameter(name='GGGH1LQCD_eps_order',
+                           nature='external',
+                           type='real',
+                           value=0.0000000008,
+                           texname='\\text{GGGH1LQCD_eps_order}',
+                           lhablock='GGGH1LQCD',
+                           lhacode=[10309])
+
 # ---
 
 
@@ -1695,6 +1710,14 @@ QQGH1LQCD_ForFac2_IM = Parameter(name='QQGH1LQCD_ForFac2_IM',
                                lhablock='QQGH1LQCD',
                                lhacode=[10804])
 
+QQGH1LQCD_eps_order = Parameter(name='QQGH1LQCD_eps_order',
+                           nature='external',
+                           type='real',
+                           value=0.0000000008,
+                           texname='\\text{QQGH1LQCD_eps_order}',
+                           lhablock='QQGH1LQCD',
+                           lhacode=[10805])
+
 # ----
 
 
@@ -1729,6 +1752,14 @@ QQGH2LQCD_ForFac2_IM = Parameter(name='QQGH2LQCD_ForFac2_IM',
                                texname='\\text{QQGH2LQCD_ForFac2_IM}',
                                lhablock='QQGH2LQCD',
                                lhacode=[10904])
+
+QQGH2LQCD_eps_order = Parameter(name='QQGH2LQCD_eps_order',
+                           nature='external',
+                           type='real',
+                           value=0.0000000008,
+                           texname='\\text{QQGH2LQCD_eps_order}',
+                           lhablock='QQGH2LQCD',
+                           lhacode=[10905])
 
 # ===============================================================================
 # Form Factors for ggH

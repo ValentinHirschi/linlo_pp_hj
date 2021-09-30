@@ -7,6 +7,7 @@
 	  double precision key_P(gghg_max_cache,0:3,3)
 	  double precision key_MA(gghg_max_cache)
 	  double precision key_MB(gghg_max_cache)
+	  double precision key_MUR(gghg_max_cache)
 	  integer key_id(gghg_max_cache)
 
 	  double precision value_Im(gghg_max_cache,4)
@@ -14,4 +15,4 @@
 	  
       data curr_cache_size/0/
       common/GGHG/curr_cache_size,key_P,key_MA,
-     & key_MB,key_id,value_Im,value_Re
+     & key_MB,key_MUR,key_id,value_Im,value_Re

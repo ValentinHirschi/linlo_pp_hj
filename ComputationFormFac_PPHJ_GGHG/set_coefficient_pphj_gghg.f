@@ -7,7 +7,7 @@ c          write(*,*) 'EMPTYING CACHE! ',curr_cache_size
 
       end subroutine
 C      
-      subroutine ACCESS_CACHE_GGHG(identifier, p, pmassA, pmassB, 
+      subroutine ACCESS_CACHE_GGHG(identifier, p, pmassA, pmassB, MUR,
      &    resRe, resIm,
      &    FOUNDIT)
             
@@ -15,7 +15,7 @@ C
 C Arguments
           double precision P(0:3,3)
           integer identifier
-          double precision pmassA, pmassB
+          double precision pmassA, pmassB, MUR
           logical FOUNDIT
           double precision resRe(4)
           double precision resIm(4)
@@ -42,6 +42,11 @@ C Cache
      &         ) then
              cycle SEARCHLOOP
             endif
+            if ( .NOT.(
+     &       abs(MUR-key_MUR(cache_index)) .lt. gghg_tol ) 
+     &         ) then
+             cycle SEARCHLOOP
+            endif
             do i=0,3
               do j=1,3
                 if ( .NOT.(
@@ -62,13 +67,13 @@ C Cache
        
       end subroutine ACCESS_CACHE_GGHG    
 
-      subroutine ADD_TO_CACHE_GGHG(identifier, p, pmassA, pmassB, 
+      subroutine ADD_TO_CACHE_GGHG(identifier, p, pmassA, pmassB, MUR,
      &    resRe, resIm)
           implicit none
 C Arguments
 C We only consider the gluon momenta
           double precision P(0:3,3)
-          double precision pmassA, pmassB
+          double precision pmassA, pmassB, MUR
           integer identifier
           double precision resRe(4)
           double precision resIm(4)
@@ -87,6 +92,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           enddo
           key_MA(cache_index)=pmassA
           key_MB(cache_index)=pmassB
+          key_MUR(cache_index)=MUR
           key_id(cache_index)=identifier
           do i=1,4
             value_Im(cache_index,i)=resRe(i)
@@ -121,6 +127,7 @@ c         Assign nloop=-1 to the meaning of HEFT 0l
           logical inc_ytqcd, inc_ytmb, inc_ytmt
           logical inc_ybqcd, inc_ybmb, inc_ybmt
           integer pphj_nf
+          integer pphj_eps_order
 
           inc_ytqcd = .False.
           inc_ytmb = .False.
@@ -129,6 +136,7 @@ c         Assign nloop=-1 to the meaning of HEFT 0l
           inc_ybmb = .False.
           inc_ybmt = .False.
           pphj_nf = MDL_PPHJ_nf
+          pphj_eps_order = 0
 
 
           ! We parse PGGG to the C routine
@@ -138,17 +146,17 @@ c         Assign nloop=-1 to the meaning of HEFT 0l
             enddo
           enddo
 
-          CALL ACCESS_CACHE_GGHG(identifier, P, MDL_MB, MDL_MT, 
+          CALL ACCESS_CACHE_GGHG(identifier, P, MDL_MB, MDL_MT, MU_R, 
      &                      resRe, resIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 0-loop HEFT tensor'
              call %(C_prefix)sget_pphj_gghg_tensor_coefs(
-     &           HEFTselected, nloop, pphj_nf,
+     &           HEFTselected, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
-     &           PGGG,MDL_MB,MDL_MT, MDL_MH, MDL_YB, MDL_YT,resRe,resIm)
-             CALL ADD_TO_CACHE_GGHG(identifier, P,MDL_MB, MDL_MT, 
+     &           PGGG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
+             CALL ADD_TO_CACHE_GGHG(identifier, P,MDL_MB, MDL_MT, MU_R,
      &                         resRe, resIm)
           endif
 
@@ -191,6 +199,7 @@ c         Assign nloop=-2 to the meaning of HEFT 1l
           logical inc_ytqcd, inc_ytmb, inc_ytmt
           logical inc_ybqcd, inc_ybmb, inc_ybmt
           integer pphj_nf
+          integer pphj_eps_order
 
           inc_ytqcd = .False.
           inc_ytmb = .False.
@@ -199,7 +208,7 @@ c         Assign nloop=-2 to the meaning of HEFT 1l
           inc_ybmb = .False.
           inc_ybmt = .False.
           pphj_nf = MDL_PPHJ_nf
-
+          pphj_eps_order = 0
 
           ! We parse PGGG to the C routine
           do i=1,3
@@ -208,17 +217,17 @@ c         Assign nloop=-2 to the meaning of HEFT 1l
             enddo
           enddo
 
-          CALL ACCESS_CACHE_GGHG(identifier, P, MDL_MB, MDL_MT, 
+          CALL ACCESS_CACHE_GGHG(identifier, P, MDL_MB, MDL_MT, MU_R,
      &                      resRe, resIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 1-loop HEFT tensor'
              call %(C_prefix)sget_pphj_gghg_tensor_coefs(
-     &           HEFTselected, nloop, pphj_nf,
+     &           HEFTselected, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
-     &           PGGG,MDL_MB,MDL_MT, MDL_MH, MDL_YB, MDL_YT,resRe,resIm)
-             CALL ADD_TO_CACHE_GGHG(identifier, P,MDL_MB, MDL_MT, 
+     &           PGGG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
+             CALL ADD_TO_CACHE_GGHG(identifier, P,MDL_MB, MDL_MT, MU_R,
      &                         resRe, resIm)
           endif
 
@@ -260,6 +269,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
 
           logical inc_ytqcd, inc_ytmb, inc_ytmt
           logical inc_ybqcd, inc_ybmb, inc_ybmt
+          integer pphj_eps_order
           integer pphj_nf
 
           inc_ytqcd = MDL_GGGH1LQCD_inc_yt.gt.0.0d0
@@ -269,6 +279,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           inc_ybmb = MDL_GGGH1LQCD_inc_yb.gt.0.0d0
           inc_ybmt = MDL_GGGH1LQCD_inc_yb.gt.0.0d0
           pphj_nf = MDL_PPHJ_nf
+          pphj_eps_order = MDL_GGGH1LQCD_eps_order
 
 
           ! We parse PGGG to the C routine
@@ -278,17 +289,17 @@ c         Assign nloop=1 to the meaning of QCD 0l
             enddo
           enddo
 
-          CALL ACCESS_CACHE_GGHG(identifier, P, MDL_MB, MDL_MT, 
+          CALL ACCESS_CACHE_GGHG(identifier, P, MDL_MB, MDL_MT, MU_R,
      &                      resRe, resIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 1-loop tensor'
              call %(C_prefix)sget_pphj_gghg_tensor_coefs(
-     &           HEFTselected, nloop, pphj_nf,
+     &           HEFTselected, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
-     &           PGGG,MDL_MB,MDL_MT, MDL_MH, MDL_YB, MDL_YT,resRe,resIm)
-             CALL ADD_TO_CACHE_GGHG(identifier, P,MDL_MB, MDL_MT, 
+     &           PGGG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
+             CALL ADD_TO_CACHE_GGHG(identifier, P,MDL_MB, MDL_MT, MU_R,
      &                         resRe, resIm)
           endif
 
@@ -331,6 +342,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           logical inc_ytqcd, inc_ytmb, inc_ytmt
           logical inc_ybqcd, inc_ybmb, inc_ybmt
           integer pphj_nf
+          integer pphj_eps_order
 
           inc_ytqcd = MDL_GGGH2LQCD_inc_ytqcd.gt.0.0d0
           inc_ytmb = MDL_GGGH2LQCD_inc_ytmb.gt.0.0d0
@@ -338,6 +350,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           inc_ybqcd = MDL_GGGH2LQCD_inc_ybqcd.gt.0.0d0
           inc_ybmb = MDL_GGGH2LQCD_inc_ybmb.gt.0.0d0
           inc_ybmt = MDL_GGGH2LQCD_inc_ybmt.gt.0.0d0
+          pphj_eps_order = MDL_GGGH2LQCD_eps_order
           pphj_nf = MDL_PPHJ_nf
 
           ! We parse PGGG to the C routine
@@ -347,17 +360,17 @@ c         Assign nloop=1 to the meaning of QCD 0l
             enddo
           enddo
 
-          CALL ACCESS_CACHE_GGHG(identifier, P, MDL_MB, MDL_MT, 
+          CALL ACCESS_CACHE_GGHG(identifier, P, MDL_MB, MDL_MT, MU_R,
      &                      resRe, resIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 2-loop tensor'
              call %(C_prefix)sget_pphj_gghg_tensor_coefs(
-     &           HEFTselected, nloop, pphj_nf,
+     &           HEFTselected, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
-     &           PGGG,MDL_MB,MDL_MT, MDL_MH, MDL_YB, MDL_YT,resRe,resIm)
-             CALL ADD_TO_CACHE_GGHG(identifier, P,MDL_MB, MDL_MT, 
+     &           PGGG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
+             CALL ADD_TO_CACHE_GGHG(identifier, P,MDL_MB, MDL_MT, MU_R,
      &                         resRe, resIm)
           endif
 

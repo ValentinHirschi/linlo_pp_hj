@@ -15,13 +15,13 @@ Block SMINPUTS
 ###################################
 Block MASS 
     4 1.420000e+00 # MC 
-    5 4.700000e+00 # MB 
-    6 1.730000e+02 # MT 
+    5 1.000000e-20 # MB 
+    6 1.7305466381079324e+02 # MT 
    11 5.110000e-04 # Me 
    13 1.056600e-01 # MM 
    15 1.777000e+00 # MTA 
    23 9.118760e+01 # MZ 
-   25 1.250900e+02 # MH 
+   25 1.250000e+02 # MH 
 ##  Not dependent paramater.
 ## Those values should be edited following analytical the 
 ## analytical expression. Some generator could simply ignore 
@@ -103,7 +103,7 @@ Block GGGH1LQCD
   10307 6.602300e+01 # GGGH1LQCD_ForFac4_RE 
   10308 6.602400e+01 # GGGH1LQCD_ForFac4_IM 
   10310 1.00000001e+00 # GGGH1LQCD_inc_yt 
-  10311 1.00000002e+00 # GGGH1LQCD_inc_yb 
+  10311 -1.00000002e+00 # GGGH1LQCD_inc_yb 
   10309 0.000000031e+00 # GGGH1LQCD_eps_order 
 
 ###################################
@@ -119,11 +119,11 @@ Block GGGH2LQCD
   10407 6.603100e+01 # GGGH2LQCD_ForFac4_RE 
   10408 6.603200e+01 # GGGH2LQCD_ForFac4_IM 
   10410 1.00000003e+00 # GGGH2LQCD_inc_ytqcd 
-  10411 1.00000004e+00 # GGGH2LQCD_inc_ytmb 
+  10411 -1.00000004e+00 # GGGH2LQCD_inc_ytmb 
   10412 1.00000005e+00 # GGGH2LQCD_inc_ytmt 
-  10413 1.00000006e+00 # GGGH2LQCD_inc_ybqcd 
-  10414 1.00000007e+00 # GGGH2LQCD_inc_ybmb 
-  10415 1.00000008e+00 # GGGH2LQCD_inc_ybmt 
+  10413 -1.00000006e+00 # GGGH2LQCD_inc_ybqcd 
+  10414 -1.00000007e+00 # GGGH2LQCD_inc_ybmb 
+  10415 -1.00000008e+00 # GGGH2LQCD_inc_ybmt 
   10416 0.000000032e+00 # GGGH2LQCD_eps_order 
 
 ###################################
@@ -181,11 +181,11 @@ Block GGH3LQCD
   10501 6.603300e+01 # GGH3LQCD_ForFac1_RE 
   10502 6.603400e+01 # GGH3LQCD_ForFac1_IM 
   10510 1.00000009e+00 # GGH3LQCD_inc_ytqcd 
-  10511 1.00000010e+00 # GGH3LQCD_inc_ytmb 
+  10511 -1.00000010e+00 # GGH3LQCD_inc_ytmb 
   10512 1.00000011e+00 # GGH3LQCD_inc_ytmt 
-  10513 1.00000012e+00 # GGH3LQCD_inc_ybqcd 
-  10514 1.00000013e+00 # GGH3LQCD_inc_ybmb 
-  10515 1.00000014e+00 # GGH3LQCD_inc_ybmt 
+  10513 -1.00000012e+00 # GGH3LQCD_inc_ybqcd 
+  10514 -1.00000013e+00 # GGH3LQCD_inc_ybmb 
+  10515 -1.00000014e+00 # GGH3LQCD_inc_ybmt 
 
 ###################################
 ## INFORMATION FOR GGHEW
@@ -228,13 +228,13 @@ Block GGHHEFT
 ## INFORMATION FOR LOOP
 ###################################
 Block LOOP 
-    1 1.250900e+02 # MU_R 
+    1 1.250000e+02 # MU_R 
 
 ###################################
 ## INFORMATION FOR PPHJ
 ###################################
 Block PPHJ 
-  10010 4.00000033e+00 # PPHJ_nf 
+  10010 5.00000033e+00 # PPHJ_nf 
 
 ###################################
 ## INFORMATION FOR QQGH0LHEFT
@@ -263,7 +263,7 @@ Block QQGH1LQCD
   10803 6.604100e+01 # QQGH1LQCD_ForFac2_RE 
   10804 6.604200e+01 # QQGH1LQCD_ForFac2_IM 
   10810 1.00000015e+00 # QQGH1LQCD_inc_yt 
-  10811 1.00000016e+00 # QQGH1LQCD_inc_yb
+  10811 -1.00000016e+00 # QQGH1LQCD_inc_yb
   10805 0.000000033e+00 # QQGH1LQCD_eps_order 
 
 
@@ -276,11 +276,11 @@ Block QQGH2LQCD
   10903 6.604500e+01 # QQGH2LQCD_ForFac2_RE 
   10904 6.604600e+01 # QQGH2LQCD_ForFac2_IM 
   10910 1.00000017e+00 # QQGH2LQCD_inc_ytqcd 
-  10911 1.00000018e+00 # QQGH2LQCD_inc_ytmb 
+  10911 -1.00000018e+00 # QQGH2LQCD_inc_ytmb 
   10912 1.00000019e+00 # QQGH2LQCD_inc_ytmt 
-  10913 1.00000020e+00 # QQGH2LQCD_inc_ybqcd 
-  10914 1.00000021e+00 # QQGH2LQCD_inc_ybmt 
-  10915 1.00000022e+00 # QQGH2LQCD_inc_ybmb
+  10913 -1.00000020e+00 # QQGH2LQCD_inc_ybqcd 
+  10914 -1.00000021e+00 # QQGH2LQCD_inc_ybmt 
+  10915 -1.00000022e+00 # QQGH2LQCD_inc_ybmb
   10905 0.000000034e+00 # QQGH2LQCD_eps_order
 
 ###################################
@@ -297,8 +297,8 @@ Block Wolfenstein
 ###################################
 Block YUKAWA 
     4 0.000000e+00 # ymc 
-    5 4.200000e+00 # ymb 
-    6 1.730000e+02 # ymt 
+    5 1.000000e-20 # ymb 
+    6 1.7305466381079324e+02 # ymt 
    11 0.000000e+00 # yme 
    13 0.000000e+00 # ymm 
    15 0.000000e+00 # ymtau 

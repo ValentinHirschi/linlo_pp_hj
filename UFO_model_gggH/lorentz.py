@@ -12,11 +12,11 @@ from object_library import all_lorentz, Lorentz
 # We of course assume the gluons to be onshell here!
 # mu nu and tau are the Lorenz indices of p1:mu  p2:nu  p3:tau
 # T212 (s12*g[mu, nu] - 2*P[2, mu]*P[1, nu])*(s23*P[1, tau] - s13*P[2, tau])/(2*s13)
-gggHTensStruc1_expr = '( ( P(-10,1)*P(-10,2)*Metric(1,2) - P(1,2)*P(2,1) ) * ( P(-11,2)*P(-11,3)*P(3,1) - P(-12,1)*P(-12,3)*P(3,2) ) ) / ( 2.*P(-13,1)*P(-13,3) )'
+gggHTensStruc1_expr = '( ( P(-10,1)*P(-10,2)*Metric(1,2) - P(1,2)*P(2,1) ) * ( P(-11,2)*P(-11,3)*P(3,1) - P(-12,1)*P(-12,3)*P(3,2) ) ) / ( P(-13,1)*P(-13,3) )'
 # T332 (s23*g[nu, tau] - 2*P[3, nu]*P[2, tau])*(s13*P[2, mu] - s12*P[3, mu])/(2*s12)
-gggHTensStruc2_expr = '( ( P(-10,2)*P(-10,3)*Metric(2,3) - P(2,3)*P(3,2) ) * ( P(-11,1)*P(-11,3)*P(1,2) - P(-12,1)*P(-12,2)*P(1,3) ) ) / ( 2.*P(-13,1)*P(-13,2) )'
+gggHTensStruc2_expr = '( ( P(-10,2)*P(-10,3)*Metric(2,3) - P(2,3)*P(3,2) ) * ( P(-11,1)*P(-11,3)*P(1,2) - P(-12,1)*P(-12,2)*P(1,3) ) ) / ( P(-13,1)*P(-13,2) )'
 # T311 (s13*g[tau, mu] - 2*P[1, tau]*P[3, mu])*(s12*P[3, nu] - s23*P[1, nu])/(2*s23)
-gggHTensStruc3_expr = '( ( P(-10,1)*P(-10,3)*Metric(3,1) - P(3,1)*P(1,3) ) * ( P(-11,1)*P(-11,2)*P(2,3) - P(-12,2)*P(-12,3)*P(2,1) ) ) / ( 2.*P(-13,2)*P(-13,3) )'
+gggHTensStruc3_expr = '( ( P(-10,1)*P(-10,3)*Metric(3,1) - P(3,1)*P(1,3) ) * ( P(-11,1)*P(-11,2)*P(2,3) - P(-12,2)*P(-12,3)*P(2,1) ) ) / ( P(-13,2)*P(-13,3) )'
 # T312 (  g[mu, nu]*(s23*P[1, tau] - s13*P[2, tau]) 
 #       + g[nu, tau]*(s13*P[2, mu] - s12*P[3, mu]) 
 #       + g[tau, mu]*(s12*P[3, nu] - s23*P[1, nu]) 

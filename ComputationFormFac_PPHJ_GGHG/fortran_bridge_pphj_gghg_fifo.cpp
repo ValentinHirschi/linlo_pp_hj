@@ -152,6 +152,7 @@ inline bool %(C_prefix)spphj_gghg_exists(const std::string& name) {
 
 extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
 		                const bool & HEFT_selected,
+						const int & pphj_eps_order,
 						const int & nloop,
 						const int & nf,
 						const bool & inc_ytqcd,
@@ -164,6 +165,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
 						const double &	mb,
 						const double &	mt,
 						const double &	massHiggs,
+						const double &	mu_r,
 						const double &	yb,
 						const double &	yt,
 						double *oneLoopTensorRe,
