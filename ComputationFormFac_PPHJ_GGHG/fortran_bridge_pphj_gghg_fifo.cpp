@@ -148,9 +148,7 @@ inline bool %(C_prefix)spphj_gghg_exists(const std::string& name) {
     return ( access( name.c_str(), F_OK ) != -1 );
 }
 
-
-
-extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
+extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
 		                const bool & HEFT_selected,
 						const int & pphj_eps_order,
 						const int & nloop,
@@ -215,12 +213,14 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
 
 	ostr<<s<< " ";
     ostr<<t<<" ";
+	ostr<<mu_r<<" ";
     ostr<<massHiggs<<" ";
-    ostr<<mb<<" ";
+    ostr<<((mb > 1.0e-16) ? mb : 0.)<<" ";
     ostr<<mt<<" ";
-    ostr<<yb<<" ";
+    ostr<<((yb > 1.0e-16) ? yb : 0.)<<" ";
     ostr<<yt<<" ";
-    ostr<<nloop<<" "; 
+    ostr<<nloop<<" ";
+	ostr<<pphj_eps_order<<" ";
 	ostr<<nf<<" ";
 	ostr<<HEFT_selected<<" ";
     ostr<<inc_ytqcd<<" ";

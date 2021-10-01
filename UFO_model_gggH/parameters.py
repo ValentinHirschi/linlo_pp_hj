@@ -1123,194 +1123,194 @@ PPHJ_nf = Parameter(name='PPHJ_nf',
 
 # ----
 
-GGGH1LQCD_inc_yt = Parameter(name='GGGH1LQCD_inc_yt',
+GGGH1LQCD_yt = Parameter(name='GGGH1LQCD_yt',
                            nature='external',
                            type='real',
-                           value=1.0000000001,
-                           texname='\\text{GGGH1LQCD_inc_yt}',
+                           value=1.0000000011,
+                           texname='\\text{GGGH1LQCD_yt}',
                            lhablock='GGGH1LQCD',
                            lhacode=[10310])
 
-GGGH1LQCD_inc_yb = Parameter(name='GGGH1LQCD_inc_yb',
+GGGH1LQCD_yb = Parameter(name='GGGH1LQCD_yb',
                            nature='external',
                            type='real',
-                           value=1.0000000002,
-                           texname='\\text{GGGH1LQCD_inc_yb}',
+                           value=1.0000000022,
+                           texname='\\text{GGGH1LQCD_yb}',
                            lhablock='GGGH1LQCD',
                            lhacode=[10311])
 
 # ----
 
-GGGH2LQCD_inc_ytqcd = Parameter(name='GGGH2LQCD_inc_ytqcd',
+GGGH2LQCD_ytqcd = Parameter(name='GGGH2LQCD_ytqcd',
                            nature='external',
                            type='real',
-                           value=1.0000000003,
-                           texname='\\text{GGGH2LQCD_inc_ytqcd}',
+                           value=1.0000000033,
+                           texname='\\text{GGGH2LQCD_ytqcd}',
                            lhablock='GGGH2LQCD',
                            lhacode=[10410])
 
-GGGH2LQCD_inc_ytmb = Parameter(name='GGGH2LQCD_inc_ytmb',
+GGGH2LQCD_ytmb = Parameter(name='GGGH2LQCD_ytmb',
                            nature='external',
                            type='real',
-                           value=1.0000000004,
-                           texname='\\text{GGGH2LQCD_inc_ytmb}',
+                           value=1.0000000044,
+                           texname='\\text{GGGH2LQCD_ytmb}',
                            lhablock='GGGH2LQCD',
                            lhacode=[10411])
 
-GGGH2LQCD_inc_ytmt = Parameter(name='GGGH2LQCD_inc_ytmt',
+GGGH2LQCD_ytmt = Parameter(name='GGGH2LQCD_ytmt',
                            nature='external',
                            type='real',
-                           value=1.0000000005,
-                           texname='\\text{GGGH2LQCD_inc_ytmt}',
+                           value=1.0000000055,
+                           texname='\\text{GGGH2LQCD_ytmt}',
                            lhablock='GGGH2LQCD',
                            lhacode=[10412])
 
-GGGH2LQCD_inc_ybqcd = Parameter(name='GGGH2LQCD_inc_ybqcd',
+GGGH2LQCD_ybqcd = Parameter(name='GGGH2LQCD_ybqcd',
                            nature='external',
                            type='real',
-                           value=1.0000000006,
-                           texname='\\text{GGGH2LQCD_inc_ybqcd}',
+                           value=1.0000000066,
+                           texname='\\text{GGGH2LQCD_ybqcd}',
                            lhablock='GGGH2LQCD',
                            lhacode=[10413])
 
-GGGH2LQCD_inc_ybmb = Parameter(name='GGGH2LQCD_inc_ybmb',
+GGGH2LQCD_ybmb = Parameter(name='GGGH2LQCD_ybmb',
                            nature='external',
                            type='real',
-                           value=1.0000000007,
-                           texname='\\text{GGGH2LQCD_inc_ybmb}',
+                           value=1.0000000077,
+                           texname='\\text{GGGH2LQCD_ybmb}',
                            lhablock='GGGH2LQCD',
                            lhacode=[10414])
 
-GGGH2LQCD_inc_ybmt = Parameter(name='GGGH2LQCD_inc_ybmt',
+GGGH2LQCD_ybmt = Parameter(name='GGGH2LQCD_ybmt',
                            nature='external',
                            type='real',
-                           value=1.0000000008,
-                           texname='\\text{GGGH2LQCD_inc_ybmt}',
+                           value=1.0000000088,
+                           texname='\\text{GGGH2LQCD_ybmt}',
                            lhablock='GGGH2LQCD',
                            lhacode=[10415])
 
 GGGH2LQCD_eps_order = Parameter(name='GGGH2LQCD_eps_order',
                            nature='external',
                            type='real',
-                           value=0.0000000008,
+                           value=0.0000000099,
                            texname='\\text{GGGH2LQCD_eps_order}',
                            lhablock='GGGH2LQCD',
                            lhacode=[10416])
 # ---
 
-GGH3LQCD_inc_ytqcd = Parameter(name='GGH3LQCD_inc_ytqcd',
+GGH3LQCD_ytqcd = Parameter(name='GGH3LQCD_ytqcd',
                            nature='external',
                            type='real',
-                           value=1.0000000009,
-                           texname='\\text{GGH3LQCD_inc_ytqcd}',
+                           value=1.0000000100,
+                           texname='\\text{GGH3LQCD_ytqcd}',
                            lhablock='GGH3LQCD',
                            lhacode=[10510])
 
-GGH3LQCD_inc_ytmb = Parameter(name='GGH3LQCD_inc_ytmb',
+GGH3LQCD_ytmb = Parameter(name='GGH3LQCD_ytmb',
                            nature='external',
                            type='real',
-                           value=1.0000000010,
-                           texname='\\text{GGH3LQCD_inc_ytmb}',
+                           value=1.0000000103,
+                           texname='\\text{GGH3LQCD_ytmb}',
                            lhablock='GGH3LQCD',
                            lhacode=[10511])
 
-GGH3LQCD_inc_ytmt = Parameter(name='GGH3LQCD_inc_ytmt',
+GGH3LQCD_ytmt = Parameter(name='GGH3LQCD_ytmt',
                            nature='external',
                            type='real',
-                           value=1.0000000011,
-                           texname='\\text{GGH3LQCD_inc_ytmt}',
+                           value=1.0000000104,
+                           texname='\\text{GGH3LQCD_ytmt}',
                            lhablock='GGH3LQCD',
                            lhacode=[10512])
 
-GGH3LQCD_inc_ybqcd = Parameter(name='GGH3LQCD_inc_ybqcd',
+GGH3LQCD_ybqcd = Parameter(name='GGH3LQCD_ybqcd',
                            nature='external',
                            type='real',
-                           value=1.0000000012,
-                           texname='\\text{GGH3LQCD_inc_ybqcd}',
+                           value=1.0000000105,
+                           texname='\\text{GGH3LQCD_ybqcd}',
                            lhablock='GGH3LQCD',
                            lhacode=[10513])
 
-GGH3LQCD_inc_ybmb = Parameter(name='GGH3LQCD_inc_ybmb',
+GGH3LQCD_ybmb = Parameter(name='GGH3LQCD_ybmb',
                            nature='external',
                            type='real',
-                           value=1.0000000013,
-                           texname='\\text{GGH3LQCD_inc_ybmb}',
+                           value=1.0000000106,
+                           texname='\\text{GGH3LQCD_ybmb}',
                            lhablock='GGH3LQCD',
                            lhacode=[10514])
 
-GGH3LQCD_inc_ybmt = Parameter(name='GGH3LQCD_inc_ybmt',
+GGH3LQCD_ybmt = Parameter(name='GGH3LQCD_ybmt',
                            nature='external',
                            type='real',
-                           value=1.0000000014,
-                           texname='\\text{GGH3LQCD_inc_ybmt}',
+                           value=1.0000000107,
+                           texname='\\text{GGH3LQCD_ybmt}',
                            lhablock='GGH3LQCD',
                            lhacode=[10515])
 
 # ----
 
-QQGH1LQCD_inc_yt = Parameter(name='QQGH1LQCD_inc_yt',
+QQGH1LQCD_yt = Parameter(name='QQGH1LQCD_yt',
                            nature='external',
                            type='real',
-                           value=1.0000000015,
-                           texname='\\text{QQGH1LQCD_inc_yt}',
+                           value=1.0000000108,
+                           texname='\\text{QQGH1LQCD_yt}',
                            lhablock='QQGH1LQCD',
                            lhacode=[10810])
 
-QQGH1LQCD_inc_yb = Parameter(name='QQGH1LQCD_inc_yb',
+QQGH1LQCD_yb = Parameter(name='QQGH1LQCD_yb',
                            nature='external',
                            type='real',
-                           value=1.0000000016,
-                           texname='\\text{QQGH1LQCD_inc_yb}',
+                           value=1.0000000109,
+                           texname='\\text{QQGH1LQCD_yb}',
                            lhablock='QQGH1LQCD',
                            lhacode=[10811])
 
 # ----
 
-QQGH2LQCD_inc_ytqcd = Parameter(name='QQGH2LQCD_inc_ytqcd',
+QQGH2LQCD_ytqcd = Parameter(name='QQGH2LQCD_ytqcd',
                            nature='external',
                            type='real',
-                           value=1.0000000017,
-                           texname='\\text{QQGH2LQCD_inc_ytqcd}',
+                           value=1.0000000110,
+                           texname='\\text{QQGH2LQCD_ytqcd}',
                            lhablock='QQGH2LQCD',
                            lhacode=[10910])
 
-QQGH2LQCD_inc_ytmb = Parameter(name='QQGH2LQCD_inc_ytmb',
+QQGH2LQCD_ytmb = Parameter(name='QQGH2LQCD_ytmb',
                            nature='external',
                            type='real',
-                           value=1.0000000018,
-                           texname='\\text{QQGH2LQCD_inc_ytmb}',
+                           value=1.0000000111,
+                           texname='\\text{QQGH2LQCD_ytmb}',
                            lhablock='QQGH2LQCD',
                            lhacode=[10911])
 
-QQGH2LQCD_inc_ytmt = Parameter(name='QQGH2LQCD_inc_ytmt',
+QQGH2LQCD_ytmt = Parameter(name='QQGH2LQCD_ytmt',
                            nature='external',
                            type='real',
-                           value=1.0000000019,
-                           texname='\\text{QQGH2LQCD_inc_ytmt}',
+                           value=1.0000000112,
+                           texname='\\text{QQGH2LQCD_ytmt}',
                            lhablock='QQGH2LQCD',
                            lhacode=[10912])
 
-QQGH2LQCD_inc_ybqcd = Parameter(name='QQGH2LQCD_inc_ybqcd',
+QQGH2LQCD_ybqcd = Parameter(name='QQGH2LQCD_ybqcd',
                            nature='external',
                            type='real',
-                           value=1.0000000020,
-                           texname='\\text{QQGH2LQCD_inc_ybqcd}',
+                           value=1.0000000113,
+                           texname='\\text{QQGH2LQCD_ybqcd}',
                            lhablock='QQGH2LQCD',
                            lhacode=[10913])
 
-QQGH2LQCD_inc_ybmt = Parameter(name='QQGH2LQCD_inc_ybmt',
+QQGH2LQCD_ybmt = Parameter(name='QQGH2LQCD_ybmt',
                            nature='external',
                            type='real',
-                           value=1.0000000021,
-                           texname='\\text{QQGH2LQCD_inc_ybmt}',
+                           value=1.0000000114,
+                           texname='\\text{QQGH2LQCD_ybmt}',
                            lhablock='QQGH2LQCD',
                            lhacode=[10914])
 
-QQGH2LQCD_inc_ybmb = Parameter(name='QQGH2LQCD_inc_ybmb',
+QQGH2LQCD_ybmb = Parameter(name='QQGH2LQCD_ybmb',
                            nature='external',
                            type='real',
-                           value=1.0000000022,
-                           texname='\\text{QQGH2LQCD_inc_ybmb}',
+                           value=1.0000000115,
+                           texname='\\text{QQGH2LQCD_ybmb}',
                            lhablock='QQGH2LQCD',
                            lhacode=[10915])
 

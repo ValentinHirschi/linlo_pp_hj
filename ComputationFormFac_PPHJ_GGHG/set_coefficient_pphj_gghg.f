@@ -272,12 +272,12 @@ c         Assign nloop=1 to the meaning of QCD 0l
           integer pphj_eps_order
           integer pphj_nf
 
-          inc_ytqcd = MDL_GGGH1LQCD_inc_yt.gt.0.0d0
-          inc_ytmb = MDL_GGGH1LQCD_inc_yt.gt.0.0d0
-          inc_ytmt = MDL_GGGH1LQCD_inc_yt.gt.0.0d0
-          inc_ybqcd = MDL_GGGH1LQCD_inc_yb.gt.0.0d0
-          inc_ybmb = MDL_GGGH1LQCD_inc_yb.gt.0.0d0
-          inc_ybmt = MDL_GGGH1LQCD_inc_yb.gt.0.0d0
+          inc_ytqcd = MDL_GGGH1LQCD_yt.gt.0.0d0
+          inc_ytmb = MDL_GGGH1LQCD_yt.gt.0.0d0
+          inc_ytmt = MDL_GGGH1LQCD_yt.gt.0.0d0
+          inc_ybqcd = MDL_GGGH1LQCD_yb.gt.0.0d0
+          inc_ybmb = MDL_GGGH1LQCD_yb.gt.0.0d0
+          inc_ybmt = MDL_GGGH1LQCD_yb.gt.0.0d0
           pphj_nf = MDL_PPHJ_nf
           pphj_eps_order = MDL_GGGH1LQCD_eps_order
 
@@ -344,12 +344,12 @@ c         Assign nloop=1 to the meaning of QCD 0l
           integer pphj_nf
           integer pphj_eps_order
 
-          inc_ytqcd = MDL_GGGH2LQCD_inc_ytqcd.gt.0.0d0
-          inc_ytmb = MDL_GGGH2LQCD_inc_ytmb.gt.0.0d0
-          inc_ytmt = MDL_GGGH2LQCD_inc_ytmt.gt.0.0d0
-          inc_ybqcd = MDL_GGGH2LQCD_inc_ybqcd.gt.0.0d0
-          inc_ybmb = MDL_GGGH2LQCD_inc_ybmb.gt.0.0d0
-          inc_ybmt = MDL_GGGH2LQCD_inc_ybmt.gt.0.0d0
+          inc_ytqcd = MDL_GGGH2LQCD_ytqcd.gt.0.0d0
+          inc_ytmb = MDL_GGGH2LQCD_ytmb.gt.0.0d0
+          inc_ytmt = MDL_GGGH2LQCD_ytmt.gt.0.0d0
+          inc_ybqcd = MDL_GGGH2LQCD_ybqcd.gt.0.0d0
+          inc_ybmb = MDL_GGGH2LQCD_ybmb.gt.0.0d0
+          inc_ybmt = MDL_GGGH2LQCD_ybmt.gt.0.0d0
           pphj_eps_order = MDL_GGGH2LQCD_eps_order
           pphj_nf = MDL_PPHJ_nf
 
