@@ -1,4 +1,5 @@
-#!/usr/bin/env wolframscript
+(* ::Package:: *)
+
 (*#!/usr/bin/env /opt/mathematica-12.0/Executables/wolframscript*)
 ComputeFormFactors[args_,InterpolationDataLinker_]:=Block[{},
 Print[];
@@ -48,7 +49,11 @@ If[LinkerKey === Null,
 ];
 
 InterpolationDataLinker2 = InterpolationDataLinker[LinkerKey];
-InterpolationData = Import[InterpolationDataLinker2[[2]]] // Association; 
+If[ValueQ[InterpolationDataFiles],
+	InterpolationData = InterpolationDataFiles[InterpolationDataLinker2[[2]]] // Association; 
+	,
+	InterpolationData = Import[InterpolationDataLinker2[[2]]] // Association; 	
+];
 nmFromst = {n,m} //. (InterpolationDataLinker2[[1]] /. {s -> args["s"], t -> args["t"]});
 
 Print["n = ", nmFromst[[1]], ", m = ", nmFromst[[2]], "."];

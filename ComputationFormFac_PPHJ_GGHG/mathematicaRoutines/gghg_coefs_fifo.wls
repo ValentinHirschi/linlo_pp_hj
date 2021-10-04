@@ -1,4 +1,6 @@
 #!/usr/bin/env wolframscript
+(* ::Package:: *)
+
 (*#!/usr/bin/env /opt/mathematica-12.0/Executables/wolframscript*)
 
 If[ByteCount[$mypath]==0,
@@ -29,6 +31,9 @@ lenfifoin=19;
 fifoFilename=ToString[$ScriptCommandLine[[-1]]];
 
 InterpolationDataLinker = Import["./InterpolationDataLinker.m"];
+Print["Importing data files.."];
+InterpolationDataFiles = Association[ # -> Import[#] & /@ Values[InterpolationDataLinker][[All, -1]] ];
+
 Get["./gghg_coefs_computation.m"];
 
 While[True,
