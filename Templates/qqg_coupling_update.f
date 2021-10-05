@@ -24,7 +24,7 @@
         pin(2,2) = F2(3)
         pin(3,2) = F2(4)
       ENDIF
-      IF (DBLE(V3(1)).lt.0.0d0) THEN
+      IF (DBLE(V3(1)).gt.0.0d0) THEN
         pin(0,3) =-V3(1)
         pin(1,3) =-V3(2)
         pin(2,3) =-V3(3)
