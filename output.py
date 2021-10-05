@@ -534,19 +534,25 @@ fortran_bridge%.o : fortran_bridge%.cpp
         _helas_dir = pjoin(self.dir_path, 'Source','DHELAS')
         _template_dir = pjoin(_plugin_path,'Templates')
         for proc in self.relevant_processes.values():
-            if proc['gluon_number'] == 2:
+            if proc['gluon_number'] == 1:
+                helas_def ='\n      double precision pin(0:3,3)'
+                with open(pjoin(_template_dir,'qqg_coupling_update.f'),'r') as file:
+                    helas_string = file.read()
+            elif proc['gluon_number'] == 2:
                 # with open(pjoin(_template_dir,'gg_coupling_update.f'),'r') as file:
                 helas_def ='\n      double precision mH, muR'
                 helas_string = '\n'#file.read()
-            if proc['gluon_number'] == 3:
+            elif proc['gluon_number'] == 3:
                 with open(pjoin(_template_dir,'ggg_coupling_update.f'),'r') as file:
                     helas_def ='\n      double precision pg(0:3,3)'
                     helas_string = file.read()
             helas_string_update =''
             for coup_update in proc["coupling_update_function"]:
-                if proc['gluon_number'] == 3:
+                if proc['gluon_number'] == 1:
+                    helas_string_update +='      call SETCOEFFFUNC(pin)'.replace('SETCOEFFFUNC',coup_update)+'\n'
+                elif proc['gluon_number'] == 3:
                     helas_string_update +='      call SETCOEFFFUNC(pg)'.replace('SETCOEFFFUNC',coup_update)+'\n'
-                if proc['gluon_number'] == 2:
+                elif proc['gluon_number'] == 2:
                     helas_string_update +='      call SETCOEFFFUNC()'.replace('SETCOEFFFUNC',coup_update)+'\n'
             # now edit the tensor structures in the helas functions
             for tens in proc["tensor_structures"]:
@@ -560,15 +566,19 @@ fortran_bridge%.o : fortran_bridge%.cpp
                         appended3=True
 
                     for line in open(tensfile,'r').read().split('\n'):
-                        if line.strip().startswith('P1(0)') and appended1==False and appended3==False:
+                        was_implicit_none = False
+                        if line.strip().startswith('IMPLICIT NONE') and appended1==False and appended3==False:
                             appended1 = True
+                            was_implicit_none = True
+                            new_routine.append(line)
                             new_routine.append(helas_def)
                         if line.strip().startswith('TMP') and appended2==False:
                             appended2 = True
                             if appended3==False:
                                 new_routine.append(helas_string)
                             new_routine.append(helas_string_update)
-                        new_routine.append(line)
+                        if not was_implicit_none:
+                            new_routine.append(line)
                     open(tensfile,'w').write('\n'.join(new_routine))                            
                 else:
                     err= 'Tensor structure '+tensfile+' not found!'

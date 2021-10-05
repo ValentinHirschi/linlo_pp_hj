@@ -1,4 +1,6 @@
 #!/usr/bin/env wolframscript
+(* ::Package:: *)
+
 (*#!/usr/bin/env /opt/mathematica-12.0/Executables/wolframscript*)
 
 If[ByteCount[$mypath]==0,
@@ -24,10 +26,15 @@ If[$script,Quit[],Abort[]]
 
 basedir=Directory[];
 
-lenfifoin=16;
+lenfifoin=19;
 
 fifoFilename=ToString[$ScriptCommandLine[[-1]]];
 
+InterpolationDataLinker = Import["./InterpolationDataLinker.m"];
+Print["Importing data files.."];
+InterpolationDataFiles = Association[ # -> Import[#] & /@ Values[InterpolationDataLinker][[All, -1]] ];
+
+Get["./qqhg_coefs_computation.m"];
 
 While[True,
 
@@ -51,35 +58,37 @@ outString=StringJoin[outString,ToString[Join[{$ScriptCommandLine[[1]]},fifoin]]<
 outFilename=fifoin[[-1]];
 
 Print["Arguments received: "<>ToString[fifoin]];
-floatArgs = Table[ SetPrecision[ImportString[fifoin[[i+1]],"CSV"][[1]][[1]],precinput], {i, 7} ];
-intArgs = Table[ ImportString[fifoin[[i+8]],"CSV"][[1]][[1]], {i, 2} ];
-boolArgs = Table[ (ImportString[fifoin[[i+10]],"CSV"][[1]][[1]]>0), {i, 7} ];
-args = <| 
-  "s" -> floatArgs[[1]],
-  "t" -> floatArgs[[2]],
-  "mh" -> floatArgs[[3]],
-  "mb" -> floatArgs[[4]],
-  "mt" -> floatArgs[[5]],
-  "yb" -> floatArgs[[4]],
-  "yt" -> floatArgs[[5]],
-  "nloop" -> intArgs[[1]],
-  "nf" -> intArgs[[2]],
-  "is_HEFT" -> boolArgs[[1]],
-  "inc_ytqcd" -> boolArgs[[1]],
-  "inc_ytmb" -> boolArgs[[2]],
-  "inc_ytmt" -> boolArgs[[3]],
-  "inc_ybqcd" -> boolArgs[[4]],
-  "inc_ybmb" -> boolArgs[[5]],
-  "inc_ybmt" -> boolArgs[[6]]
-|>
-Print["Parsed arguments received: "<>ToString[args]];
 
-FormFactors = {
-  Complex[1.1,1.2],
-  Complex[1.3,1.4],
-  Complex[1.5,1.6],
-  Complex[1.7,1.8]
-};
+If[(Length@fifoin) < 19, Print["Not enough arguments received. Aborting.. "]; Abort[];];
+
+precinput=16; 
+
+floatArgs = Table[ SetPrecision[ImportString[fifoin[[i]],"CSV"][[1]][[1]],precinput], {i, 8} ];
+intArgs = Table[ ImportString[fifoin[[i+8]],"CSV"][[1]][[1]], {i, 3} ];
+boolArgs = Table[ (ImportString[fifoin[[i+11]],"CSV"][[1]][[1]]>0) , {i, 7} ];
+
+args = <|
+"s" -> floatArgs[[1]],
+"t" -> floatArgs[[2]],
+"mu" -> floatArgs[[3]],
+"mh" -> floatArgs[[4]],
+"mb" -> floatArgs[[5]],
+"mt" -> floatArgs[[6]],
+"yb" -> floatArgs[[7]],
+"yt" -> floatArgs[[8]],
+"nloop" -> intArgs[[1]],
+"eps_order" -> intArgs[[2]],
+"nf" -> intArgs[[3]],
+"is_HEFT" -> boolArgs[[1]],
+"inc_ytqcd" -> boolArgs[[2]],
+"inc_ytmb" -> boolArgs[[3]],
+"inc_ytmt" -> boolArgs[[4]],
+"inc_ybqcd" -> boolArgs[[5]],
+"inc_ybmb" -> boolArgs[[6]],
+"inc_ybmt" -> boolArgs[[7]]
+|>;
+
+FormFactors=ComputeFormFactors[args, InterpolationDataLinker];
 
 (*-----------------------------*)
 

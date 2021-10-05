@@ -1,4 +1,5 @@
 #!/usr/bin/env wolframscript
+(* ::Package:: *)
 
 If[ByteCount[$mypath]==0,
 	$myImportPath=FileNameJoin[{DirectoryName @ $InputFileName, ""}];
@@ -11,61 +12,61 @@ If[ByteCount[$mypath]==0,
 
 
 outFilename=ToString[$ScriptCommandLine[[-1]]];
-WriteLine[outFilename,$ProcessID];
+WriteLine[outFilename, $ProcessID];
 WriteLine[outFilename, "Arguments received: "<>ToString[$ScriptCommandLine]];
 
 
-basedir=Directory[];
+Print["Arguments received: "<>ToString[$ScriptCommandLine]];
+
+If[(Length@$ScriptCommandLine) < 19, Print["Not enough arguments received. Aborting.. "]; Abort[];];
 
 precinput=16; 
+floatArgs = Table[ SetPrecision[ImportString[$ScriptCommandLine[[i+1]],"CSV"][[1]][[1]],precinput], {i, 8} ];
+intArgs = Table[ ImportString[$ScriptCommandLine[[i+9]],"CSV"][[1]][[1]], {i, 3} ];
+boolArgs = Table[ (ImportString[$ScriptCommandLine[[i+12]],"CSV"][[1]][[1]]>0) , {i, 7} ];
 
-
-Print["Arguments received: "<>ToString[$ScriptCommandLine]];
-floatArgs = Table[ SetPrecision[ImportString[$ScriptCommandLine[[i+1]],"CSV"][[1]][[1]],precinput], {i, 7} ];
-intArgs = Table[ ImportString[$ScriptCommandLine[[i+8]],"CSV"][[1]][[1]], {i, 2} ];
-boolArgs = Table[ (ImportString[$ScriptCommandLine[[i+10]],"CSV"][[1]][[1]]>0) , {i, 7} ];
 args = <| 
   "s" -> floatArgs[[1]],
   "t" -> floatArgs[[2]],
-  "mh" -> floatArgs[[3]],
-  "mb" -> floatArgs[[4]],
-  "mt" -> floatArgs[[5]],
-  "yb" -> floatArgs[[4]],
-  "yt" -> floatArgs[[5]],
+  "mu" -> floatArgs[[3]],
+  "mh" -> floatArgs[[4]],
+  "mb" -> floatArgs[[5]],
+  "mt" -> floatArgs[[6]],
+  "yb" -> floatArgs[[7]],
+  "yt" -> floatArgs[[8]],
   "nloop" -> intArgs[[1]],
-  "nf" -> intArgs[[2]],
+  "eps_order" -> intArgs[[2]],
+  "nf" -> intArgs[[3]],
   "is_HEFT" -> boolArgs[[1]],
-  "inc_ytqcd" -> boolArgs[[1]],
-  "inc_ytmb" -> boolArgs[[2]],
-  "inc_ytmt" -> boolArgs[[3]],
-  "inc_ybqcd" -> boolArgs[[4]],
-  "inc_ybmb" -> boolArgs[[5]],
-  "inc_ybmt" -> boolArgs[[6]]
-|>
-Print["Parsed arguments received: "<>ToString[args]];
+  "inc_ytqcd" -> boolArgs[[2]],
+  "inc_ytmb" -> boolArgs[[3]],
+  "inc_ytmt" -> boolArgs[[4]],
+  "inc_ybqcd" -> boolArgs[[5]],
+  "inc_ybmb" -> boolArgs[[6]],
+  "inc_ybmt" -> boolArgs[[7]]
+|>;
 
-FormFactors = {
-  Complex[1.1,1.2],
-  Complex[1.3,1.4],
-  Complex[1.5,1.6],
-  Complex[1.7,1.8]
-};
+Print[];
+Print["Parsed arguments received: " <> ToString[args]];
+Print[];
+Print["Note that yb and yt are currently ignored.."];
+Print[];
 
-FormFactors = {
-  Complex[1.1,1.2],
-  Complex[1.3,1.4],
-  Complex[1.5,1.6],
-  Complex[1.7,1.8]
-};
+InterpolationDataLinker = Import["./InterpolationDataLinker.m"];
+Get["./qqhg_coefs_computation.m"];
+
+Print["Looking up arguments in linker file.."];
+
+FormFactors=ComputeFormFactors[args, InterpolationDataLinker];
 
 WriteLine[outFilename,"START_OUTPUT_STREAM"];
 
 Do[
-WriteLine[outFilename,Re[FormFactors[[i]]]//CForm//ToString]
+WriteLine[outFilename, Re[FormFactors[[i]]] // CForm // ToString]
 ,{i,Length@FormFactors}];
 
 Do[ 
-WriteLine[outFilename,Im[FormFactors[[i]]]//CForm//ToString]
+WriteLine[outFilename, Im[FormFactors[[i]]] // CForm // ToString]
 ,{i,Length@FormFactors}];
 
 WriteLine[outFilename,"END_OUTPUT_STREAM"];
