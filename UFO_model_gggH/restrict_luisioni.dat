@@ -105,6 +105,7 @@ Block GGGH1LQCD
   10310 1.00000021e+00 # GGGH1LQCD_yt 
   10311 -1.00000022e+00 # GGGH1LQCD_yb 
   10309 0.000000031e+00 # GGGH1LQCD_eps_order 
+  10313 0.000000073e+00 # GGGH1LQCD_eval_mode
 
 ###################################
 ## INFORMATION FOR GGGH2LQCD
@@ -125,6 +126,7 @@ Block GGGH2LQCD
   10414 -1.000317e+00 # GGGH2LQCD_ybmb 
   10415 -1.000318e+00 # GGGH2LQCD_ybmt 
   10416 0.0000342e+00 # GGGH2LQCD_eps_order 
+  10417 0.000000072e+00 # GGGH2LQCD_eval_mode
 
 ###################################
 ## INFORMATION FOR GGGHEWWW
@@ -265,7 +267,7 @@ Block QQGH1LQCD
   10810 1.00000615e+00 # QQGH1LQCD_yt 
   10811 -1.00000616e+00 # QQGH1LQCD_yb
   10805 0.000000633e+00 # QQGH1LQCD_eps_order 
-
+  10806 0.000000074e+00 # QQGH1LQCD_eval_mode
 
 ###################################
 ## INFORMATION FOR QQGH2LQCD
@@ -282,6 +284,7 @@ Block QQGH2LQCD
   10914 -1.000721e+00 # QQGH2LQCD_ybmt 
   10915 -1.000722e+00 # QQGH2LQCD_ybmb
   10905 0.0000734e+00 # QQGH2LQCD_eps_order
+  10906 0.000000078e+00 # QQGH2LQCD_eval_mode
 
 ###################################
 ## INFORMATION FOR WOLFENSTEIN

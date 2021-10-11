@@ -1196,6 +1196,15 @@ GGGH2LQCD_eps_order = Parameter(name='GGGH2LQCD_eps_order',
                            texname='\\text{GGGH2LQCD_eps_order}',
                            lhablock='GGGH2LQCD',
                            lhacode=[10416])
+
+GGGH2LQCD_eval_mode = Parameter(name='GGGH2LQCD_eval_mode',
+                           nature='external',
+                           type='real',
+                           value=0.00000000988,
+                           texname='\\text{GGGH2LQCD_eval_mode}',
+                           lhablock='GGGH2LQCD',
+                           lhacode=[10417])
+
 # ---
 
 GGH3LQCD_ytqcd = Parameter(name='GGH3LQCD_ytqcd',
@@ -1523,6 +1532,14 @@ GGGH1LQCD_eps_order = Parameter(name='GGGH1LQCD_eps_order',
                            lhablock='GGGH1LQCD',
                            lhacode=[10309])
 
+GGGH1LQCD_eval_mode = Parameter(name='GGGH1LQCD_eval_mode',
+                           nature='external',
+                           type='real',
+                           value=0.00000000989,
+                           texname='\\text{GGGH1LQCD_eval_mode}',
+                           lhablock='GGGH1LQCD',
+                           lhacode=[10313])
+
 # ---
 
 
@@ -1718,6 +1735,14 @@ QQGH1LQCD_eps_order = Parameter(name='QQGH1LQCD_eps_order',
                            lhablock='QQGH1LQCD',
                            lhacode=[10805])
 
+QQGH1LQCD_eval_mode = Parameter(name='QQGH1LQCD_eval_mode',
+                           nature='external',
+                           type='real',
+                           value=0.00000000991,
+                           texname='\\text{QQGH1LQCD_eval_mode}',
+                           lhablock='QQGH1LQCD',
+                           lhacode=[10806])
+
 # ----
 
 
@@ -1760,6 +1785,14 @@ QQGH2LQCD_eps_order = Parameter(name='QQGH2LQCD_eps_order',
                            texname='\\text{QQGH2LQCD_eps_order}',
                            lhablock='QQGH2LQCD',
                            lhacode=[10905])
+
+QQGH2LQCD_eval_mode = Parameter(name='QQGH2LQCD_eval_mode',
+                           nature='external',
+                           type='real',
+                           value=0.00000000992,
+                           texname='\\text{QQGH2LQCD_eval_mode}',
+                           lhablock='QQGH2LQCD',
+                           lhacode=[10906])
 
 # ===============================================================================
 # Form Factors for ggH

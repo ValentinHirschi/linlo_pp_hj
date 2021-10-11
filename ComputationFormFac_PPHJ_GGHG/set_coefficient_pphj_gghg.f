@@ -124,6 +124,7 @@ c         Assign nloop=-1 to the meaning of HEFT 0l
           save resRe
           save resIm
 
+          integer eval_mode
           logical inc_ytqcd, inc_ytmb, inc_ytmt
           logical inc_ybqcd, inc_ybmb, inc_ybmt
           integer pphj_nf
@@ -135,7 +136,8 @@ c         Assign nloop=-1 to the meaning of HEFT 0l
           inc_ybqcd = .False.
           inc_ybmb = .False.
           inc_ybmt = .False.
-          pphj_nf = MDL_PPHJ_nf
+          pphj_nf = NINT(MDL_PPHJ_nf)
+          eval_mode = 0
           pphj_eps_order = 0
 
 
@@ -152,7 +154,7 @@ c         Assign nloop=-1 to the meaning of HEFT 0l
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 0-loop HEFT tensor'
              call %(C_prefix)sget_pphj_gghg_tensor_coefs(
-     &           HEFTselected, pphj_eps_order, nloop, pphj_nf,
+     &           HEFTselected, eval_mode, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
      &           PGGG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
@@ -198,6 +200,7 @@ c         Assign nloop=-2 to the meaning of HEFT 1l
 
           logical inc_ytqcd, inc_ytmb, inc_ytmt
           logical inc_ybqcd, inc_ybmb, inc_ybmt
+          integer eval_mode
           integer pphj_nf
           integer pphj_eps_order
 
@@ -207,7 +210,8 @@ c         Assign nloop=-2 to the meaning of HEFT 1l
           inc_ybqcd = .False.
           inc_ybmb = .False.
           inc_ybmt = .False.
-          pphj_nf = MDL_PPHJ_nf
+          eval_mode = 0
+          pphj_nf = NINT(MDL_PPHJ_nf)
           pphj_eps_order = 0
 
           ! We parse PGGG to the C routine
@@ -223,7 +227,7 @@ c         Assign nloop=-2 to the meaning of HEFT 1l
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 1-loop HEFT tensor'
              call %(C_prefix)sget_pphj_gghg_tensor_coefs(
-     &           HEFTselected, pphj_eps_order, nloop, pphj_nf,
+     &           HEFTselected, eval_mode, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
      &           PGGG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
@@ -267,6 +271,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           save resRe
           save resIm
 
+          integer eval_mode
           logical inc_ytqcd, inc_ytmb, inc_ytmt
           logical inc_ybqcd, inc_ybmb, inc_ybmt
           integer pphj_eps_order
@@ -278,8 +283,9 @@ c         Assign nloop=1 to the meaning of QCD 0l
           inc_ybqcd = MDL_GGGH1LQCD_yb.gt.0.0d0
           inc_ybmb = MDL_GGGH1LQCD_yb.gt.0.0d0
           inc_ybmt = MDL_GGGH1LQCD_yb.gt.0.0d0
-          pphj_nf = MDL_PPHJ_nf
-          pphj_eps_order = MDL_GGGH1LQCD_eps_order
+          pphj_nf = NINT(MDL_PPHJ_nf)
+          eval_mode = NINT(MDL_GGGH1LQCD_eval_mode)
+          pphj_eps_order = NINT(MDL_GGGH1LQCD_eps_order)
 
 
           ! We parse PGGG to the C routine
@@ -295,7 +301,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 1-loop tensor'
              call %(C_prefix)sget_pphj_gghg_tensor_coefs(
-     &           HEFTselected, pphj_eps_order, nloop, pphj_nf,
+     &           HEFTselected, eval_mode, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
      &           PGGG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
@@ -339,6 +345,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           save resRe
           save resIm
 
+          integer eval_mode
           logical inc_ytqcd, inc_ytmb, inc_ytmt
           logical inc_ybqcd, inc_ybmb, inc_ybmt
           integer pphj_nf
@@ -350,8 +357,9 @@ c         Assign nloop=1 to the meaning of QCD 0l
           inc_ybqcd = MDL_GGGH2LQCD_ybqcd.gt.0.0d0
           inc_ybmb = MDL_GGGH2LQCD_ybmb.gt.0.0d0
           inc_ybmt = MDL_GGGH2LQCD_ybmt.gt.0.0d0
-          pphj_eps_order = MDL_GGGH2LQCD_eps_order
-          pphj_nf = MDL_PPHJ_nf
+          eval_mode = NINT(MDL_GGGH2LQCD_eval_mode)
+          pphj_eps_order = NINT(MDL_GGGH2LQCD_eps_order)
+          pphj_nf = NINT(MDL_PPHJ_nf)
 
           ! We parse PGGG to the C routine
           do i=1,3
@@ -366,7 +374,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 2-loop tensor'
              call %(C_prefix)sget_pphj_gghg_tensor_coefs(
-     &           HEFTselected, pphj_eps_order, nloop, pphj_nf,
+     &           HEFTselected, eval_mode, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
      &           PGGG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
