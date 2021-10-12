@@ -59,13 +59,13 @@ outFilename=fifoin[[-1]];
 
 Print["Arguments received: "<>ToString[fifoin]];
 
-If[(Length@fifoin) < 19, Print["Not enough arguments received. Aborting.. "]; Abort[];];
+If[(Length@fifoin) < 20, Print["Not enough arguments received. Aborting.. "]; Abort[];];
 
 precinput=16; 
 
 floatArgs = Table[ SetPrecision[ImportString[fifoin[[i]],"CSV"][[1]][[1]],precinput], {i, 8} ];
-intArgs = Table[ ImportString[fifoin[[i+8]],"CSV"][[1]][[1]], {i, 3} ];
-boolArgs = Table[ (ImportString[fifoin[[i+11]],"CSV"][[1]][[1]]>0) , {i, 7} ];
+intArgs = Table[ ImportString[fifoin[[i+8]],"CSV"][[1]][[1]], {i, 4} ];
+boolArgs = Table[ (ImportString[fifoin[[i+12]],"CSV"][[1]][[1]]>0) , {i, 7} ];
 
 args = <|
 "s" -> floatArgs[[1]],
@@ -77,8 +77,9 @@ args = <|
 "yb" -> floatArgs[[7]],
 "yt" -> floatArgs[[8]],
 "nloop" -> intArgs[[1]],
-"eps_order" -> intArgs[[2]],
-"nf" -> intArgs[[3]],
+"eval_mode" -> intArgs[[2]],
+"eps_order" -> intArgs[[3]],
+"nf" -> intArgs[[4]],
 "is_HEFT" -> boolArgs[[1]],
 "inc_ytqcd" -> boolArgs[[2]],
 "inc_ytmb" -> boolArgs[[3]],

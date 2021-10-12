@@ -23,7 +23,7 @@ const bool PIPE_TO_STDOUT = false;
 #include <fcntl.h> 
 #include <sys/types.h> 
 
-namespace %(C_prefix)spphj_gghg_uuid {
+namespace %(C_prefix)spphj_qqhg_uuid {
     static std::random_device              rd;
     static std::mt19937                    gen(rd());
     static std::uniform_int_distribution<> dis(0, 15);
@@ -58,7 +58,7 @@ namespace %(C_prefix)spphj_gghg_uuid {
 }
 
 /*
-std::string %(C_prefix)spphj_gghg_exec(const char* cmd) {
+std::string %(C_prefix)spphj_qqhg_exec(const char* cmd) {
     char buffer[128];
     std::string result = "";
     FILE* pipe = popen(cmd, "r");
@@ -81,7 +81,7 @@ std::string %(C_prefix)spphj_gghg_exec(const char* cmd) {
 */
 
 /*
-std::string %(C_prefix)spphj_gghg_exec(const char* cmd) {
+std::string %(C_prefix)spphj_qqhg_exec(const char* cmd) {
     std::array<char, 128> buffer;
     std::string result("");
 	std::string target_start("START_OUTPUT_STREAM");	
@@ -115,7 +115,7 @@ std::string %(C_prefix)spphj_gghg_exec(const char* cmd) {
 }
 */
 
-std::string %(C_prefix)spphj_gghg_exec(const char* cmd) {
+std::string %(C_prefix)spphj_qqhg_exec(const char* cmd) {
     const int bufsize=128;
 	std::string output;
     std::array<char, bufsize> buffer;
@@ -144,14 +144,16 @@ std::string %(C_prefix)spphj_gghg_exec(const char* cmd) {
 	return output;
 }
 
-inline bool %(C_prefix)spphj_gghg_exists(const std::string& name) {
+inline bool %(C_prefix)spphj_qqhg_exists(const std::string& name) {
     return ( access( name.c_str(), F_OK ) != -1 );
 }
 
 
 
-extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
+extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs(
 		                const bool & HEFT_selected,
+						const int & eval_mode,
+						const int & pphj_eps_order,
 						const int & nloop,
 						const int & nf,
 						const bool & inc_ytqcd,
@@ -164,6 +166,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
 						const double &	mb,
 						const double &	mt,
 						const double &	massHiggs,
+						const double &	mu_r,
 						const double &	yb,
 						const double &	yt,
 						double *oneLoopTensorRe,
@@ -179,7 +182,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
 
 	  double s, t;
 	  s =  (p[0][0]+p[1][0])*(p[0][0]+p[1][0]) - (p[0][1]+p[1][1])*(p[0][1]+p[1][1]) - (p[0][2]+p[1][2])*(p[0][2]+p[1][2]) - (p[0][3]+p[1][3])*(p[0][3]+p[1][3]);
-      t =  (p[0][0]-p[2][0])*(p[0][0]-p[2][0]) - (p[0][1]-p[2][1])*(p[0][1]-p[2][1]) - (p[0][2]-p[2][2])*(p[0][2]-p[2][2]) - (p[0][3]-p[2][3])*(p[0][3]-p[2][3]);
+      t =  (p[0][0]+p[2][0])*(p[0][0]+p[2][0]) - (p[0][1]+p[2][1])*(p[0][1]+p[2][1]) - (p[0][2]+p[2][2])*(p[0][2]+p[2][2]) - (p[0][3]+p[2][3])*(p[0][3]+p[2][3]);
 
 
     std::ostringstream ostr;
@@ -188,12 +191,12 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
 
 	std::string mathematica_input_file("%(path_prefix)s/mathematicaRoutines/mathematica_input.fifo");
 
-	if (!%(C_prefix)spphj_gghg_exists(mathematica_input_file)) {
-	   std::cerr<<"Could Not find 'mathematica_input.fifo'. Place it somewhere as defined in fortran_bridge_pphj_gghg_fifo.cpp"<<std::endl;
+	if (!%(C_prefix)spphj_qqhg_exists(mathematica_input_file)) {
+	   std::cerr<<"Could Not find 'mathematica_input.fifo'. Place it somewhere as defined in fortran_bridge_pphj_qqhg_fifo.cpp"<<std::endl;
        exit (EXIT_FAILURE);
 	}
 
-	string tmp_file = "%(path_prefix)s/mathematicaRoutines/"+%(C_prefix)spphj_gghg_uuid::%(C_prefix)sgenerate_uuid_v4()+"_tmp.fifo";
+	string tmp_file = "%(path_prefix)s/mathematicaRoutines/"+%(C_prefix)spphj_qqhg_uuid::%(C_prefix)sgenerate_uuid_v4()+"_tmp.fifo";
 
 	// Create the output fifo file
 	//std::string mkfifo("mkfifo "+tmp_file);
@@ -213,12 +216,15 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
 
 	ostr<<s<< " ";
     ostr<<t<<" ";
+	ostr<<mu_r<<" ";
     ostr<<massHiggs<<" ";
-    ostr<<mb<<" ";
+    ostr<<((mb > 1.0e-16) ? mb : 0.)<<" ";
     ostr<<mt<<" ";
-    ostr<<yb<<" ";
+    ostr<<((yb > 1.0e-16) ? yb : 0.)<<" ";
     ostr<<yt<<" ";
-    ostr<<nloop<<" "; 
+    ostr<<nloop<<" ";
+	ostr<<eval_mode<<" ";
+	ostr<<pphj_eps_order<<" ";
 	ostr<<nf<<" ";
 	ostr<<HEFT_selected<<" ";
     ostr<<inc_ytqcd<<" ";
@@ -227,6 +233,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
     ostr<<inc_ybqcd<<" ";
     ostr<<inc_ybmb<<" ";
     ostr<<inc_ybmt<<" ";
+	
 	
 	ostr<<" "<<tmp_file;
 
@@ -266,13 +273,13 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs(
 		}
 	}
 
-	for(int i=0; i<4; i++) {
+	for(int i=0; i<2; i++) {
 		oneLoopTensorRe[i]=std::stod(result[i]);
 		if (PIPE_TO_STDOUT) std::cout<<"oneLoopTensorRe["<<i<<"]="<<oneLoopTensorRe[i]<<std::endl;
 	}
-	for(int i=4; i<8; i++) {
-		oneLoopTensorIm[i-4]=std::stod(result[i]);
-		if (PIPE_TO_STDOUT) std::cout<<"oneLoopTensorIm["<<i-4<<"]="<<oneLoopTensorIm[i-4]<<std::endl;
+	for(int i=2; i<4; i++) {
+		oneLoopTensorIm[i-2]=std::stod(result[i]);
+		if (PIPE_TO_STDOUT) std::cout<<"oneLoopTensorIm["<<i-2<<"]="<<oneLoopTensorIm[i-2]<<std::endl;
 	}
 
 }
