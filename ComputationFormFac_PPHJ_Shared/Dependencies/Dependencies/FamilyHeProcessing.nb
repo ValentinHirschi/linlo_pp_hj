@@ -1,0 +1,261 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      9707,        253]
+NotebookOptionsPosition[      9333,        238]
+NotebookOutlinePosition[      9726,        254]
+CellTagsIndexPosition[      9683,        251]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "Many", " ", "definitions", " ", "here", " ", "are", " ", "for", " ", 
+     "family", " ", "H"}], ",", " ", 
+    RowBox[{"but", " ", "that", " ", "is", " ", "ok"}], ",", " ", 
+    RowBox[{
+    "since", " ", "H", " ", "and", " ", "He", " ", "differ", " ", "by", " ", 
+     RowBox[{"eps", "^", "2"}]}], ",", " ", 
+    RowBox[{"so", " ", "that", " ", "He", " ", "is", " ", 
+     RowBox[{"finite", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"FamHMasters", "=", 
+     RowBox[{"Import", "[", 
+      RowBox[{"FileNameJoin", "[", 
+       RowBox[{"{", 
+        RowBox[{
+        "BaseDirectory", ",", "\"\<Dependencies\>\"", ",", "\"\<Bases\>\"", 
+         ",", "\"\<HCombined.m\>\""}], "}"}], "]"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"FamHRules", "=", 
+     RowBox[{"Import", "[", 
+      RowBox[{"FileNameJoin", "[", 
+       RowBox[{"{", 
+        RowBox[{
+        "BaseDirectory", ",", "\"\<Dependencies\>\"", ",", " ", 
+         "\"\<HRules.m\>\""}], "}"}], "]"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"FamHRootsRestore", "=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"Tmp", ",", "CurrMasters"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"CurrMasters", "=", 
+         RowBox[{"(", 
+          RowBox[{"Import", "[", 
+           RowBox[{"FileNameJoin", "[", 
+            RowBox[{"{", 
+             RowBox[{
+             "BaseDirectory", ",", "\"\<Dependencies\>\"", ",", 
+              "\"\<Bases\>\"", ",", "\"\<FamilyH.m\>\""}], "}"}], "]"}], 
+           "]"}], ")"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        
+        RowBox[{
+         RowBox[{"Table", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Tmp", "=", 
+             RowBox[{"Table", "[", 
+              RowBox[{
+               RowBox[{"SWAPMAS", "[", 
+                RowBox[{"\"\<H\>\"", ",", "ind", ",", "perm"}], "]"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"ind", ",", 
+                 RowBox[{"Length", "@", "CurrMasters"}]}], "}"}]}], "]"}]}], 
+            ";", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Tmp", "\[Rule]", 
+              RowBox[{
+               RowBox[{"Together", "[", 
+                FractionBox[
+                 RowBox[{"(", 
+                  RowBox[{"CurrMasters", "/.", 
+                   RowBox[{
+                    RowBox[{"SwapRelations", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", "perm", "]"}]}], 
+                  ")"}], 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"CurrMasters", "/.", 
+                    RowBox[{
+                    RowBox[{"SwapRelations", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", "perm", "]"}]}], "/.",
+                    "RootFlips"}], ")"}]], "]"}], "Tmp"}]}], "//", 
+             "Thread"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"{", 
+            RowBox[{"perm", ",", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", "2", ",", "3", ",", "4", ",", "5", ",", "6"}],
+               "}"}]}], "}"}]}], "\[IndentingNewLine]", "]"}], "//", 
+         "Flatten"}]}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"FamHAllFinalIntegrals", "=", 
+     RowBox[{"FamHRootsRestore", "[", 
+      RowBox[{"[", 
+       RowBox[{"All", ",", "1"}], "]"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"FamHAllFinalIntegralsCombinedRules", "=", 
+     RowBox[{
+      RowBox[{"FamHAllFinalIntegrals", "/.", "FamHRootsRestore"}], "/.", 
+      "FamHRules"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ConvertDiffExpResultsHe", "[", "data_", "]"}], ":=", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"data", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Module", "[", 
+        RowBox[{
+         RowBox[{"{", "FirstRules", "}"}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"FirstRules", "=", 
+           RowBox[{
+            RowBox[{"FamHMasters", "\[Rule]", 
+             RowBox[{"(", "\[IndentingNewLine]", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"data", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "//", 
+                RowBox[{"Map", "[", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"#", "[", 
+                    RowBox[{"[", "ind", "]"}], "]"}], 
+                    SuperscriptBox["\[Epsilon]", 
+                    RowBox[{"ind", "-", "1"}]]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"ind", ",", 
+                    RowBox[{"Length", "@", "#"}]}], "}"}]}], "]"}], "+", 
+                    SuperscriptBox[
+                    RowBox[{"O", "[", "\[Epsilon]", "]"}], 
+                    RowBox[{"(", 
+                    RowBox[{"Length", "@", "#"}], ")"}]]}], ")"}], "&"}], 
+                 "]"}]}], ")"}], 
+              RowBox[{"(*", 
+               RowBox[{
+                RowBox[{"+", "err"}], " ", 
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"SetPrecision", "[", 
+                   RowBox[{
+                    RowBox[{"data", "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"data", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "//", "Accuracy"}]}], 
+                   "]"}], "//", 
+                  RowBox[{"Map", "[", 
+                   RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"#", "[", 
+                    RowBox[{"[", "ind", "]"}], "]"}], 
+                    SuperscriptBox["\[Epsilon]", 
+                    RowBox[{"ind", "-", "1"}]]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"ind", ",", 
+                    RowBox[{"Length", "@", "#"}]}], "}"}]}], "]"}], "+", 
+                    SuperscriptBox[
+                    RowBox[{"O", "[", "\[Epsilon]", "]"}], 
+                    RowBox[{"(", 
+                    RowBox[{"Length", "@", "#"}], ")"}]]}], ")"}], "&"}], 
+                   "]"}]}], ")"}]}], "*)"}], "\[IndentingNewLine]", ")"}]}], "//",
+             "Thread"}]}], ";", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Thread", "[", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"FamHAllFinalIntegrals", "/.", 
+               RowBox[{"\"\<H\>\"", "\[Rule]", "\"\<He\>\""}]}], ")"}], 
+             "\[Rule]", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"FamHAllFinalIntegralsCombinedRules", "/.", 
+                RowBox[{"data", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}]}], "/.", "FirstRules"}], 
+              ")"}]}], "]"}], "/.", 
+           RowBox[{
+            RowBox[{"SWAPMAS", "[", 
+             RowBox[{"fam_", ",", "ind_", ",", "perm_"}], "]"}], 
+            "\[RuleDelayed]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"ToExpression", "[", 
+               RowBox[{"\"\<Fam\>\"", "<>", "fam"}], "]"}], "[", "perm", 
+              "]"}], "[", "ind", "]"}]}]}]}]}], "\[IndentingNewLine]", 
+        "]"}]}], 
+      RowBox[{"(*", 
+       RowBox[{"//", 
+        RowBox[{"MapAt", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"N", "[", 
+            RowBox[{"#", ",", 
+             RowBox[{"Accuracy", "[", "#", "]"}]}], "]"}], "&"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"All", ",", "2"}], "}"}]}], "]"}]}], "*)"}], "}"}]}], 
+    ";"}]}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.8348349534158573`*^9, 3.834835045109482*^9}, {
+   3.834835079094102*^9, 3.834835145880043*^9}, 3.8348352179990683`*^9, {
+   3.834835276138021*^9, 3.834835289632015*^9}, {3.834835326492607*^9, 
+   3.834835410268606*^9}, 3.8348355820961637`*^9, {3.835268395163382*^9, 
+   3.83526847738243*^9}, {3.835270796795451*^9, 3.835270831660017*^9}, {
+   3.835270887149004*^9, 3.835270889804576*^9}, {3.835270921581119*^9, 
+   3.8352709295811996`*^9}, {3.835270967821582*^9, 3.835270994974421*^9}, 
+   3.837015070657118*^9, 
+   3.838373032504734*^9},ExpressionUUID->"cd18b407-d088-4f51-ace5-\
+bc3544bdd896"]
+},
+WindowSize->{1920, 903},
+WindowMargins->{{0, Automatic}, {0, Automatic}},
+FrontEndVersion->"12.2 for Linux x86 (64-bit) (December 12, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"e143aad9-f683-41e9-91b7-41432997371c"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 8771, 216, 620, "Input",ExpressionUUID->"cd18b407-d088-4f51-ace5-bc3544bdd896",
+ InitializationCell->True]
+}
+]
+*)
+

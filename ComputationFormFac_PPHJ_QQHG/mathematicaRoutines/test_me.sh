@@ -1,2 +1,1 @@
-#!/usr/bin/env bash
-./qqhg_coefs.wls 1.0 2.0 3.0 4.0 5.0 6.0 7.0 2 4 1 1 0 1 0 1 1 res.dat
+wolframscript qqhg_coefs.wls 24336 -5560.8307142857142857 2      125   0     173.05466381079322610 1      1     2         0           0            5     0           1           0            1           0            0           0          res.dat

@@ -1,9 +1,0 @@
-All the 2-loop basis definitions are given with mm = 1. This is equivalent to considering the family obtained by letting s -> s / mm, t -> t / mm, pp4 -> pp4 / mm, and by setting I[{x1,x2,...}] -> I[{x1,x2,...}]* mm^(x1+x2+...-4+2eps) for all integrals.
-
-Similarly, the 1-loop family is given with mm = 1, which is equivalent to the family with s -> s / mm, t -> t / mm, pp4 -> pp4 / mm, and by setting I[{x1,x2,...}] -> I[{x1,x2,...}]* mm^(x1+x2+...+(-4+2eps)/2).
-
-The roots do not all have +Idelta, according to the Feynman prescription. However, we will always give numerics with a +Idelta-prescription for these roots. (That means we take the DiffExp output and multiply by appropriate factors, to restore the Idelta prescriptions of the roots to the original ones.)
-
-There are two definitions for family A. The first definition corresponds to the one from the 2016 paper, and is used in the amplitude. The second, called "FamilyA_Francesco.m", is the basis used for the expansions, and roughly corresponds to the basis used in Francesco's first expansion paper. However, in addition we have removed integral 19 from the basis, which is redundant. The basis is labeled as "Af" in the code, and has 72 master integrals, instead of the 73 from A where the redundant integral 19 is included.
-
-There are two definitions for family B. Some of the roots were combined in the basis given in the ancillary of the 2016 paper. They have been split up, in a manner consistent in the Euclidean region, which gives a new family labeled "Bs".
