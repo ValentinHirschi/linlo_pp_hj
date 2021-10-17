@@ -168,7 +168,7 @@
 		"tensor_structures":["qqgHTensStruc1HEFT0L","qqgHTensStruc2HEFT0L"],
 	    "associated_coupling":["PPHJ","QQHG0LHEFT"],
 		"fortran_cache": "qqhg_cache.inc",
-		"gluon_number":1
+		"gluon_number":-1
 	},
 	"pphjQQHGHEFT1L":{
 		"directory":"ComputationFormFac_PPHJ_QQHG",
@@ -178,7 +178,7 @@
 		"tensor_structures":["qqgHTensStruc1HEFT1L","qqgHTensStruc2HEFT1L"],
 	    "associated_coupling":["PPHJ","QQHG1LHEFT"],
 		"fortran_cache": "qqhg_cache.inc",
-		"gluon_number":1
+		"gluon_number":-1
 	},
 	"pphjQQHGQCD1L":{
 		"directory":"ComputationFormFac_PPHJ_QQHG",
@@ -188,7 +188,7 @@
 		"tensor_structures":["qqgHTensStruc1QCD1L","qqgHTensStruc2QCD1L"],
 	    "associated_coupling":["PPHJ","QQHG1LQCD"],
 		"fortran_cache": "qqhg_cache.inc",
-		"gluon_number":1
+		"gluon_number":-1
 	},
 	"pphjQQHGHQCD2L":{
 		"directory":"ComputationFormFac_PPHJ_QQHG",
@@ -198,6 +198,6 @@
 		"tensor_structures":["qqgHTensStruc1QCD2L","qqgHTensStruc2QCD2L"],
 	    "associated_coupling":["PPHJ","QQHG2LQCD"],
 		"fortran_cache": "qqhg_cache.inc",
-		"gluon_number":1
+		"gluon_number":-1
 	}
 }
