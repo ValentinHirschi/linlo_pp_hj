@@ -153,6 +153,7 @@ inline bool %(C_prefix)spphj_qqhg_exists(const std::string& name) {
 extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs(
 		                const bool & HEFT_selected,
 						const int & eval_mode,
+						const int & selected_channel,
 						const int & pphj_eps_order,
 						const int & nloop,
 						const int & nf,
@@ -224,6 +225,7 @@ extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs(
     ostr<<yt<<" ";
     ostr<<nloop<<" ";
 	ostr<<eval_mode<<" ";
+	ostr<<selected_channel<<" ";
 	ostr<<pphj_eps_order<<" ";
 	ostr<<nf<<" ";
 	ostr<<HEFT_selected<<" ";

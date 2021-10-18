@@ -101,7 +101,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
 
       end subroutine ADD_TO_CACHE_QQHG   
 
-      subroutine set_pphj_qqhg_heft_0l_coeffs(P)
+      subroutine set_pphj_qqhg_heft_0l_coeffs(selected_channel, P)
 
           implicit none
           include 'coupl.inc'
@@ -110,6 +110,7 @@ c          write(*,*) 'ADDING ENTRY TO CACHE ',cache_index
           double precision PQQG(12)
           double precision resRe(4) 
           double precision resIm(4)
+          integer selected_channel
 
 c         Assign nloop=-1 to the meaning of HEFT 0l          
           integer identifier
@@ -148,17 +149,17 @@ c         Assign nloop=-1 to the meaning of HEFT 0l
             enddo
           enddo
 
-          CALL ACCESS_CACHE_QQHG(identifier, P, MDL_MB, MDL_MT, MU_R, 
+          CALL ACCESS_CACHE_QQHG((identifier*10+selected_channel), P, MDL_MB, MDL_MT, MU_R, 
      &                      resRe, resIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 0-loop HEFT tensor'
              call %(C_prefix)sget_pphj_qqhg_tensor_coefs(
-     &           HEFTselected, eval_mode, pphj_eps_order, nloop, pphj_nf,
+     &           HEFTselected, eval_mode, selected_channel, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
      &           PQQG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
-             CALL ADD_TO_CACHE_QQHG(identifier, P,MDL_MB, MDL_MT, MU_R, 
+             CALL ADD_TO_CACHE_QQHG((identifier*10+selected_channel), P,MDL_MB, MDL_MT, MU_R, 
      &                         resRe, resIm)
           endif
 
@@ -171,7 +172,7 @@ c             Write(*,*) 'Recomputing 0-loop HEFT tensor'
 
       end subroutine set_pphj_qqhg_heft_0l_coeffs
 
-      subroutine set_pphj_qqhg_heft_1l_coeffs(P)
+      subroutine set_pphj_qqhg_heft_1l_coeffs(selected_channel, P)
 
           implicit none
           include 'coupl.inc'
@@ -180,6 +181,7 @@ c             Write(*,*) 'Recomputing 0-loop HEFT tensor'
           double precision PQQG(12)
           double precision resRe(4) 
           double precision resIm(4)
+          integer selected_channel
 
 c         Assign nloop=-2 to the meaning of HEFT 1l          
           integer identifier
@@ -218,17 +220,17 @@ c         Assign nloop=-2 to the meaning of HEFT 1l
             enddo
           enddo
 
-          CALL ACCESS_CACHE_QQHG(identifier, P, MDL_MB, MDL_MT, MU_R,
+          CALL ACCESS_CACHE_QQHG((identifier*10+selected_channel), P, MDL_MB, MDL_MT, MU_R,
      &                      resRe, resIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 1-loop HEFT tensor'
              call %(C_prefix)sget_pphj_qqhg_tensor_coefs(
-     &           HEFTselected, eval_mode, pphj_eps_order, nloop, pphj_nf,
+     &           HEFTselected, eval_mode, selected_channel, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
      &           PQQG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
-             CALL ADD_TO_CACHE_QQHG(identifier, P,MDL_MB, MDL_MT, MU_R,
+             CALL ADD_TO_CACHE_QQHG((identifier*10+selected_channel), P,MDL_MB, MDL_MT, MU_R,
      &                         resRe, resIm)
           endif
 
@@ -241,7 +243,7 @@ c             Write(*,*) 'Recomputing 1-loop HEFT tensor'
 
       end subroutine set_pphj_qqhg_heft_1l_coeffs
 
-      subroutine set_pphj_qqhg_qcd_1l_coeffs(P)
+      subroutine set_pphj_qqhg_qcd_1l_coeffs(selected_channel, P)
 
           implicit none
           include 'coupl.inc'
@@ -250,6 +252,7 @@ c             Write(*,*) 'Recomputing 1-loop HEFT tensor'
           double precision PQQG(12)
           double precision resRe(4) 
           double precision resIm(4)
+          integer selected_channel
 
 c         Assign nloop=1 to the meaning of QCD 0l          
           integer identifier
@@ -286,17 +289,17 @@ c         Assign nloop=1 to the meaning of QCD 0l
             enddo
           enddo
 
-          CALL ACCESS_CACHE_QQHG(identifier, P, MDL_MB, MDL_MT, MU_R,
+          CALL ACCESS_CACHE_QQHG((identifier*10+selected_channel), P, MDL_MB, MDL_MT, MU_R,
      &                      resRe, resIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 1-loop tensor'
              call %(C_prefix)sget_pphj_qqhg_tensor_coefs(
-     &           HEFTselected, eval_mode, pphj_eps_order, nloop, pphj_nf,
+     &           HEFTselected, eval_mode, selected_channel, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
      &           PQQG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
-             CALL ADD_TO_CACHE_QQHG(identifier, P,MDL_MB, MDL_MT, MU_R,
+             CALL ADD_TO_CACHE_QQHG((identifier*10+selected_channel), P,MDL_MB, MDL_MT, MU_R,
      &                         resRe, resIm)
           endif
 
@@ -309,7 +312,7 @@ c             Write(*,*) 'Recomputing 1-loop tensor'
 
       end subroutine set_pphj_qqhg_qcd_1l_coeffs
 
-      subroutine set_pphj_qqhg_qcd_2l_coeffs(P)
+      subroutine set_pphj_qqhg_qcd_2l_coeffs(selected_channel, P)
 
           implicit none
           include 'coupl.inc'
@@ -318,6 +321,7 @@ c             Write(*,*) 'Recomputing 1-loop tensor'
           double precision PQQG(12)
           double precision resRe(4) 
           double precision resIm(4)
+          integer selected_channel
 
 c         Assign nloop=1 to the meaning of QCD 0l          
           integer identifier
@@ -354,17 +358,17 @@ c         Assign nloop=1 to the meaning of QCD 0l
             enddo
           enddo
 
-          CALL ACCESS_CACHE_QQHG(identifier, P, MDL_MB, MDL_MT, MU_R,
+          CALL ACCESS_CACHE_QQHG((identifier*10+selected_channel), P, MDL_MB, MDL_MT, MU_R,
      &                      resRe, resIm,
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 2-loop tensor'
              call %(C_prefix)sget_pphj_qqhg_tensor_coefs(
-     &           HEFTselected, eval_mode, pphj_eps_order, nloop, pphj_nf,
+     &           HEFTselected, eval_mode, selected_channel, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
      &           PQQG,MDL_MB,MDL_MT, MDL_MH, MU_R, MDL_YB, MDL_YT,resRe,resIm)
-             CALL ADD_TO_CACHE_QQHG(identifier, P,MDL_MB, MDL_MT, MU_R,
+             CALL ADD_TO_CACHE_QQHG((identifier*10+selected_channel), P,MDL_MB, MDL_MT, MU_R,
      &                         resRe, resIm)
           endif
 
