@@ -50,7 +50,7 @@ ProcessingFunctionInterpolated[args__]:=Module[{LinkerKey, SatisfiesArguments, C
 		Print["No datafile found for the current configuration options.."];
 		Do[
 			Print["************************************************"];
-			Print["Skipped entry ", CurrentConditional[[1]], "."];
+			Print["Skipped entry ", CurrentConditional, "."];
 			Print["************************************************"];
 		, {CurrentConditional, ConditionalsList}];
 		

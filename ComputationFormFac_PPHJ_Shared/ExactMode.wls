@@ -25,8 +25,12 @@ Get[FileNameJoin[{NotationPath, "2LoopProcessing.m"}]];
 Get[FileNameJoin[{NotationPath, "1LoopProcessing.m"}]];
 Get[FileNameJoin[{NotationPath, "FamilyHeProcessing.m"}]];
 
-{FFs1Loop["top"], FFs2Loop["top"]} = Import[FileNameJoin[{AmplitudeDataDirectory, AmplitudeType <> "-" <> "top" <> ".mx"}]];
-{FFs1Loop["topbottom"], FFs2Loop["topbottom"]} = Import[FileNameJoin[{AmplitudeDataDirectory, AmplitudeType <> "-" <> "topbottom" <> ".mx"}]];
+Do[
+	{FFs1Loop[CurrAmpType, "top"], FFs2Loop[CurrAmpType, "top"]} = Import[FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "top" <> ".mx"}]];
+	{FFs1Loop[CurrAmpType, "topbottom"], FFs2Loop[CurrAmpType, "topbottom"]} = Import[FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "topbottom" <> ".mx"}]];
+	,
+	{CurrAmpType, {"gghg", "qqhg1", "qqhg2", "qqhg3"}}
+]
 
 (* Linker for points on the grid and their associated file. *)
 IndexingData = Association[
@@ -113,7 +117,8 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		ComputeNext, DataFilesExported, RunModes, NumericalPointData, FFs1LoopNum, FFs2LoopNum, NewPointComputed, ExportFileName, FFExportFileName, CouplingReplacements, RunMode,
 		(* Variable definitions copied over from the original script. *)
 		floatArgs, intArgs, boolArgs, FormFactors,
-		Compute1L = True (* Note that the 1L integrals also appear in the 2-loop form factors, due to the UV subtraction. *), Compute2L, ComputeHe},
+		Compute1L = True (* Note that the 1L integrals also appear in the 2-loop form factors, due to the UV subtraction. *), Compute2L, ComputeHe,
+		CurrAmplitudeType},
 		
 	Which[
 		args["nf"] === 5, 
@@ -125,6 +130,15 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		True,
 		Print["Only nf = 5 (top contributions) and nf = 4 (top-bottom contributions) are supported..!"];
 	];	
+	
+	Which[
+		AmplitudeType == "gghg",
+		CurrAmplitudeType = AmplitudeType;
+		
+		, AmplitudeType == "qqhg",
+		(* Add channel index from argument. *)
+		CurrAmplitudeType = AmplitudeType <> ToString[args["selected_channel"]];
+	];
 		
 	MyPoint = {s -> args["s"], t -> args["t"], pp4 -> args["mh"]^2, mmt -> args["mt"]^2, mmb -> args["mb"]^2} // Association;
 	MyPointTop = MyPoint // Map[#/MyPoint[mmt]&] // KeyTake[{s, t, pp4}];
@@ -221,16 +235,16 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	
 	(* Since the script can be called multiple times for the same point with different options for eps order and mu, we save the FormFactors in the data directory as well. *)
 	FFExportFileName = FileNameJoin[{BaseDirectory, "NumericalData", "ExactMode", "FormFactors", 
-		RunMode <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> AmplitudeType, (GetPointHash @ MyPoint) <> ".mx"}];
+		RunMode <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> CurrAmplitudeType, (GetPointHash @ MyPoint) <> ".mx"}];
 		
 	If[! (FileExistsQ[FFExportFileName] && ReuseFFs), 
 		Print["Plugging point into form factors"];
 		
 		If[args["nloop"] === 1,
-			FormFactors = FFs1Loop[RunMode] // PlugNumericsIntoExpression[#, NumericalPointData] &;
+			FormFactors = FFs1Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData] &;
 		];
 		If[args["nloop"] === 2,
-			FormFactors = FFs2Loop[RunMode] // PlugNumericsIntoExpression[#, NumericalPointData] &;
+			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData] &;
 		];
 		
 		Export[FFExportFileName, FormFactors];
