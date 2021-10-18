@@ -7,10 +7,18 @@ TwoLoopFudgeFactor = 1./((Pi^4)*(2.^5)*Sqrt[2.]);
 BaseDirectory = FileNameJoin[{PPHJSharedDirectory, "Dependencies"}];
 
 ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput = 16, args},
-	floatArgs = Table[ SetPrecision[ImportString[$ScriptCommandLine[[i+1]],"CSV"][[1]][[1]],precinput], {i, 8} ];
-	intArgs = Table[ ImportString[$ScriptCommandLine[[i+9]],"CSV"][[1]][[1]], {i, 5} ];
-	boolArgs = Table[ (ImportString[$ScriptCommandLine[[i+14]],"CSV"][[1]][[1]]>0) , {i, 7} ];
 
+	floatArgs = Table[ SetPrecision[ImportString[commandsin[[i]],"CSV"][[1]][[1]],precinput], {i, 8} ];
+	Which[
+		AmplitudeType == "gghg", 
+		intArgs = Table[ ImportString[commandsin[[i+8]],"CSV"][[1]][[1]], {i, 4} ];
+		boolArgs = Table[ (ImportString[commandsin[[i+12]],"CSV"][[1]][[1]]>0) , {i, 7} ];
+		
+		, AmplitudeType == "qqhg",
+		intArgs = Table[ ImportString[$ScriptCommandLine[[i+9]],"CSV"][[1]][[1]], {i, 5} ];
+		boolArgs = Table[ (ImportString[$ScriptCommandLine[[i+14]],"CSV"][[1]][[1]]>0) , {i, 7} ];
+	];
+	
 	args = <| 
 	  "s" -> floatArgs[[1]],
 	  "t" -> floatArgs[[2]],
@@ -22,9 +30,21 @@ ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput =
 	  "yt" -> floatArgs[[8]],
 	  "nloop" -> intArgs[[1]],
 	  "eval_mode" -> intArgs[[2]],
-	  "selected_channel" -> intArgs[[3]],
-	  "eps_order" -> intArgs[[4]],
-	  "nf" -> intArgs[[5]],
+	  Sequence @@ Which[
+		  AmplitudeType == "gghg",
+		  {
+			  "eps_order" -> intArgs[[3]],
+			  "nf" -> intArgs[[4]]
+		  },
+		  
+		  AmplitudeType == "qqhg",
+		  {
+			  "selected_channel" -> intArgs[[3]],
+			  "eps_order" -> intArgs[[4]],
+			  "nf" -> intArgs[[5]]
+		  }
+	  ]
+	  ,
 	  "is_HEFT" -> boolArgs[[1]],
 	  "inc_ytqcd" -> boolArgs[[2]],
 	  "inc_ytmb" -> boolArgs[[3]],

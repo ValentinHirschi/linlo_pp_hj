@@ -82,7 +82,7 @@ ProcessingFunctionInterpolated[args__]:=Module[{LinkerKey, SatisfiesArguments, C
 				)
 			) * Log[mmuu]^muord /. {mmuu -> args["mu"], yt -> args["yt"], yb -> args["yb"]}
 		, {muord, 0, Which[args["nloop"] == 1, 0, args["nloop"] == 2, 2+epsilonPoleIndex]}]
-	, {ffind, 4}];
+	, {ffind, Which[AmplitudeType == "gghg", 4, AmplitudeType == "qqhg", 2]}];
 
 	FormFactors
 ]
