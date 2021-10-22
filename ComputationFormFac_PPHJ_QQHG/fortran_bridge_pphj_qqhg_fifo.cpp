@@ -150,7 +150,7 @@ inline bool %(C_prefix)spphj_qqhg_exists(const std::string& name) {
 
 
 
-extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs(
+extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs_(
 		                const bool & HEFT_selected,
 						const int & eval_mode,
 						const int & selected_channel,
