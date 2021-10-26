@@ -10,8 +10,8 @@ NotationPath = FileNameJoin[{BaseDirectory, "Dependencies"}];
 SessionsPath = FileNameJoin[{BaseDirectory, "Server", "Sessions"}];
 DiffExpPath = FileNameJoin[{BaseDirectory, "DiffExp", "DiffExp.m"}];
 
-Data1LDirectoryStatic = FileNameJoin[{BaseDirectory, "NumericalData", "GridPrecomputed", "1LCombined_Luisoni", "DataPoints/"}];
-Data2LDirectoryStatic = FileNameJoin[{BaseDirectory, "NumericalData", "GridPrecomputed", "2LCombined_Luisoni", "DataPoints/"}];
+Data1LDirectoryStatic = FileNameJoin[{BaseDirectory, "NumericalData", "GridPrecomputed", "1LCombined", "DataPoints/"}];
+Data2LDirectoryStatic = FileNameJoin[{BaseDirectory, "NumericalData", "GridPrecomputed", "2LCombined", "DataPoints/"}];
 DataHeDirectoryStatic = FileNameJoin[{BaseDirectory, "NumericalData", "GridPrecomputed", "HeCombined", "DataPoints/"}];
 
 IndexingFile = FileNameJoin[{BaseDirectory, "NumericalData", "ExactMode", "Indexing.mx"}];
@@ -143,7 +143,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	MyPoint = {s -> args["s"], t -> args["t"], pp4 -> args["mh"]^2, mmt -> args["mt"]^2, mmb -> args["mb"]^2} // Association;
 	MyPointTop = MyPoint // Map[#/MyPoint[mmt]&] // KeyTake[{s, t, pp4}];
 	
-	If["nf" === 4,
+	If[args["nf"] === 4,
 		MyPointBottom = MyPoint // Map[#/MyPoint[mmb]&] // KeyTake[{s, t, pp4}];
 	];
 	
@@ -162,7 +162,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			Get[FileNameJoin[{SessionsPath, ComputeType <> ".mx"}]];
 	
 			Print["Nearest point: "];
-			NearestPointFile = Nearest[IndexingData[ComputeType][[All, 2]] -> IndexingData[ComputeType][[All, 1]], ComputePoint // Values, 2] // Last;
+			Print[NearestPointFile = Nearest[IndexingData[ComputeType][[All, 2]] -> IndexingData[ComputeType][[All, 1]], ComputePoint // Values, 2] // Last];
 			NearestPointData = Import @ NearestPointFile;
 	
 			NewPointComputed = TransportTo[
@@ -210,7 +210,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				ComputeNext["He", MyPoint];
 				AppendTo[AllDataComputed, NewPointComputed // ConvertDiffExpResultsHe // Last  // ConvertNotationFinal[#, {FamHe -> "He"}] & // ReplaceAll[MS["He", a__] :> MS[{"He", "top", "bottom"}, a]]];
 				
-				ComputeNext["He", Normal[MyPoint] /. {mmt -> mmb, mmb -> mmt}];
+				ComputeNext["He", {s, t, pp4, mmt, mmb} -> ((* Flipped! *){s, t, pp4, mmb, mmt} /. Normal[MyPoint]) // Thread];
 				AppendTo[AllDataComputed, NewPointComputed // ConvertDiffExpResultsHe // Last  // ConvertNotationFinal[#, {FamHe -> "He"}] & // ReplaceAll[MS["He", a__] :> MS[{"He", "bottom", "top"}, a]]];
 			]; 
 		];

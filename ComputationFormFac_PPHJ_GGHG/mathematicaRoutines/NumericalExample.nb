@@ -1,0 +1,77 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      2197,         67]
+NotebookOptionsPosition[      1849,         53]
+NotebookOutlinePosition[      2244,         69]
+CellTagsIndexPosition[      2201,         66]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Interpolated", " ", 
+    RowBox[{"2", "/", "1"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+    "Result2", "=", 
+     "\"\<-0.00004658077028948332\n-0.00002638171096078987\n\
+6.028799514865892e-6\n-0.0000670291247684268\n-0.0002951066180856268\n\
+-0.00016600740660053105\n0.000038147433656714134\n-0.00042476655633883473\n\>\
+\""}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", "Interpolated", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+    "Result1", "=", 
+     "\"\<-0.00004657226884352183\n-0.00002638128702930612\n\
+6.0287995130284925e-6\n-0.00006702019967562515\n-0.0002950584875434217\n\
+-0.00016600419917124967\n0.00003814743366389456\n-0.00042471567798601123\n\
+\>\""}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", "Exact", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+    "Result0", "=", 
+     "\"\<\n-0.000046580867337065936\n-0.000026381765942997663\n\
+6.028812074386881e-6\n-0.00006702926452150294\n-0.0002951061317735154\n\
+-0.00016600566009358965\n0.000038147361382967055\n-0.0004247658555983072\n\
+\>\""}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.844257187081088*^9, 
+  3.844257281669421*^9}},ExpressionUUID->"602678fb-e25c-42d2-a0fe-\
+db28418d9d30"]
+},
+WindowSize->{808, 911},
+WindowMargins->{{556, Automatic}, {20, Automatic}},
+FrontEndVersion->"12.2 for Linux x86 (64-bit) (December 12, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"960b1b99-7f23-40f9-9f0a-d14dbb12176a"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 1287, 31, 691, "Input",ExpressionUUID->"602678fb-e25c-42d2-a0fe-db28418d9d30"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

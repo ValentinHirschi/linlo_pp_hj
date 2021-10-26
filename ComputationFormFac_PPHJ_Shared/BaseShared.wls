@@ -60,7 +60,7 @@ ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput =
 	args
 ];
 
-ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFactors, FudgeFactor},
+ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFactors, FudgeFactor, argsAlt},
 	Print["Arguments received: " <> ToString[commandsin]];
 	
 	outString = "";
@@ -85,6 +85,11 @@ ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFa
 		Print["Cannot run plugin with mb = 0, and nf = 4.. Use nf = 5 for massless bottom quark contributions."];
 		Abort[];
 	];
+	
+	If[args["nloop"] === 1 && args["eval_mode"] === 2,
+		Print["Can not use nloop = 1 and eval_mode = 2."];
+		Abort[];
+	];
 (*	
 	If[(Or @@ {args["inc_ytmb"], args["inc_ybqcd"], args["inc_ybmb"], args["inc_ybmt"]}) || (args["nf"] \[NotEqual] 5),
 		Print["Massive bottom contributions not supported at the moment."];
@@ -99,8 +104,14 @@ ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFa
 		FormFactors = ProcessingFunctionInterpolated[args];
 		
 		, args["eval_mode"] === 2,
-		Print["This mode is not supported yet.."];
-		Abort[];
+		Print["Interpolating 2/1 part."];
+		argsAlt = args;
+		argsAlt["nloop"] = "2/1";
+		FormFactors = ProcessingFunctionInterpolated[argsAlt];
+		Print["Processing exact 1L part."];
+		
+		argsAlt["nloop"] = 1;
+		FormFactors *= (ProcessingFunctionExact[argsAlt] // Map[Sqrt[Re[#]^2 + Im[#]^2] &]);
 	];
 	
 	Which[args["nloop"] == 1, FudgeFactor = OneLoopFudgeFactor;

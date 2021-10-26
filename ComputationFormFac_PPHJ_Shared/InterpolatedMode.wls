@@ -70,18 +70,18 @@ ProcessingFunctionInterpolated[args__]:=Module[{LinkerKey, SatisfiesArguments, C
 	
 	(* Possible values are 0, -1, -2 *)
 	epsilonPoleIndex = args["eps_order"];
-	FormFactors = args["yt"] * Table[
+	FormFactors = Table[
 		Sum[
 			(
-				yt InterpolationData[{args["nloop"], ffind, epsilonPoleIndex, muord, 1, 0, TF10 @ args["inc_ytqcd"], TF10 @ args["inc_ybqcd"], Re}][Sequence @@ nmFromst]+
-				yb InterpolationData[{args["nloop"], ffind, epsilonPoleIndex, muord, 0, 1, TF10 @ args["inc_ytqcd"], TF10 @ args["inc_ybqcd"], Re}][Sequence @@ nmFromst]+
+				yt InterpolationData[{args["nloop"], ffind, epsilonPoleIndex, muord, 1, 0, TF10 @ args["inc_ytqcd"], TF10 @ args["inc_ybqcd"], Re}][Sequence @@ nmFromst] +
+				yb InterpolationData[{args["nloop"], ffind, epsilonPoleIndex, muord, 0, 1, TF10 @ args["inc_ytqcd"], TF10 @ args["inc_ybqcd"], Re}][Sequence @@ nmFromst] +
 				
 				I (
-					yt InterpolationData[{args["nloop"], ffind, epsilonPoleIndex, muord, 1, 0, TF10 @ args["inc_ytqcd"], TF10 @ args["inc_ybqcd"], Im}][Sequence @@ nmFromst]+
+					yt InterpolationData[{args["nloop"], ffind, epsilonPoleIndex, muord, 1, 0, TF10 @ args["inc_ytqcd"], TF10 @ args["inc_ybqcd"], Im}][Sequence @@ nmFromst] +
 					yb InterpolationData[{args["nloop"], ffind, epsilonPoleIndex, muord, 0, 1, TF10 @ args["inc_ytqcd"], TF10 @ args["inc_ybqcd"], Im}][Sequence @@ nmFromst]
 				)
 			) * Log[mmuu]^muord /. {mmuu -> args["mu"], yt -> args["yt"], yb -> args["yb"]}
-		, {muord, 0, Which[args["nloop"] == 1, 0, args["nloop"] == 2, 2+epsilonPoleIndex]}]
+		, {muord, 0, Which[args["nloop"] == 1, 0, args["nloop"] == 2 || args["nloop"] == "2/1", 2 + epsilonPoleIndex]}]
 	, {ffind, Which[AmplitudeType == "gghg", 4, AmplitudeType == "qqhg", 2]}];
 
 	FormFactors
