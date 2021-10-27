@@ -284,6 +284,13 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
 
         return "\n".join(helicity_line_list)
 
+    def generate_subprocess_directory(self, matrix_element, fortran_model, number, **opts):
+        """ Overload this to protect check_sa.f from being overwritten by a link."""
+
+        dirpath = pjoin(self.dir_path, 'SubProcesses', \
+                       "P%s" % matrix_element.get('processes')[0].shell_string())
+        super(My_ggHg_Exporter,self).generate_subprocess_directory(matrix_element, fortran_model, number, **opts)
+        shutil.move(pjoin(dirpath,'check_sa_tmp.f'),pjoin(dirpath,'check_sa.f'))
 
     def write_matrix_element_v4(self, writer, matrix_element, fortran_model,
                                 write=True, proc_prefix=''):
@@ -405,11 +412,9 @@ class My_ggHg_Exporter(export_v4.ProcessExporterFortranSA):
 
             # For convenience we also write the driver check_sa_splitOrders.f
             # that explicitely writes out the contribution from each squared order.
-            # The original driver still works and is compiled with 'make' while
-            # the splitOrders one is compiled with 'make check_sa_born_splitOrders'
-            #check_sa_writer = writers.FortranWriter(pjoin(self.dir_path, 'SubProcesses', 
-            #    "P%s" % matrix_element.get('processes')[0].shell_string(),'check_sa_tmp.f'))
-            check_sa_writer = writers.FortranWriter(pjoin(self.dir_path, 'SubProcesses','check_sa.f'))
+            check_sa_writer = writers.FortranWriter(pjoin(self.dir_path, 'SubProcesses', 
+                "P%s" % matrix_element.get('processes')[0].shell_string(),'check_sa_tmp.f'))
+            #check_sa_writer = writers.FortranWriter(pjoin(self.dir_path, 'SubProcesses','check_sa.f'))
             self.write_check_sa_splitOrders(squared_orders, split_orders,
                                             nexternal, ninitial, proc_prefix, check_sa_writer)
         if write:
