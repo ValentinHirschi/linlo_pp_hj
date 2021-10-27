@@ -15,8 +15,8 @@ ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput =
 		boolArgs = Table[ (ImportString[commandsin[[i+12]],"CSV"][[1]][[1]]>0) , {i, 7} ];
 		
 		, AmplitudeType == "qqhg",
-		intArgs = Table[ ImportString[$ScriptCommandLine[[i+9]],"CSV"][[1]][[1]], {i, 5} ];
-		boolArgs = Table[ (ImportString[$ScriptCommandLine[[i+14]],"CSV"][[1]][[1]]>0) , {i, 7} ];
+		intArgs = Table[ ImportString[commandsin[[i+8]],"CSV"][[1]][[1]], {i, 5} ];
+		boolArgs = Table[ (ImportString[commandsin[[i+13]],"CSV"][[1]][[1]]>0) , {i, 7} ];
 	];
 	
 	args = <| 

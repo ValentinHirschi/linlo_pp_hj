@@ -27,10 +27,12 @@ Get[FileNameJoin[{NotationPath, "FamilyHeProcessing.m"}]];
 
 Do[
 	{FFs1Loop[CurrAmpType, "top"], FFs2Loop[CurrAmpType, "top"]} = Import[FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "top" <> ".mx"}]];
-	{FFs1Loop[CurrAmpType, "topbottom"], FFs2Loop[CurrAmpType, "topbottom"]} = Import[FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "topbottom" <> ".mx"}]];
+	(*{FFs1Loop[CurrAmpType, "topbottom"], FFs2Loop[CurrAmpType, "topbottom"]} = Import[FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "topbottom" <> ".mx"}]];*)
 	,
 	{CurrAmpType, {"gghg", "qqhg1", "qqhg2", "qqhg3"}}
-]
+];
+
+{FFs1Loop["gghg", "topbottom"], FFs2Loop["gghg", "topbottom"]} = Import[FileNameJoin[{AmplitudeDataDirectory, "gghg" <> "-" <> "topbottom" <> ".mx"}]];
 
 (* Linker for points on the grid and their associated file. *)
 IndexingData = Association[
