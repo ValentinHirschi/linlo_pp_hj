@@ -184,7 +184,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
 
 
 	if (%(C_prefix)spphj_gghg_exists("%(path_prefix)s/mathematicaRoutines/gghg_coefs.wls")) {
-		ostr<<"%(path_prefix)s/mathematicaRoutines/gghg_coefs.wls ";
+		ostr<<"wolframscript %(path_prefix)s/mathematicaRoutines/gghg_coefs.wls ";
 		//ostr<<"%(path_prefix)s/mathematicaRoutines/python_wrapper.py ";
 	} else  {
 	   std::cerr<<"Could Not find 'exp_gghg_nlo_qcd.wls'. Place it somewhere as defined in fortran_bridge_pphj_gghg.cpp"<<std::endl;

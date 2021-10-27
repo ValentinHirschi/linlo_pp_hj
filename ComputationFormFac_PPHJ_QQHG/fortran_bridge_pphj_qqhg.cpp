@@ -185,7 +185,7 @@ extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs_(
 
 
 	if (%(C_prefix)spphj_qqhg_exists("%(path_prefix)s/mathematicaRoutines/qqhg_coefs.wls")) {
-		ostr<<"%(path_prefix)s/mathematicaRoutines/qqhg_coefs.wls ";
+		ostr<<"wolframscript %(path_prefix)s/mathematicaRoutines/qqhg_coefs.wls ";
 		//ostr<<"%(path_prefix)s/mathematicaRoutines/python_wrapper.py ";
 	} else  {
 	   std::cerr<<"Could Not find 'qqhg_coefs.wls'. Place it somewhere as defined in fortran_bridge_pphj_qqhg.cpp"<<std::endl;
