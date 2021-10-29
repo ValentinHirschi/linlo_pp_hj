@@ -7,16 +7,16 @@ TwoLoopFudgeFactor = 1./((Pi^4)*(2.^5)*Sqrt[2.]);
 BaseDirectory = FileNameJoin[{PPHJSharedDirectory, "Dependencies"}];
 
 ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput = 16, args},
-
-	floatArgs = Table[ SetPrecision[ImportString[commandsin[[i]],"CSV"][[1]][[1]],precinput], {i, 8} ];
+	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "10^"] // ToExpression // SetPrecision[#, precinput]&;
+	
 	Which[
 		AmplitudeType == "gghg", 
-		intArgs = Table[ ToExpression[StringReplace[commandsin[[i+8]], "e" -> "10^"]], {i, 4} ];
-		boolArgs = Table[ ToExpression[StringReplace[commandsin[[i+12]], "e" -> "10^"]] , {i, 7} ] // Map[#>0&];
+		intArgs = StringReplace[commandsin[[8+1 ;; 8+4]], "e" -> "10^"] // ToExpression;
+		boolArgs = StringReplace[commandsin[[12+1 ;; 12+7]], "e" -> "10^"] // ToExpression // Map[#>0&];
 		
 		, AmplitudeType == "qqhg",
-		intArgs = Table[ ToExpression[StringReplace[commandsin[[i+8]], "e" -> "10^"]], {i, 5} ];
-		boolArgs = Table[ ToExpression[StringReplace[commandsin[[i+13]], "e" -> "10^"]]  , {i, 7} ] // Map[#>0&];
+		intArgs = StringReplace[commandsin[[8+1 ;; 8+5]], "e" -> "10^"] // ToExpression;
+		boolArgs = StringReplace[commandsin[[13+1 ;; 13+7]], "e" -> "10^"] // ToExpression // Map[#>0&];
 	];
 	
 	args = <| 
