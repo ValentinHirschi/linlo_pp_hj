@@ -90,11 +90,6 @@ ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFa
 		Print["Can not use nloop = 1 and eval_mode = 2."];
 		Abort[];
 	];
-(*	
-	If[(Or @@ {args["inc_ytmb"], args["inc_ybqcd"], args["inc_ybmb"], args["inc_ybmt"]}) || (args["nf"] \[NotEqual] 5),
-		Print["Massive bottom contributions not supported at the moment."];
-		Abort[];
-	];*)
 	
 	Which[
 		args["eval_mode"] === 0,
@@ -111,6 +106,7 @@ ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFa
 		Print["Processing exact 1L part."];
 		
 		argsAlt["nloop"] = 1;
+		argsAlt["eps_order"] = 0;
 		FormFactors *= (ProcessingFunctionExact[argsAlt] // Map[Sqrt[Re[#]^2 + Im[#]^2] &]);
 	];
 	
