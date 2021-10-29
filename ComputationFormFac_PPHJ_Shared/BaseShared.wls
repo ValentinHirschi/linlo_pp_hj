@@ -11,12 +11,12 @@ ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput =
 	floatArgs = Table[ SetPrecision[ImportString[commandsin[[i]],"CSV"][[1]][[1]],precinput], {i, 8} ];
 	Which[
 		AmplitudeType == "gghg", 
-		intArgs = Table[ ImportString[commandsin[[i+8]],"CSV"][[1]][[1]], {i, 4} ];
-		boolArgs = Table[ (ImportString[commandsin[[i+12]],"CSV"][[1]][[1]]>0) , {i, 7} ];
+		intArgs = Table[ ToExpression[StringReplace[commandsin[[i+8]], "e" -> "10^"]], {i, 4} ];
+		boolArgs = Table[ ToExpression[StringReplace[commandsin[[i+12]], "e" -> "10^"]] , {i, 7} ] // Map[#>0&];
 		
 		, AmplitudeType == "qqhg",
-		intArgs = Table[ ImportString[commandsin[[i+8]],"CSV"][[1]][[1]], {i, 5} ];
-		boolArgs = Table[ (ImportString[commandsin[[i+13]],"CSV"][[1]][[1]]>0) , {i, 7} ];
+		intArgs = Table[ ToExpression[StringReplace[commandsin[[i+8]], "e" -> "10^"]], {i, 5} ];
+		boolArgs = Table[ ToExpression[StringReplace[commandsin[[i+13]], "e" -> "10^"]]  , {i, 7} ] // Map[#>0&];
 	];
 	
 	args = <| 
