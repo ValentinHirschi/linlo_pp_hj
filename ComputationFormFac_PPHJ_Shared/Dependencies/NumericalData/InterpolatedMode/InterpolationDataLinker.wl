@@ -1,22 +1,27 @@
 (* ::Package:: *)
 
 (* ::Input::Initialization:: *)
-LinkerChopPrec=10^-10;
+LinkerChopPrec=10^-5;
 
 EchoLabelAlt[lab_] :=(Print[lab,": ",#]; #)&;
 
-SharedConditions = And[
-Chop[#["mh"]-125.,LinkerChopPrec]===0 //EchoLabelAlt["mh"],
+SharedConditionsTop = And[
+	Chop[#["mh"]-125.,LinkerChopPrec]===0 //EchoLabelAlt["mh"],
 	Chop[#["mb"]-0.,LinkerChopPrec]===0 //EchoLabelAlt["mb"],
 	Chop[#["mt"]-N[ 125*Sqrt[23/12]],LinkerChopPrec]===0 //EchoLabelAlt["mt"],
 	#["nf"]==5 //EchoLabelAlt["nf"],
 	!#["is_HEFT"] //EchoLabelAlt["heft"],
-	#["inc_ytqcd" ]==#["inc_ytmt" ] //EchoLabelAlt["inc_yt"],
-	#["inc_ytmb" ]==#["inc_ybmb" ]==#["inc_ybqcd" ]==#["inc_ybmt" ]==False//EchoLabelAlt["inc_yb"],
-MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
+Sequence @@ If[!(#["nloop"] === 1),
+{
+(* These parameters only apply when we are at 2-loop *)
+#["inc_ytqcd"]==#["inc_ytmt"]//EchoLabelAlt["inc_yt"],
+#["inc_ytmb"]==#["inc_ybmb"]==#["inc_ybqcd"]==#["inc_ybmt"]==False//EchoLabelAlt["inc_yb"]
+}
+],
+	MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
 ]&;
 
-(*SharedConditions2 = And[
+(*SharedConditionsTopBottom = And[
 Chop[#["mh"]-125.,LinkerChopPrec]===0 //EchoLabelAlt["mh"],
 	Chop[#["mb"]-4.2,LinkerChopPrec]===0 //EchoLabelAlt["mb"],
 	Chop[#["mt"]-N[ 125*Sqrt[23/12]],LinkerChopPrec]===0 //EchoLabelAlt["mt"],
@@ -30,7 +35,7 @@ MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
 {
 	(* Conditionals *)
 	(       And[
-			SharedConditions[#],
+			SharedConditionsTop[#],
 			AmplitudeType=="gghg"//EchoLabelAlt["amptype"]
 		]&)->{
 	(* Replacement for n,m in the interpolation functions *)
@@ -40,7 +45,7 @@ MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
     }(*,
 
 	(       And[
-			SharedConditions2[#],
+			SharedConditionsTopBottom[#],
 			AmplitudeType=="gghg"//EchoLabelAlt["amptype"]
 		]&)->{
 	(* Replacement for n,m in the interpolation functions *)
@@ -50,7 +55,7 @@ MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
     }*),
 
 	(       And[
-			SharedConditions[#],
+			SharedConditionsTop[#],
 			AmplitudeType=="qqhg"//EchoLabelAlt["amptype"],
 	   #["selected_channel"] == 1
 		]&)->{
@@ -61,7 +66,7 @@ MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
     },
 
 (       And[
-			SharedConditions[#],
+			SharedConditionsTop[#],
 			AmplitudeType=="qqhg"//EchoLabelAlt["amptype"],
 	   #["selected_channel"] == 2
 		]&)->{
@@ -72,7 +77,7 @@ MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
     },
 
 (       And[
-			SharedConditions[#],
+			SharedConditionsTop[#],
 			AmplitudeType=="qqhg"//EchoLabelAlt["amptype"],
 	   #["selected_channel"] == 3
 		]&)->{
