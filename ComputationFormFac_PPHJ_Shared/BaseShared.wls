@@ -7,16 +7,16 @@ TwoLoopFudgeFactor = 1./((Pi^4)*(2.^5)*Sqrt[2.]);
 BaseDirectory = FileNameJoin[{PPHJSharedDirectory, "Dependencies"}];
 
 ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput = 16, args},
-	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "10^"] // ToExpression // SetPrecision[#, precinput]&;
+	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression // SetPrecision[#, precinput]&;
 	
 	Which[
 		AmplitudeType == "gghg", 
-		intArgs = StringReplace[commandsin[[8+1 ;; 8+4]], "e" -> "10^"] // ToExpression;
-		boolArgs = StringReplace[commandsin[[12+1 ;; 12+7]], "e" -> "10^"] // ToExpression // Map[#>0&];
+		intArgs = StringReplace[commandsin[[8+1 ;; 8+4]], "e" -> "*10^"] // ToExpression;
+		boolArgs = StringReplace[commandsin[[12+1 ;; 12+7]], "e" -> "*10^"] // ToExpression // Map[#>0&];
 		
 		, AmplitudeType == "qqhg",
-		intArgs = StringReplace[commandsin[[8+1 ;; 8+5]], "e" -> "10^"] // ToExpression;
-		boolArgs = StringReplace[commandsin[[13+1 ;; 13+7]], "e" -> "10^"] // ToExpression // Map[#>0&];
+		intArgs = StringReplace[commandsin[[8+1 ;; 8+5]], "e" -> "*10^"] // ToExpression;
+		boolArgs = StringReplace[commandsin[[13+1 ;; 13+7]], "e" -> "*10^"] // ToExpression // Map[#>0&];
 	];
 	
 	args = <| 
