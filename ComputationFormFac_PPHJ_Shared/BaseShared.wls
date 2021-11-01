@@ -39,7 +39,7 @@ ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput =
 		  
 		  AmplitudeType == "qqhg",
 		  {
-			  "selected_channel" -> intArgs[[3]],
+			  "selected_channel" -> intArgs[[3]]+1,
 			  "eps_order" -> intArgs[[4]],
 			  "nf" -> intArgs[[5]]
 		  }
