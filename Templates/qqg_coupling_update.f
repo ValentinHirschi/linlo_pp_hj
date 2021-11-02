@@ -3,7 +3,6 @@
       ! We expect that all vertices are implemented in the form FI,FO,V,S
       ! So we can deduce the corresponding channel using this information, 
       ! Then, the wavefunction with positive energy sign is the outoing one
-      integer selected_channel
 
       IF (DBLE(V3(1)).gt.0.0d0) THEN
         ! q(p1) qbar(p2) -> h(p3) g(p4)

@@ -30,8 +30,14 @@ gggHTensStruc4_expr = ('(  Metric(1,2) * ( P(-10,2)*P(-10,3)*P(3,1) - P(-11,1)*P
                       '- P(1,2)*P(2,3)*P(3,1)'+
                       ')')
 
-qqgHTensStruc1_expr = 'Gamma(3,2,1)' #TODO
-qqgHTensStruc2_expr = 'Gamma(3,2,1)' #TODO
+# For the following vertex:
+#    q(p1) qbar(p2) g(p3) h(p4) (all momenta incoming)
+# Then the two tensor structures used are:
+#   p_1^(mu3) slash(p3) - (p1+p3)^2 gamma(mu3)/2
+#   p_2^mu3 slash(p3) - (p2+p3)^2 gamma(mu3)/2
+# Note that the FF are only valid for on-shell massless external, so we remove p_i^2 terms here.
+qqgHTensStruc1_expr = 'P(3,1)*Gamma(-21,2,1)*P(-21,3) - P(-22,1)*P(-22,3)*Gamma(3,2,1)'
+qqgHTensStruc2_expr = 'P(3,2)*Gamma(-31,2,1)*P(-31,3) - P(-32,2)*P(-32,3)*Gamma(3,2,1)'
 
 # Heft 0L
 

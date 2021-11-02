@@ -539,7 +539,11 @@ fortran_bridge%.o : fortran_bridge%.cpp
         _helas_dir = pjoin(self.dir_path, 'Source','DHELAS')
         _template_dir = pjoin(_plugin_path,'Templates')
         for proc in self.relevant_processes.values():
-            if proc['gluon_number'] in [1,-1]:
+            if proc['gluon_number'] in [-1,]:
+                helas_def ='\n      double precision pin(0:3,3)\n      integer selected_channel'
+                with open(pjoin(_template_dir,'qqg_coupling_update.f'),'r') as file:
+                    helas_string = file.read()
+            elif proc['gluon_number'] in [1,]:
                 helas_def ='\n      double precision pin(0:3,3)'
                 with open(pjoin(_template_dir,'qqg_coupling_update.f'),'r') as file:
                     helas_string = file.read()
