@@ -237,6 +237,7 @@ Block LOOP
 ###################################
 Block PPHJ 
   10010 4.00000033e+00 # PPHJ_nf 
+  10011 -1.00000017e+00 # PPHJ_DEBUG 
 
 ###################################
 ## INFORMATION FOR QQGH0LHEFT

@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
 (* ::Input::Initialization:: *)
-LinkerChopPrec=10^-5;
+LinkerChopPrec=10^-4;
 
 EchoLabelAlt[lab_] :=(Print[lab,": ",#]; #)&;
 

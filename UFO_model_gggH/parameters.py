@@ -1121,6 +1121,14 @@ PPHJ_nf = Parameter(name='PPHJ_nf',
                      lhablock='PPHJ',
                      lhacode=[10010])
 
+PPHJ_DEBUG = Parameter(name='PPHJ_DEBUG',
+                     nature='external',
+                     type='real',
+                     value=-1.0,
+                     texname='\\text{PPHJ_DEBUG}',
+                     lhablock='PPHJ',
+                     lhacode=[10011])
+
 # ----
 
 GGGH1LQCD_yt = Parameter(name='GGGH1LQCD_yt',

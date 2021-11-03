@@ -144,6 +144,7 @@ inline bool %(C_prefix)spphj_qqhg_exists (const std::string& name) {
 }
 
 extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs_(
+						const bool & do_debug,
 		                const bool & HEFT_selected,
 						const int & eval_mode,
 						const int & selected_channel,
@@ -229,7 +230,7 @@ extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs_(
 	ostr<<" 2>&1 > /dev/null";
 
 	std::string command = ostr.str();
-	std::cout<<"About to call wrapper with: "<<command<<std::endl;
+	if (do_debug) { std::cout<<"About to call wrapper with: "<<command<<std::endl; }
     // std::string str_result = %(C_prefix)spphj_qqhg_exec(command.c_str());
 	system(command.c_str());
 	std::ifstream infile(tmp_file);

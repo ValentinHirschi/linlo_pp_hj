@@ -149,6 +149,7 @@ inline bool %(C_prefix)spphj_gghg_exists(const std::string& name) {
 }
 
 extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
+						const bool & do_debug,
 		                const bool & HEFT_selected,
 						const int & eval_mode,
 						const int & pphj_eps_order,
@@ -235,7 +236,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
 	ostr<<" "<<tmp_file;
 
 	std::string command = ostr.str();
-	std::cout<<"About to call wrapper with: "<<command<<std::endl<< std::flush;
+	if (do_debug) { std::cout<<"About to call wrapper with: "<<command<<std::endl<< std::flush; }
 	int fd;
 	fd = open(mathematica_input_file.c_str(), O_WRONLY); 
 	write(fd, command.c_str(), strlen(command.c_str())); 
