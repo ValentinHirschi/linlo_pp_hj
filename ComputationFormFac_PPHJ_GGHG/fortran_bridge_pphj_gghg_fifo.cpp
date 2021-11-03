@@ -241,7 +241,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
 	fd = open(mathematica_input_file.c_str(), O_WRONLY); 
 	write(fd, command.c_str(), strlen(command.c_str())); 
     close(fd);
-	std::cout<<"Mathematica command sent and waiting for output."<<std::endl<<std::flush;
+        if (do_debug) { std::cout<<"Mathematica command sent and waiting for output."<<std::endl<<std::flush; }
 
 	// Now read the result in a blocking fashion
 	char char_res[10000];
