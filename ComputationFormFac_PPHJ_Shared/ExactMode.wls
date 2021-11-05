@@ -4,7 +4,7 @@
 ExportPrecision = 50;
 
 ReuseProcessedIntegrals = True;
-ReuseFFs = False;
+ReuseFFs = True;
 
 NotationPath = FileNameJoin[{BaseDirectory, "Dependencies"}];
 SessionsPath = FileNameJoin[{BaseDirectory, "Server", "Sessions"}];
