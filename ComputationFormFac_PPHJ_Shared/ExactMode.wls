@@ -10,13 +10,14 @@ NotationPath = FileNameJoin[{BaseDirectory, "Dependencies"}];
 SessionsPath = FileNameJoin[{BaseDirectory, "Server", "Sessions"}];
 DiffExpPath = FileNameJoin[{BaseDirectory, "DiffExp", "DiffExp.m"}];
 
-Data1LDirectoryStatic = FileNameJoin[{BaseDirectory, "NumericalData", "GridPrecomputed", "1LCombined", "DataPoints/"}];
-Data2LDirectoryStatic = FileNameJoin[{BaseDirectory, "NumericalData", "GridPrecomputed", "2LCombined", "DataPoints/"}];
-DataHeDirectoryStatic = FileNameJoin[{BaseDirectory, "NumericalData", "GridPrecomputed", "HeCombined", "DataPoints/"}];
+DataDirectory = FileNameJoin[{BaseDirectory, "Data"}];
+Data1LDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "1LCombined", "DataPoints/"}];
+Data2LDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "2LCombined", "DataPoints/"}];
+DataHeDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "HeCombined", "DataPoints/"}];
 
-IndexingFile = FileNameJoin[{BaseDirectory, "NumericalData", "ExactMode", "Indexing.mx"}];
+IndexingFile = FileNameJoin[{DataDirectory, "ExactMode", "Indexing.mx"}];
 
-AmplitudeDataDirectory = FileNameJoin[{BaseDirectory, "Amplitude"}];
+AmplitudeDataDirectory = FileNameJoin[{DataDirectory, "Amplitude"}];
 
 Print["Loading dependencies for exact mode.."];
 Get[DiffExpPath];
@@ -25,14 +26,21 @@ Get[FileNameJoin[{NotationPath, "2LoopProcessing.m"}]];
 Get[FileNameJoin[{NotationPath, "1LoopProcessing.m"}]];
 Get[FileNameJoin[{NotationPath, "FamilyHeProcessing.m"}]];
 
-Do[
-	{FFs1Loop[CurrAmpType, "top"], FFs2Loop[CurrAmpType, "top"]} = Import[FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "top" <> ".mx"}]];
-	(*{FFs1Loop[CurrAmpType, "topbottom"], FFs2Loop[CurrAmpType, "topbottom"]} = Import[FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "topbottom" <> ".mx"}]];*)
-	,
-	{CurrAmpType, {"gghg", "qqhg1", "qqhg2", "qqhg3"}}
+Module[{MyFile},
+	Do[
+		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "top" <> ".mx"}];
+		If[FileExistsQ[MyFile],
+			{FFs1Loop[CurrAmpType, "top"], FFs2Loop[CurrAmpType, "top"]} = Import[MyFile];
+		];
+		
+		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "topbottom" <> ".mx"}];
+		If[FileExistsQ[MyFile],
+			{FFs1Loop[CurrAmpType, "topbottom"], FFs2Loop[CurrAmpType, "topbottom"]} = Import[MyFile];
+		];
+		,
+		{CurrAmpType, {"gghg", "qqhg1", "qqhg2", "qqhg3"}}
+	];
 ];
-
-{FFs1Loop["gghg", "topbottom"], FFs2Loop["gghg", "topbottom"]} = Import[FileNameJoin[{AmplitudeDataDirectory, "gghg" <> "-" <> "topbottom" <> ".mx"}]];
 
 (* Linker for points on the grid and their associated file. *)
 IndexingData = Association[
@@ -108,11 +116,11 @@ ConvertNotationFinal[or_,labreps_]:=Table[
 TLNamingReps = {FamA -> "A", FamAf -> "Af", FamBs -> "Bs", FamC -> "C", FamD -> "D", FamF -> "F", FamG -> "G"};
 
 (* Function for plugging numerics into the amplitudes.*)
-PlugNumericsIntoExpression[ex_, point_] := Module[{Tmp},
+PlugNumericsIntoExpression[ex_, point_, maxepsord_] := Module[{Tmp},
 	Tmp = ex /.{mt->Sqrt[mmt],mb->Sqrt[mmb],mch->Sqrt[mmc]}/.{(* Doing the replacement for the MS in this way is a lot faster for some reason.. *)MS[a__]:>(MS[a]/.point[[2]]),
 	Sequence@@Normal@Map[Rationalize[#, 10^-50]&]@point[[1]]
 	};
-	Series[Tmp,{eps,0,0}]//Normal//ReplaceAll[Log[a_]:>PowerExpand[Log[a]]]//Expand//Chop//N
+	Series[Tmp,{eps,0,maxepsord}]//Normal//ReplaceAll[Log[a_]:>PowerExpand[Log[a]]]//Expand//Chop//N
 ];
 
 ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, NewPointComputedProcessed, AllDataComputed = {},
@@ -179,10 +187,10 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			NewPointComputed[[2]] = NewPointComputed[[2]] // N[#, ExportPrecision] &; 
 			
 			MyHash = (GetPointHash @ ComputePoint);
-			Export[FileNameJoin[{BaseDirectory, "NumericalData", "ExactMode", "Integrals", ComputeType, MyHash <> ".mx"}], NewPointComputed];
+			Export[FileNameJoin[{DataDirectory, "ExactMode", "Integrals", ComputeType, MyHash <> ".mx"}], NewPointComputed];
 		];
 	
-	ExportFileName = FileNameJoin[{BaseDirectory, "NumericalData", "ExactMode", "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
+	ExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
 	
 	If[!(FileExistsQ[ExportFileName] && ReuseProcessedIntegrals),
 		If[Compute1L, 
@@ -236,17 +244,17 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	NumericalPointData = Import[ExportFileName];
 	
 	(* Since the script can be called multiple times for the same point with different options for eps order and mu, we save the FormFactors in the data directory as well. *)
-	FFExportFileName = FileNameJoin[{BaseDirectory, "NumericalData", "ExactMode", "FormFactors", 
+	FFExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "FormFactors", 
 		RunMode <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> CurrAmplitudeType, (GetPointHash @ MyPoint) <> ".mx"}];
 		
 	If[! (FileExistsQ[FFExportFileName] && ReuseFFs), 
 		Print["Plugging point into form factors"];
 		
 		If[args["nloop"] === 1,
-			FormFactors = FFs1Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData] &;
+			FormFactors = FFs1Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 2] &;
 		];
 		If[args["nloop"] === 2,
-			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData] &;
+			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
 		];
 		
 		Export[FFExportFileName, FormFactors];
@@ -260,8 +268,10 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		yt -> args["yt"],
 		yb -> args["yb"],
 		mu -> args["mu"],
-		incytqcdytmt -> If[args["inc_ytqcd"], 1, 0],
-		incybqcdybmb -> If[args["inc_ybqcd"], 1, 0],
+		incytqcd -> If[args["inc_ytqcd"], 1, 0],
+		incytmt -> If[args["inc_ytmt"], 1, 0],
+		incybqcd -> If[args["inc_ybqcd"], 1, 0],
+		incybmb -> If[args["inc_ybmb"], 1, 0],
 		incytmb -> If[args["inc_ytmb"], 1, 0],
 		incybmt -> If[args["inc_ybmt"], 1, 0]
 	};
