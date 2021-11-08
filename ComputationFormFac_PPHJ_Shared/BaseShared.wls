@@ -71,16 +71,6 @@ ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFa
 
 	args = ReadArguments[commandsin];
 	
-	If[!(args["inc_ytqcd"] === args["inc_ytmt"]),
-		Print["inc_ytqcd and inc_ytmt cannot currently be separated."];
-		Abort[];
-	];
-	
-	If[!(args["inc_ybqcd"] === args["inc_ybmb"]),
-		Print["inc_ybqcd and inc_ybmb cannot currently be separated."];
-		Abort[];
-	];
-	
 	If[Chop[args["mb"]] === 0 && args["nf"] === 4,
 		Print["Cannot run plugin with mb = 0, and nf = 4.. Use nf = 5 for massless bottom quark contributions."];
 		Abort[];
