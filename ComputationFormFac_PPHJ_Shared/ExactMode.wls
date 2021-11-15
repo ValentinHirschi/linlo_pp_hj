@@ -21,7 +21,7 @@ AmplitudeDataDirectory = FileNameJoin[{DataDirectory, "Amplitude"}];
 
 GaveThreadSafeWarning = False;
 ThreadSafeExport[fn_,data_]:=Module[{TmpFile = CreateFile[], FileDirectory = fn // FileNameSplit // Part[#, 1 ;; -2]& // FileNameJoin},
-	If[$OperatingSystem == "MacOSX" || $OperatingSystem == "Unix",
+	(*If[$OperatingSystem \[Equal] "MacOSX" || $OperatingSystem \[Equal] "Unix",
 		Export[TmpFile, data, "MX"];
 	
 		If[!DirectoryQ[FileDirectory], CreateDirectory[FileDirectory]];
@@ -35,7 +35,9 @@ ThreadSafeExport[fn_,data_]:=Module[{TmpFile = CreateFile[], FileDirectory = fn 
 		];
 		
 		Export[fn, data];
-	];
+	];*)
+	
+	Export[fn, data];
 ];
 
 Print["Loading dependencies for exact mode.."];
@@ -206,7 +208,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			NewPointComputed[[2]] = NewPointComputed[[2]] // N[#, ExportPrecision] &; 
 			
 			MyHash = (GetPointHash @ ComputePoint);
-			ThreadSafeExport[FileNameJoin[{DataDirectory, "ExactMode", "Integrals", ComputeType, MyHash <> ".mx"}], NewPointComputed];
+			Export[FileNameJoin[{DataDirectory, "ExactMode", "Integrals", ComputeType, MyHash <> ".mx"}], NewPointComputed];
 		];
 	
 	ExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
@@ -247,7 +249,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		AllDataComputed = AllDataComputed // Flatten;
 	
 		Print["Exporting processed results.."];
-		ThreadSafeExport[ExportFileName, 
+		Export[ExportFileName, 
 			{
 				MyPoint,
 				AllDataComputed
@@ -276,7 +278,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
 		];
 		
-		ThreadSafeExport[FFExportFileName, FormFactors];
+		Export[FFExportFileName, FormFactors];
 		,
 		
 		Print["Form factors already computed. Loading result."];
