@@ -19,6 +19,25 @@ IndexingFile = FileNameJoin[{DataDirectory, "ExactMode", "Indexing.mx"}];
 
 AmplitudeDataDirectory = FileNameJoin[{DataDirectory, "Amplitude"}];
 
+GaveThreadSafeWarning = False;
+ThreadSafeExport[fn_,data_]:=Module[{TmpFile = CreateFile[], FileDirectory = fn // FileNameSplit // Part[#, 1 ;; -2]& // FileNameJoin},
+	If[$OperatingSystem == "MacOSX" || $OperatingSystem == "Unix",
+		Export[TmpFile, data, "MX"];
+	
+		If[!DirectoryQ[FileDirectory], CreateDirectory[FileDirectory]];
+	
+		Run["mv \"" <> TmpFile <> "\" \"" <> fn <> "\""];
+		
+		,
+		If[!GaveThreadSafeWarning,
+			Print["Warning, thread-safe exporting of results does not work on Windows."];
+			GaveThreadSafeWarning = True;
+		];
+		
+		Export[fn, data];
+	];
+];
+
 Print["Loading dependencies for exact mode.."];
 Get[DiffExpPath];
 Get[FileNameJoin[{NotationPath, "StandardDefinitions.m"}]];
@@ -187,7 +206,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			NewPointComputed[[2]] = NewPointComputed[[2]] // N[#, ExportPrecision] &; 
 			
 			MyHash = (GetPointHash @ ComputePoint);
-			Export[FileNameJoin[{DataDirectory, "ExactMode", "Integrals", ComputeType, MyHash <> ".mx"}], NewPointComputed];
+			ThreadSafeExport[FileNameJoin[{DataDirectory, "ExactMode", "Integrals", ComputeType, MyHash <> ".mx"}], NewPointComputed];
 		];
 	
 	ExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
@@ -228,7 +247,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		AllDataComputed = AllDataComputed // Flatten;
 	
 		Print["Exporting processed results.."];
-		Export[ExportFileName, 
+		ThreadSafeExport[ExportFileName, 
 			{
 				MyPoint,
 				AllDataComputed
@@ -257,7 +276,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
 		];
 		
-		Export[FFExportFileName, FormFactors];
+		ThreadSafeExport[FFExportFileName, FormFactors];
 		,
 		
 		Print["Form factors already computed. Loading result."];

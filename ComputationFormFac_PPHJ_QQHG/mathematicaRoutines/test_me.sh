@@ -1,5 +1,4 @@
 #!/bin/bash
-# Ask the user for their name
 echo Which mode should we use?
 read usemode
 echo Which channel should we compute?

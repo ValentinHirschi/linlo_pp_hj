@@ -1,8 +1,12 @@
 #!/usr/bin/env wolframscript
 (* ::Package:: *)
 
-OneLoopFudgeFactor = 1./((Pi^4)*(2.^5)*Sqrt[2.]);
-TwoLoopFudgeFactor = 1./((Pi^4)*(2.^5)*Sqrt[2.]);
+(* Fudge factors (ideally we'd like these to be 1.) *)
+OneLoopFudgeFactor["gghg"] = (1/((Pi^4)*(2^5)*Sqrt[2]))/(1/(2\[Pi])^(4-2eps)/.eps->0);
+TwoLoopFudgeFactor["gghg"] = 1/(8 \[Pi]^2) (1/((Pi^4)*(2^5)*Sqrt[2]))/(Gamma[1-eps]/(4\[Pi])^eps (1/(2\[Pi])^(4-2eps))^2 2 \[Pi]^2/.eps->0);
+
+OneLoopFudgeFactor["qqhg"] = 4 (1/((Pi^4)*(2^5)*Sqrt[2]))/(1/(2\[Pi])^(4-2eps)/.eps->0);
+TwoLoopFudgeFactor["qqhg"] = 1/(8 \[Pi]^2) 4 (1/((Pi^4)*(2^5)*Sqrt[2]))/(Gamma[1-eps]/(4\[Pi])^eps (1/(2\[Pi])^(4-2eps))^2 2 \[Pi]^2/.eps->0);
 
 BaseDirectory = FileNameJoin[{PPHJSharedDirectory, "Dependencies"}];
 
@@ -100,8 +104,8 @@ ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFa
 		FormFactors *= (ProcessingFunctionExact[argsAlt] // Map[Sqrt[Re[#]^2 + Im[#]^2] &]);
 	];
 	
-	Which[args["nloop"] == 1, FudgeFactor = OneLoopFudgeFactor;
-		, args["nloop"] == 2, FudgeFactor = TwoLoopFudgeFactor; ];
+	Which[args["nloop"] == 1, FudgeFactor = OneLoopFudgeFactor[AmplitudeType];
+		, args["nloop"] == 2, FudgeFactor = TwoLoopFudgeFactor[AmplitudeType]; ];
 	
 	FormFactors = FudgeFactor * FormFactors;
 	
