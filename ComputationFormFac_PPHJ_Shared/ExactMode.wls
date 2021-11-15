@@ -21,7 +21,7 @@ AmplitudeDataDirectory = FileNameJoin[{DataDirectory, "Amplitude"}];
 
 GaveThreadSafeWarning = False;
 ThreadSafeExport[fn_,data_]:=Module[{TmpFile = CreateFile[], FileDirectory = fn // FileNameSplit // Part[#, 1 ;; -2]& // FileNameJoin},
-	(*If[$OperatingSystem \[Equal] "MacOSX" || $OperatingSystem \[Equal] "Unix",
+	If[$OperatingSystem == "MacOSX" || $OperatingSystem == "Unix",
 		Export[TmpFile, data, "MX"];
 	
 		If[!DirectoryQ[FileDirectory], CreateDirectory[FileDirectory]];
@@ -35,9 +35,7 @@ ThreadSafeExport[fn_,data_]:=Module[{TmpFile = CreateFile[], FileDirectory = fn 
 		];
 		
 		Export[fn, data];
-	];*)
-	
-	Export[fn, data];
+	]
 ];
 
 Print["Loading dependencies for exact mode.."];
@@ -141,7 +139,7 @@ PlugNumericsIntoExpression[ex_, point_, maxepsord_] := Module[{Tmp},
 	Tmp = ex /.{mt->Sqrt[mmt],mb->Sqrt[mmb],mch->Sqrt[mmc]}/.{(* Doing the replacement for the MS in this way is a lot faster for some reason.. *)MS[a__]:>(MS[a]/.point[[2]]),
 	Sequence@@Normal@Map[Rationalize[#, 10^-50]&]@point[[1]]
 	};
-	Series[Tmp,{eps,0,maxepsord}]//Normal//ReplaceAll[Log[a_]:>PowerExpand[Log[a]]]//Expand//Chop//N
+	Series[Tmp,{eps,0,maxepsord}]//Normal//ReplaceAll[Log[a_]:>PowerExpand[Log[a]]]//Expand//N
 ];
 
 ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, NewPointComputedProcessed, AllDataComputed = {},
@@ -208,7 +206,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			NewPointComputed[[2]] = NewPointComputed[[2]] // N[#, ExportPrecision] &; 
 			
 			MyHash = (GetPointHash @ ComputePoint);
-			Export[FileNameJoin[{DataDirectory, "ExactMode", "Integrals", ComputeType, MyHash <> ".mx"}], NewPointComputed];
+			ThreadSafeExport[FileNameJoin[{DataDirectory, "ExactMode", "Integrals", ComputeType, MyHash <> ".mx"}], NewPointComputed];
 		];
 	
 	ExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
@@ -249,7 +247,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		AllDataComputed = AllDataComputed // Flatten;
 	
 		Print["Exporting processed results.."];
-		Export[ExportFileName, 
+		ThreadSafeExport[ExportFileName, 
 			{
 				MyPoint,
 				AllDataComputed
@@ -278,7 +276,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
 		];
 		
-		Export[FFExportFileName, FormFactors];
+		ThreadSafeExport[FFExportFileName, FormFactors];
 		,
 		
 		Print["Form factors already computed. Loading result."];
