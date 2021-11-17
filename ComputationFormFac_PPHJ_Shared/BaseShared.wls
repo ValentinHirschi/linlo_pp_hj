@@ -5,8 +5,8 @@
 OneLoopFudgeFactor["gghg"] = 1/(2 Sqrt[2]);
 TwoLoopFudgeFactor["gghg"] = 1/(2 Sqrt[2]);
 
-OneLoopFudgeFactor["qqhg"] = Sqrt[2];
-TwoLoopFudgeFactor["qqhg"] = Sqrt[2];
+OneLoopFudgeFactor["qqhg"] = 1/(2 Sqrt[2]);
+TwoLoopFudgeFactor["qqhg"] = 1/(2 Sqrt[2]);
 
 BaseDirectory = FileNameJoin[{PPHJSharedDirectory, "Dependencies"}];
 
