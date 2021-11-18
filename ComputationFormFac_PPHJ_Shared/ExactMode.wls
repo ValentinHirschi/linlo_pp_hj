@@ -239,7 +239,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				NewPointComputed[[2]] = NewPointComputed[[2]] // N[#, ExportPrecision] &; 
 				
 				MyHash = (GetPointHash @ ComputePoint);
-				ThreadSafeExport[FExport = FileNameJoin[{DynamicIntegralsTopDirectory, ComputeType, MyHash <> ".mx"}], NewPointComputed];
+				ThreadSafeExport[FExport = FileNameJoin[{DynamicIntegralsTopDirectory, ComputeType, MyHash <> ".m"}], NewPointComputed];
 			
 				(* This is not fully thread-safe but at worst a point is lost in the indexing. *)
 				IndexingData = Import[IndexingFile];
@@ -248,7 +248,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			];
 		];
 	
-	ExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".m"}];
+	ExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
 	
 	If[!(FileExistsQ[ExportFileName] && ReuseProcessedIntegrals),
 		If[Compute1L, 
