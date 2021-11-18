@@ -7,10 +7,17 @@ ScriptDirectory = FileNameJoin @ FileNameSplit[ScriptPath][[1 ;; -2]];
 
 DataDirectory = FileNameJoin[{ScriptDirectory, "Dependencies", "Data"}];
 CacheDirectory = FileNameJoin[{DataDirectory, "ExactMode"}];
+CacheIntegralsDirectory = FileNameJoin[{DataDirectory, "ExactMode", "Integrals"}];
+CacheIntegralsProcessedDirectory = FileNameJoin[{DataDirectory, "ExactMode", "Processed"}];
+CacheIntegralsFormFactorsDirectory = FileNameJoin[{DataDirectory, "ExactMode", "FormFactors"}];
 
-If[Input["Confirm deletion of directory (y/n): " <> CacheDirectory <> "\n"] === y,
-	DeleteDirectory[CacheDirectory, DeleteContents -> True];
-	Print["Cache cleared.."];
-	,
-	Print["Aborted."];
+If[Input["Delete cached integral directories? (y/n): " <> CacheIntegralsDirectory <> ", " <> CacheIntegralsProcessedDirectory <> "\n"] === y,
+	DeleteDirectory[CacheIntegralsDirectory, DeleteContents -> True];
+	DeleteDirectory[CacheIntegralsProcessedDirectory, DeleteContents -> True];
+	Print["Integrals cleared.."];
+];
+
+If[Input["Delete cached form factor directory? (y/n): " <> CacheIntegralsFormFactorsDirectory <> "\n"] === y,
+	DeleteDirectory[CacheIntegralsFormFactorsDirectory, DeleteContents -> True];
+	Print["Integrals cleared.."];
 ];

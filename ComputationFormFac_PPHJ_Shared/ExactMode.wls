@@ -1,7 +1,9 @@
 #!/usr/bin/env wolframscript
 (* ::Package:: *)
 
-ExportPrecision = 50;
+ExportPrecision = 100;
+RationalizePointsPrecision = 10^-25;
+NumericsPlugInFFPrecision = 10^-50;
 
 ReuseProcessedIntegrals = True;
 ReuseFFs = True;
@@ -10,10 +12,15 @@ NotationPath = FileNameJoin[{BaseDirectory, "Dependencies"}];
 SessionsPath = FileNameJoin[{BaseDirectory, "Server", "Sessions"}];
 DiffExpPath = FileNameJoin[{BaseDirectory, "DiffExp", "DiffExp.m"}];
 
+Get[DiffExpPath];
+
+ParallelMatrixExpansionCores = 16;
+
 DataDirectory = FileNameJoin[{BaseDirectory, "Data"}];
 Data1LDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "1LCombined", "DataPoints/"}];
 Data2LDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "2LCombined", "DataPoints/"}];
 DataHeDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "HeCombined", "DataPoints/"}];
+DynamicIntegralsTopDirectory = FileNameJoin[{DataDirectory, "ExactMode", "Integrals"}];
 
 IndexingFile = FileNameJoin[{DataDirectory, "ExactMode", "Indexing.mx"}];
 
@@ -26,7 +33,7 @@ ThreadSafeExport[fn_,data_]:=Module[{TmpFile = CreateFile[], FileDirectory = fn 
 	
 		If[!DirectoryQ[FileDirectory], CreateDirectory[FileDirectory]];
 	
-		Run["mv \"" <> TmpFile <> "\" \"" <> fn <> "\""];
+		Run["mv -f \"" <> TmpFile <> "\" \"" <> fn <> "\""];
 		
 		,
 		If[!GaveThreadSafeWarning,
@@ -39,7 +46,6 @@ ThreadSafeExport[fn_,data_]:=Module[{TmpFile = CreateFile[], FileDirectory = fn 
 ];
 
 Print["Loading dependencies for exact mode.."];
-Get[DiffExpPath];
 Get[FileNameJoin[{NotationPath, "StandardDefinitions.m"}]];
 Get[FileNameJoin[{NotationPath, "2LoopProcessing.m"}]];
 Get[FileNameJoin[{NotationPath, "1LoopProcessing.m"}]];
@@ -68,8 +74,19 @@ IndexingData = Association[
 
 GetPointHash = Hash[Normal[KeySort[#]], "SHA256", "HexString"] &;
 
-DoIndexing[IndDir_, IndType_] := Module[{HaveRead, CurrFileStream, Counter = 0, CurrPoint},
-	Print["Indexing data from ", IndDir];
+PointCanonical[FamType_, Pnt_] := Module[{CurrPoint}, 
+	(* Remove the Association structure, as this way it is easier to use with the Nearest function.. A replacement is used so the keys are ordered in a consistent way. *)
+	Which[
+		FamType === "1L", CurrPoint = {s, t, pp4} /. Pnt,
+		FamType === "2L", CurrPoint = {s, t, pp4} /. Pnt,
+		FamType === "He", CurrPoint = {s, t, pp4, mmt, mmb} /. Pnt
+	];
+			
+	CurrPoint
+];
+
+DoIndexing[Dirs_, IndType_] := Module[{HaveRead, CurrFileStream, Counter = 0, CurrPoint},
+	Print["Indexing data from ", Dirs];
 	
 	Do[
 		Counter++; 
@@ -88,28 +105,21 @@ DoIndexing[IndDir_, IndType_] := Module[{HaveRead, CurrFileStream, Counter = 0, 
 		IndexingData[IndType] = {IndexingData[IndType], A @ {CurrFile, 
 			CurrPoint = (HaveRead // StringJoin // StringCases[#, "<|" ~~ Shortest[a__] ~~ "|>" ]& // First // ToExpression);
 			
-			(* I remove the Association structure, as this way it is easier to use with the Nearest function.. A replacement is used so the keys are ordered in a consistent way. *)
-			Which[
-				IndType === "1L", CurrPoint = {s, t, pp4} /. CurrPoint,
-				IndType === "2L", CurrPoint = {s, t, pp4} /. CurrPoint,
-				IndType === "He", CurrPoint = {s, t, pp4, mmt, mmb} /. CurrPoint
-			];
-			
-			CurrPoint
+			PointCanonical[IndType, CurrPoint]
 		}};
 	
 		Close[CurrFileStream];
 	
-	, {CurrFile, FileNames[FileNameJoin[{IndDir, "*"}]]}];
+	, {CurrFile, Flatten[FileNames[FileNameJoin[{#, "*"}]]& /@ Dirs]}];
 	
 	IndexingData[IndType] = Flatten[IndexingData[IndType]] /. A -> Identity;
 ];
 
 
 If[!FileExistsQ[IndexingFile],
-	DoIndexing[Data1LDirectoryStatic, "1L"];
-	DoIndexing[Data2LDirectoryStatic, "2L"];
-	DoIndexing[DataHeDirectoryStatic, "He"];
+	DoIndexing[{Data1LDirectoryStatic, FileNameJoin[{DynamicIntegralsTopDirectory, "1L"}]}, "1L"];
+	DoIndexing[{Data2LDirectoryStatic, FileNameJoin[{DynamicIntegralsTopDirectory, "2L"}]}, "2L"];
+	DoIndexing[{DataHeDirectoryStatic, FileNameJoin[{DynamicIntegralsTopDirectory, "He"}]}, "He"];
 	
 	Export[IndexingFile, IndexingData]
 	,
@@ -137,7 +147,7 @@ TLNamingReps = {FamA -> "A", FamAf -> "Af", FamBs -> "Bs", FamC -> "C", FamD -> 
 (* Function for plugging numerics into the amplitudes.*)
 PlugNumericsIntoExpression[ex_, point_, maxepsord_] := Module[{Tmp},
 	Tmp = ex /.{mt->Sqrt[mmt],mb->Sqrt[mmb],mch->Sqrt[mmc]}/.{(* Doing the replacement for the MS in this way is a lot faster for some reason.. *)MS[a__]:>(MS[a]/.point[[2]]),
-	Sequence@@Normal@Map[Rationalize[#, 10^-50]&]@point[[1]]
+	Sequence@@Normal@Map[Rationalize[#, NumericsPlugInFFPrecision]&]@point[[1]]
 	};
 	Series[Tmp,{eps,0,maxepsord}]//Normal//ReplaceAll[Log[a_]:>PowerExpand[Log[a]]]//Expand//N
 ];
@@ -186,27 +196,56 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	
 	Print["Processing point: ", MyPoint];
 	
-	ComputeNext[ComputeType_, ComputePoint_] := Module[{MyHash, NearestPointFile, NearestPointData},
+	ComputeNext[ComputeType_, ComputePoint_] := Module[{MyHash, NearestPointFile, NearestPointData, FExport},
 			Print["Computing " <> ComputeType <> " integrals.."];
 			Get[FileNameJoin[{SessionsPath, ComputeType <> ".mx"}]];
+			
+			(* Override some options from the session files. *)
+			Block[{Print}, 
+				If[ComputeType === "1L", 
+					UpdateConfiguration[
+						ExpansionOrder -> 80
+					],
+					
+					UpdateConfiguration[
+						ExpansionOrder -> 55,
+						If[ParallelMatrixExpansionCores > 1,
+							"Parallel" -> ParallelMatrixExpansionCores,
+							Sequence @@ {}
+						]
+					]
+				]
+			];
 	
 			Print["Nearest point: "];
-			Print[NearestPointFile = Nearest[IndexingData[ComputeType][[All, 2]] -> IndexingData[ComputeType][[All, 1]], ComputePoint // Values, 2] // Last];
+			Print[NearestPointFile = Nearest[IndexingData[ComputeType][[All, 2]] -> IndexingData[ComputeType][[All, 1]], ComputePoint // Values] // Last];
 			NearestPointData = Import @ NearestPointFile;
-	
-			NewPointComputed = TransportTo[
-				NearestPointData,
-				ComputePoint // Map[Rationalize[#, 10^-25]&]
+			
+			If[DeleteDuplicates[Rationalize[({s, t, pp4, mmt, mmb, mm} /. ComputePoint) - ({s, t, pp4, mmt, mmb, mm} /. NearestPointData[[1]]), RationalizePointsPrecision]] === {0},
+				Print["Nearest available point is within delta of: ", RationalizePointsPrecision];
+				NewPointComputed = NearestPointData;
+				
+				,
+				
+				NewPointComputed = TransportTo[
+					NearestPointData,
+					ComputePoint // Map[Rationalize[#, RationalizePointsPrecision]&]
+				];
+			
+				(*  
+				   We save the point in a notation suitable for DiffExp, so we can always run cross-checks.
+				   We lower the precision, to reduce the storage size. In addition we use the mx file format, which is more compact.
+				*)
+				NewPointComputed[[2]] = NewPointComputed[[2]] // N[#, ExportPrecision] &; 
+				
+				MyHash = (GetPointHash @ ComputePoint);
+				ThreadSafeExport[FExport = FileNameJoin[{DynamicIntegralsTopDirectory, ComputeType, MyHash <> ".mx"}], NewPointComputed];
+			
+				(* This is not fully thread-safe but at worst a point is lost in the indexing. *)
+				IndexingData = Import[IndexingFile];
+				IndexingData[ComputeType] = Append[IndexingData[ComputeType], {FExport, PointCanonical[ComputeType, NewPointComputed[[1]]]}];
+				ThreadSafeExport[IndexingFile, IndexingData];
 			];
-			
-			(*  
-			   We save the point in a notation suitable for DiffExp, so we can always run cross-checks.
-			   We lower the precision, to reduce the storage size. In addition we use the mx file format, which is more compact.
-			*)
-			NewPointComputed[[2]] = NewPointComputed[[2]] // N[#, ExportPrecision] &; 
-			
-			MyHash = (GetPointHash @ ComputePoint);
-			ThreadSafeExport[FileNameJoin[{DataDirectory, "ExactMode", "Integrals", ComputeType, MyHash <> ".mx"}], NewPointComputed];
 		];
 	
 	ExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
