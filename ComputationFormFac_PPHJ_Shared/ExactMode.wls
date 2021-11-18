@@ -89,6 +89,8 @@ PointCanonical[FamType_, Pnt_] := Module[{CurrPoint},
 	CurrPoint
 ];
 
+EndOfFileToBlank[ex_] := If[ex === EndOfFile, "", ex];
+
 DoIndexing[Dirs_, IndType_] := Module[{HaveRead, CurrFileStream, Counter = 0, CurrPoint},
 	Print["Indexing data from ", Dirs];
 	
@@ -101,13 +103,20 @@ DoIndexing[Dirs_, IndType_] := Module[{HaveRead, CurrFileStream, Counter = 0, Cu
 	
 		HaveRead = {};
 	
-		AppendTo[HaveRead, ReadLine[CurrFileStream]];
-		AppendTo[HaveRead, ReadLine[CurrFileStream]];
-		AppendTo[HaveRead, ReadLine[CurrFileStream]];
+		AppendTo[HaveRead, ReadLine[CurrFileStream] // EndOfFileToBlank];
+		AppendTo[HaveRead, ReadLine[CurrFileStream] // EndOfFileToBlank];
+		AppendTo[HaveRead, ReadLine[CurrFileStream] // EndOfFileToBlank];
+		AppendTo[HaveRead, ReadLine[CurrFileStream] // EndOfFileToBlank];
+		AppendTo[HaveRead, ReadLine[CurrFileStream] // EndOfFileToBlank];
 	
 		(* Seemed faster than using AppendTo? Might have been HDD caching. I keep it like this for now. *)
 		IndexingData[IndType] = {IndexingData[IndType], A @ {CurrFile, 
-			CurrPoint = (HaveRead // StringJoin // StringCases[#, "<|" ~~ Shortest[a__] ~~ "|>" ]& // First // ToExpression);
+			Check[
+			CurrPoint = (HaveRead // StringJoin // StringReplace[#, "\n" -> ""]& // StringCases[#, "<|" ~~ Shortest[a__] ~~ "|>" ]& // First // ToExpression);
+			,
+			Print[CurrFile];
+			Abort[];
+			];
 			
 			PointCanonical[IndType, CurrPoint]
 		}};
