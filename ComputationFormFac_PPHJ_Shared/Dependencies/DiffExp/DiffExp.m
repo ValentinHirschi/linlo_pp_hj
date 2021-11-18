@@ -20,7 +20,7 @@
 
 
 (* ::Input::Initialization:: *)
-(* Copyright (C) 2020 Martijn Hidding *)
+(* Copyright (C) 2021 Martijn Hidding *)
 
 (* DiffExp is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -101,14 +101,16 @@ DivisionOrder->3,
 EpsilonOrder->4,
 "EstimateError"->"Fast",
 ExpansionOrder->50,
-"InvWronskSolver"->"Auto",
+"IgnoreIndicialCheck"->False,
+"InvWronskSolver"->"InverseLogx",
 "KeepMatrixExpansions"->False,
 "LinearSolveChopPrecision"->250,
 LineParameter->Global`x,
 MatrixDirectory->"",
 RadiusOfConvergence->1,
 "SaveExpansionsCompress"->False,
-"HomogeneousSolve"->"Expand",
+"HomogeneousSolve"->"DontExpand",
+"Parallel"->False,
 SegmentationStrategy->"Predivision",
 IntegrationStrategy->"Default",
 UseMobius->False,
@@ -161,15 +163,16 @@ NumIntegrals=0;
 ];
 
 (* State variables *)
+AnalyticContinuationFailed=False;
 AnalyticContinuationReplacements={};
 AnalyticContinuationReplacementsAssociation=Association[{}];
-UserDeltaPrescriptions={};
-SquareRootPrescriptionsAdded[]:={#,1}&/@Complement[Expand[DEqnSquareRoots],Flatten@Expand@{UserDeltaPrescriptions[[All,1]],-UserDeltaPrescriptions[[All,1]]}];
-DEqnSquareRoots={};
+BenchmarkData=Association[];
 CurrentSingularityWasAddedFromSquareRoot=False;
 CurrentSingularityHasIDeltaPrescription=False;
-AnalyticContinuationFailed=False;
+DEqnSquareRoots={};
 MultivaluedFail=False;
+SquareRootPrescriptionsAdded[]:={#,1}&/@Complement[Expand[DEqnSquareRoots],Flatten@Expand@{UserDeltaPrescriptions[[All,1]],-UserDeltaPrescriptions[[All,1]]}];
+UserDeltaPrescriptions={};
 
 (* Constants for internal purposes. These should normally not have to be changed. *)
 CrosscheckFlags={
@@ -248,15 +251,42 @@ ex2+O[x]^(a[[5]]/a[[6]])
 SafeReplaceSeries11[a_List,b_]:=SafeReplaceSeries11[#,b]&/@a;
 SafeReplaceSeries11[a_,b_]:=a/.b;
 
-MatrixMultiplySExpand[MatA_,MatB_]:=Module[{Dim1=Dimensions[MatA],Dim2=Dimensions[MatB]},
+MatrixMultiplySExpand[MatA_,MatB_]:=Module[{Dim1=Dimensions[MatA],Dim2=Dimensions[MatB],ABFile},
 If[!(Dim1[[2]]===Dim2[[1]]),
 Global`DebugData={MatA,MatB};
 ReportError["Matrix dimensions don't match."];
 ];
 
+If[(*(!FEC["Parallel"]===False)&&(!Dimensions[MatA]==={1,1})*)False,
+Export[ABFile=$TemporaryDirectory<>"/"<>ToString[$SessionID]<>"AB.mx",{MatA,MatB}](*//EchoTiming[#,"export"]&*);
+With[{dir=ABFile},ParallelEvaluate[{MyMatA,MyMatB}=Import[dir];];](*//EchoTiming[#,"import"]&*);
+DeleteFile[ABFile];
+
+Table[
+With[{PDim1=Dim1,piind=iind,pjind=jind},
+ParallelSubmit[
+SExpand@Sum[SMultiply[MyMatA[[piind,kind]],MyMatB[[kind,pjind]]],{kind,PDim1[[2]]}]
+]
+]
+,{iind,Dim1[[1]]},{jind,Dim2[[2]]}
+]//WaitAll
+
+(*Table[
+With[{PMatA=Compress[MatA[[iind]]],PMatB=Compress[MatB[[All,jind]]],PDim1=Dim1(*,piind=iind,pjind=jind*)},
+ParallelSubmit[
+PMatAFix=Uncompress[PMatA];
+PMatBFix=Uncompress[PMatB];
+SExpand@Sum[SMultiply[PMatAFix[[kind]],PMatBFix[[kind]]],{kind,PDim1[[2]]}]
+]
+]
+,{iind,Dim1[[1]]},{jind,Dim2[[2]]}
+]//WaitAll*)
+
+,
 Table[
 SExpand@Sum[SMultiply[MatA[[iind,kind]],MatB[[kind,jind]]],{kind,Dim1[[2]]}]
 ,{iind,Dim1[[1]]},{jind,Dim2[[2]]}
+]
 ]
 ];
 MatrixPowerSExpand[a_,0_]:=Block[{dim=a//Dimensions},If[!(dim[[1]]===dim[[2]]),ReportError["Matrix is not square!"];];IdentityMatrix[dim[[1]]]];
@@ -423,24 +453,26 @@ PrintTemporary["Processing ",Dynamic[Counter]];
 ];
 
 If[FEC["SaveExpansionsCompress"]===True,
-Uncompressed=SavedData[[1,5]]//Uncompress;
+If[!FEC["SaveExpansionsCompressDirectory"]==="?",
+If[StringJoin[SavedData[[1,5]]//StringPart[#,-2;;-1]&]===".m",
+Uncompressed[ind_]:=Uncompressed[ind]=Uncompress[Import[SavedData[[ind,5]]]];,
+Uncompressed[ind_]:=Uncompressed[ind]=Uncompress[SavedData[[ind,5]]];
+];
 ,
-Uncompressed=SavedData[[1,5]];
+Uncompressed[ind_]:=Uncompressed[ind]=Uncompress[SavedData[[ind,5]]];
+]
+,
+Uncompressed[ind_]:=SavedData[[ind,5]];
 ];
 
 Table[
 Res=Piecewise@Table[
 Counter={ind,intind,epsord};
-If[FEC["SaveExpansionsCompress"]===True,
-Uncompressed=SavedData[[ind,5]]//Uncompress;
-,
-Uncompressed=SavedData[[ind,5]];
-];
 {
 (If[Pade===True,
 (Project\[Theta]s[#,GetPade]&@#)/.Logx->Log[x]/.\[Theta]p->HeavisideTheta[x]/.\[Theta]m->HeavisideTheta[-x]/.(SavedData[[ind,2]]),
 (Normal@#)/.Logx->Log[x]/.\[Theta]p->HeavisideTheta[x]/.\[Theta]m->HeavisideTheta[-x]/.(SavedData[[ind,2]])
-]&@(Uncompressed[[intind,epsord]]+If[Ord===Null,0,O[x]^Ord]))
+]&@(Uncompressed[ind][[intind,epsord]]+If[Ord===Null,0,O[x]^Ord]))
 ,
 x>=SavedData[[ind,3,1]]&&x<=SavedData[[ind,3,2]]
 }
@@ -448,8 +480,8 @@ x>=SavedData[[ind,3,1]]&&x<=SavedData[[ind,3,2]]
 ];
 Evaluate[Res/.x->#]&
 ,
-{intind,Uncompressed//Dimensions//First},
-{epsord,Uncompressed//Dimensions//Last}]
+{intind,Uncompressed[1]//Dimensions//First},
+{epsord,Uncompressed[1]//Dimensions//Last}]
 ]
 
 LoadConfiguration[a__]:=(
@@ -509,7 +541,7 @@ If[KeyExistsQ[assoc,"EstimateError"],
 If[assoc["EstimateError"]==="False",
 DiffExpConfiguration["EstimateError"]=False;
 ,
-If[!MemberQ[{"Precise","Fast"},assoc["EstimateError"]],
+If[!MemberQ[{True,"Fast"},assoc["EstimateError"]],
 DiffExpConfiguration["EstimateError"]=False;
 ];
 ];
@@ -1027,12 +1059,10 @@ CombineDifferentialEquationsHomogeneous[Amat_,topind_:1]:=Module[{Amats,n=Amat//
 PrintDebug["Getting higher order derivatives.."][2];
 
 If[FEC["HomogeneousSolve"]==="Expand",
-Amats=PChop@NestList[SExpand[(SD[#,x]+MatrixMultiplySExpand[#,Amat])]&,IdentityMatrix[n],n];
+Amats=PChop@NestList[If[FEC["VerbosityDebug"]>=3,EchoTiming,Identity][SExpand[(SD[#,x]+MatrixMultiplySExpand[#,Amat])]]&,IdentityMatrix[n],n];
 Solns=Amats[[All,topind]]//Transpose//NullSpaceTryAgainOnFail[#,Method->"DivisionFreeRowReduction",Tolerance->10^-LinearSolveChopPrecisionVal]&;
-
 ,
-
-Amats=PChop@NestList[Together[(D[#,x]+# . Amat)]&,IdentityMatrix[n],n];
+MyAMats=Amats=PChop@NestList[Together[(D[#,x]+# . Amat)]&,IdentityMatrix[n],n];
 Solns=DiffExpSeries[Amats[[All,topind]]//Transpose//NullSpace[#]&//Together];
 ];
 
@@ -1073,7 +1103,7 @@ PrintDebug["Indicial equation: ",IndicialEquation/.r->"r"][3];
 rMax=Max[IndicialEquation==0//Solve[#,r]&//Part[#,All,1,2]&];
 PrintDebug["Considering largest root: r = ",rMax][3];
 
-If[Denominator[rMax]>2&&!(IgnoreIndicialCheck===True),
+If[Denominator[rMax]>2&&!(FEC["IgnoreIndicialCheck"]===True),
 ReportError["The root of the indicial equation is of degree greater than two: ",rMax,". This case is not implemented in DiffExp."];
 ];
 
@@ -1239,8 +1269,11 @@ GetLargestTerm[line_]:=Block[{},
 (Flatten[Coefficient[DEqnMatricesExpanded[line]//Values,x,ExpansionOrderVal-ISafetyExpansionSubtract-(MaxCouplingOrder-1)]]//Abs//Max)x^(ExpansionOrderVal-ISafetyExpansionSubtract-(MaxCouplingOrder-1))
 ];
 
-TransportTo[bcs2_List,line2_Association|line2_List,to2:_?NumericQ:1,SaveExpansions:_?BooleanQ:False]:=Module[{line=If[line2[[0]]===List,line2//Association//KeySort,line2//KeySort],LineRat,ToRat,to,Tmp,bcs,FixAt,MySingularities,MySingularitiesImaginary,MySingularitiesRelevant,SingularitySegments,PoleIntervals,CurrLine,CurrLineNoMobius=Null,CurrIntegrated,CurrIntervalCurrLine,CurrIntervalLine,Done=False,Tmp2,CurrEvalPoint,CurrEvalPointCurrLine,CurrEval,Currbcs,AllIntegrationData={},MyCenter,EvaluateCurrPoint,NextIsPole=False,SegmentCounter=1,TmpRelateLines,InterSec,CurrIntervalLinePos,CurrIntervalLineNeg,CurrEvalError,CurrIntegratedError,CurrbcsError,PrintError,CurrError,CurrErrorAcc=0,CurrErrorAccs=ConstantArray[0,{NumIntegrals,EpsilonOrderVal+1}],FixWithin,SegmentsToIntegrate,UpdateMatrixExpansionError,TimeStart,TimeStart0,LineReturn,FailedLine,ExpansionsIndeterminates={},bcsprev,CurrStatusBackup,BoundaryFixPoint,CurrEvalErrorEx,CurrEvalError1,CurrEvalError2,CurrEvalAtBoundaryFixPoint,CurrEvalEx
+TransportTo[bcs2_List,line2_Association|line2_List,to2:_?NumericQ:1,SaveExpansions:_?BooleanQ:False,SampleAtList_List:{}]:=Module[{line=If[line2[[0]]===List,line2//Association//KeySort,line2//KeySort],LineRat,ToRat,to,Tmp,bcs,FixAt,MySingularities,MySingularitiesImaginary,MySingularitiesRelevant,SingularitySegments,PoleIntervals,CurrLine,CurrLineNoMobius=Null,CurrIntegrated,CurrIntervalCurrLine,CurrIntervalLine,Done=False,Tmp2,CurrEvalPoint,CurrEvalPointCurrLine,CurrEval,Currbcs,AllIntegrationData={},MyCenter,EvaluateCurrPoint,NextIsPole=False,SegmentCounter=1,TmpRelateLines,InterSec,CurrIntervalLinePos,CurrIntervalLineNeg,CurrEvalError,CurrIntegratedError,CurrbcsError,PrintError,CurrError,CurrErrorAcc=0,CurrErrorAccs=ConstantArray[0,{NumIntegrals,EpsilonOrderVal+1}],FixWithin,SegmentsToIntegrate,UpdateMatrixExpansionError,TimeStart,TimeStart0,LineReturn,FailedLine,ExpansionsIndeterminates={},bcsprev,CurrStatusBackup,BoundaryFixPoint,CurrEvalErrorEx,CurrEvalError1,CurrEvalError2,CurrEvalAtBoundaryFixPoint,CurrEvalEx,AllSegmentsPredivision,TmpFile,Ses,CompressedTermForExport,CompressedTermForExportFN,CurrLineLR,FullLineLR,TmpTmp
 },
+
+BenchmarkData=Association[];
+BenchmarkData["TimeStart"]=AbsoluteTime[];
 
 MultivaluedFail=False;
 
@@ -1314,6 +1347,9 @@ CurrErrorAccs=PadRight[#,EpsilonOrderVal+1,10^-FEWorkingPrecision]&/@CurrErrorAc
 
 PrintInfo["Transporting boundary conditions along ",line//Normal//N//Association," from x = ",FixAt//N," to x = ",to//N][1];
 
+BenchmarkData["BasicPreprocessing"]=AbsoluteTime[]-BenchmarkData["TimeStart"];
+BenchmarkData["MatrixPreprocessing"]=AbsoluteTime[];
+
 PrintInfo["Preparing differential equations along current line.."][1];
 PrepareMatricesFactored[line];
 
@@ -1333,6 +1369,9 @@ SingularitySegments={#,GetLineRescaled[line,#,{MySingularities,MySingularitiesIm
 ];
 
 PrintInfo["Possible singularities along line at positions ",DeleteCases[SingularitySegments[[All,1]],\[Infinity]|-\[Infinity]]//N,"."][1];
+
+BenchmarkData["MatrixPreprocessing"]=AbsoluteTime[]-BenchmarkData["MatrixPreprocessing"];
+BenchmarkData["PoleIntervals"]=AbsoluteTime[];
 
 If[FEC[SegmentationStrategy]==="Dynamic",
 PrintInfo["Determining intervals around possible singularities."][1];
@@ -1363,6 +1402,8 @@ Tmp
 {sline,SingularitySegments}
 ];
 
+BenchmarkData["PoleIntervals"]=AbsoluteTime[]-BenchmarkData["PoleIntervals"];
+
 (* Main loop. *)
 If[DependsQ[#===0&/@(SingularitySegments//PChop),True],
 PrintDebug["First expansion is at singularity."][1];
@@ -1378,14 +1419,16 @@ PrintDebug["First expansion is at singularity."][1];
 
 
 
-
+BenchmarkData["SegmentCounting"]=AbsoluteTime[];
 
 (* Duplicate of the code block below, without print statements and integrations. This counts the number of segments. *)
+AllSegmentsPredivision={};
 If[FEC[SegmentationStrategy]==="Predivision",
 PrintInfo["Analyzing integration segments."][1];
 PoleIntervals1=PoleIntervals;
 MyCenter=FixAt;
 CurrLine=GetLineRescaled[line,FixAt,{MySingularities,MySingularitiesImaginary}];
+AppendTo[AllSegmentsPredivision,CurrLine];
 
 Done=False;
 While[!Done,
@@ -1453,6 +1496,8 @@ CurrLine=GetLineRescaled[line,MyCenter,{MySingularities,MySingularitiesImaginary
 ];
 ];
 
+AppendTo[AllSegmentsPredivision,CurrLine];
+
 PoleIntervals=PoleIntervals1;
 ];
 
@@ -1462,8 +1507,64 @@ PoleIntervals=PoleIntervals1;
 PrintInfo["Segments to integrate: ",SegmentsToIntegrate=SegmentCounter,"."][1];
 ];
 
+BenchmarkData["SegmentCounting"]=AbsoluteTime[]-BenchmarkData["SegmentCounting"];
+BenchmarkData["AllPreprocessing"]=AbsoluteTime[]-BenchmarkData["TimeStart"];
 
+If[!FEC["Parallel"]===False,
+PrintInfo["Starting parallel matrix expansion.."][1];
 
+TmpFile=FileNameJoin[{$TemporaryDirectory,(Ses=ToString[$SessionID])<>"SessionData.mx"}];
+DumpSave[TmpFile,{"DiffExp`","DiffExpGridSampler`"}];
+
+CloseKernels[];
+LaunchKernels[FEC["Parallel"]];
+$DistributedContexts=None;
+
+With[{file=TmpFile},ParallelEvaluate[Get[file]]];
+DeleteFile[TmpFile];
+
+AllSegmentsPredivision=AllSegmentsPredivision//DeleteDuplicates;
+
+AParallelCounter=0;
+SetSharedVariable[AParallelCounter];
+Print[Dynamic[AParallelCounter]," / ",Length@AllSegmentsPredivision];
+
+Table[
+With[{lin=line,CurrLin=mylin,tmpdir=$TemporaryDirectory,PSes=Ses},
+ParallelSubmit[
+MyTiming=PrepareMatricesFrom[lin,CurrLin]//AbsoluteTiming//First;
+MyFileName=FileNameJoin[{tmpdir,PSes<>Hash[CurrLin,"SHA256","HexString"]<>".mx"}];
+Export[MyFileName,{DEqnMatricesFactored[CurrLin],AlphabetLogRulesFactored[CurrLin],DEqnMatricesExpanded[CurrLin]}];
+ClearMatrices[CurrLin];
+PrintInfo["Finished: ",CurrLin//N," in ",MyTiming//N,"s."][1];
+AParallelCounter++;
+]
+],{mylin,AllSegmentsPredivision}]//WaitAll;
+
+PrintInfo["Loading results.."][1];
+Do[
+Check[
+TmpFile=Import@FileNameJoin[{$TemporaryDirectory,Ses<>Hash[mylin,"SHA256","HexString"]<>".mx"}];
+
+DEqnMatricesFactored[mylin]=TmpFile[[1]];
+AlphabetLogRulesFactored[mylin]=TmpFile[[2]];
+DEqnMatricesExpanded[mylin]=TmpFile[[3]];
+PrintInfo["Loaded: ",mylin//N][1];
+,
+KeyDropFrom[DEqnMatricesFactored,mylin];
+KeyDropFrom[AlphabetLogRulesFactored,mylin];
+KeyDropFrom[DEqnMatricesExpanded,mylin];
+];
+,{mylin,AllSegmentsPredivision}
+];
+
+Do[
+DeleteFile[FileNameJoin[{$TemporaryDirectory,Ses<>Hash[mylin,"SHA256","HexString"]<>".mx"}]];
+,{mylin,AllSegmentsPredivision}
+];
+
+CloseKernels[];
+];
 
 
 
@@ -1561,14 +1662,9 @@ NumExpansions++;
 ];
 ];
 
-LastBoundaryConditions=Append[Currbcs,CurrErrorAccs];
-LastIntegrateSystemCall=IntegrateSystem2[Currbcs,CurrLine,{"TransportToCall"}];
+(*LastBoundaryConditions=Append[Currbcs,CurrErrorAccs];
+LastIntegrateSystemCall=IntegrateSystem2[Currbcs,CurrLine,{"TransportToCall"}];*)
 CurrIntegrated=IntegrateSystem[Currbcs,CurrLine,{"TransportToCall"}];
-
-If[FEC["EstimateError"]==="Precise",
-PrintInfo["Estimating error.."][2];
-CurrIntegratedError=IntegrateSystem[CurrbcsError,CurrLine,{"TransportToCall","DecreaseOrderBy1"}];
-];
 
 If[SaveExpansions===True,
 TmpRelateLines=x->RelateLines[CurrLine,line];
@@ -1578,11 +1674,50 @@ TmpRelateLines, (* Change of line parameter from CurrLine to line *)
 If[to>FixAt,Identity,Reverse]@{Limit[RelateLines[line,Currbcs[[1]]],x->0],CurrEvalPoint},(*  Expansions gives results on line between x and y *)
 {Limit[RelateLines[CurrLine,Currbcs[[1]]],x->0],CurrEvalPointCurrLine},(*  Expansions gives results on CurrLine between x and y *)
 If[FEC["SaveExpansionsCompress"]===True,
-(ApplyAnalyticContinuation[CurrIntegrated]//Project\[Theta]s)//Compress (* And the expansion data itself *)
+CompressedTermForExport=(ApplyAnalyticContinuation[CurrIntegrated]//Project\[Theta]s)//Compress (* And the expansion data itself *);
+If[!FEC["SaveExpansionsCompressDirectory"]==="?",
+CompressedTermForExportFN=FileNameJoin[{FEC["SaveExpansionsCompressDirectory"],Hash[CompressedTermForExport,"SHA256","HexString"]<>".m"}];
+Export[
+CompressedTermForExportFN,
+CompressedTermForExport
+];
+CompressedTermForExportFN
+,
+CompressedTermForExport
+]
 ,
 (ApplyAnalyticContinuation[CurrIntegrated]//Project\[Theta]s) (* And the expansion data itself *)
 ]
 }];
+];
+
+(* Write out points if provided *)
+If[!SampleAtList==={},
+CurrLineLR={Limit[RelateLines[CurrLine,Currbcs[[1]]],x->0],CurrEvalPointCurrLine};
+FullLineLR=If[to>FixAt,Identity,Reverse]@{Limit[RelateLines[line,Currbcs[[1]]],x->0],CurrEvalPoint};
+
+(* SampleAtList has the form {{xval, filename}, ...}*)
+Do[
+(*PrintInfo["Evaluating and exporting at x = ",MyPoint//N,"."][2];*)
+
+Export[
+FileNameJoin[{
+SampleAtList[[2]],
+(line/.x->MyPoint // Hash[Normal[KeySort[#]], "SHA256", "HexString"]&)<>".m"
+}
+],
+
+{
+line/.x->MyPoint//Normal//Association,
+SEval[
+CurrIntegrated,
+RelateLinesPoint[CurrLine,line,MyPoint]
+]//If[Length[SampleAtList]===3,N[#,SampleAtList[[3]]]&,Identity]
+}
+];
+
+,{MyPoint,(* All points lying in the current segment *)Select[SampleAtList[[1]],FullLineLR[[1]]<=#<=FullLineLR[[2]]&]}
+];
 ];
 
 (* If MultivaluedFail is True, then multivalued functions were encountered but no singularity was expected. We then abort the computation early. *)
@@ -1610,8 +1745,6 @@ CurrEvalAtBoundaryFixPoint=SEval2[CurrEvalEx,BoundaryFixPoint];
 CurrEvalError2=CurrEvalError1;
 CurrEvalAtBoundaryFixPoint=CurrEval;
 ];
-
-,"Precise",CurrEvalError=SEval[CurrIntegratedError,CurrEvalPointCurrLine];
 ];
 ];
 
@@ -1670,7 +1803,6 @@ TmpErrors=Table[Max[{TmpErrors1[[ii,jj]],TmpErrors2[[ii,jj]]}],{ii,First@Dimensi
 CurrError=Flatten[TmpErrors]//Abs//Max;
 
 Switch[FEC["EstimateError"],
-"Precise",CurrError,
 "Fast",
 CurrErrorAcc=CurrErrorAcc+CurrError;
 CurrErrorAccs=CurrErrorAccs+TmpErrors;
@@ -1679,8 +1811,6 @@ CurrErrorAccs=CurrErrorAccs+TmpErrors;
 Which[FEC["EstimateError"]=="Fast",
 PrintInfo["Current segment error estimate: ",CurrError][1];
 PrintInfo["Total error estimate: ",CurrErrorAcc][1];
-,FEC["EstimateError"]=="Precise",
-PrintInfo["Current error estimate: ",CurrError][1];
 ];
 
 If[CurrError>1,
@@ -1696,9 +1826,12 @@ CurrLine=GetLineRescaled[line,FixAt,{MySingularities,MySingularitiesImaginary}];
 If[FEC[UseMobius]===True,CurrLineNoMobius=GetLineRescaled[line,FixAt,{MySingularities,MySingularitiesImaginary},True]];
 Currbcs=CurrbcsError=bcs;
 
+BenchmarkData["Segments"]=Association[];
+
 Done=False;
 While[!Done,
-TimeStart=AbsoluteTime[];
+BenchmarkData["Segments"][CurrLine//N]=Association[];
+BenchmarkData["Segments"][CurrLine//N]["ComputationTime"]=TimeStart=AbsoluteTime[];
 
 CurrStatusBackup={Currbcs,CurrbcsError,bcs,CurrLine,MyCenter,FixAt,CurrErrorAcc,CurrErrorAccs};
 
@@ -1723,6 +1856,7 @@ ReportError["Analytic continuation failed. Please separate out the singularities
 ];
 ];
 
+BenchmarkData["Segments"][LastLine//N]["MatrixExpansion"]=AbsoluteTime[];
 If[FEC[SegmentationStrategy]==="Dynamic",
 PrepareMatricesFrom[line,CurrLine];
 CurrIntervalCurrLine={-#,#}&@GetMatricesPrecisionDistance[CurrLine];
@@ -1731,6 +1865,8 @@ If[FEC[SegmentationStrategy]==="Predivision",
 PrepareMatricesFrom1[line,CurrLine];
 CurrIntervalCurrLine={-RadiusOfConvergenceVal/FEC[DivisionOrder],RadiusOfConvergenceVal/FEC[DivisionOrder]};
 ];
+BenchmarkData["Segments"][LastLine//N]["MatrixExpansion"]=AbsoluteTime[]-BenchmarkData["Segments"][LastLine//N]["MatrixExpansion"];
+
 CurrIntervalLine=RelateLinesPoint[line,CurrLine,#]&/@CurrIntervalCurrLine;
 PrintInfo["Current line segment covers x \[Element] [",CurrIntervalLine[[1]]//N,", ",CurrIntervalLine[[2]]//N,"]."][2];
 SegmentCounter+=1;
@@ -1817,6 +1953,8 @@ PrintError[];
 ];
 ];
 
+BenchmarkData["Segments"][LastLine//N]["ComputationTime"]=AbsoluteTime[]-BenchmarkData["Segments"][LastLine//N]["ComputationTime"];
+
 (* Analytic continuation failed. *)
 If[MultivaluedFail,
 PrintWarning["The computation will be aborted, and the last line segment will be returned."];
@@ -1830,6 +1968,9 @@ ExpansionOrderVal+=IExpansionOrderIncrease2;
 PrintInfo["The estimated error of the results is lower than the requested AccuracyGoal. The expansions will be repeated at the order ",ExpansionOrderVal,"."][1];
 (* Reload variables for the computation of the segment *)
 {Currbcs,CurrbcsError,bcs,CurrLine,MyCenter,FixAt,CurrErrorAcc,CurrErrorAccs}=CurrStatusBackup;
+If[SaveExpansions===True,
+AllIntegrationData=Delete[AllIntegrationData,-1];
+];
 (* Drop the expansion matrices *)
 KeyDropFrom[DEqnMatricesExpanded,CurrLine];
 (* Decrease counter *)
@@ -1859,6 +2000,10 @@ If[MultivaluedFail,
 LineReturn=FailedLine,
 LineReturn=line/.x->to;
 ];
+
+BenchmarkData["TimeEnd"]=AbsoluteTime[];
+BenchmarkData["ComputationTime"]=BenchmarkData["TimeEnd"]-BenchmarkData["TimeStart"];
+KeyDropFrom[BenchmarkData,{"TimeEnd","TimeStart"}];
 
 If[SaveExpansions===True,
 If[!FEC["EstimateError"]===False,
@@ -2109,7 +2254,7 @@ AA[0]=AAA/.Logx->0;
 BB[0]=Inverse[AA[0](*,Method\[Rule]"DivisionFreeRowReduction"*)];
 Do[
 AA[mm]=Coefficient[AAA,Logx^mm](*AAA-(AAA/.Logx^k_/;(k===mm)\[RuleDelayed]0)*)(*AAA/.Logx^k_/;!(k===mm)\[RuleDelayed]0*)(*Coefficient[AAA,Logx^mm]*);
-BB[mm]=-BB[0] . (Sum[AA[jj] . BB[mm-jj],{jj,1,mm}])//DiffExp`Private`SExpand
+BB[mm]=-MatrixMultiplySExpand[BB[0],(Sum[AA[jj] . BB[mm-jj],{jj,1,mm}])];
 ,{mm,1,MaxLogxPower}];
 Sum[BB[mm]Logx^mm,{mm,0,MaxLogxPower}]//DiffExp`Private`SExpand
 ];
@@ -2117,6 +2262,16 @@ Sum[BB[mm]Logx^mm,{mm,0,MaxLogxPower}]//DiffExp`Private`SExpand
 IntegrateSystem[bcs2:_List:"?",line2_Association|line2_List,opts2_:{}]:=Module[{bcs,line,lrln,lrln2,BCSRelevant,relevantinds,IgnorePositions,CurrBlock,HomogeneousEquation,Solns,MtildeMat,GMat,FMat,FMatInv,FMatInvBMat,BMat,CrossC,bVec,IntegrationData,fGeneral,FixAt,BoundaryEqns1,BoundaryEqns2,boundarysols,cIndices,Cmat,Cb,cpivs,csol,NewResults,Wronsk,ll,FMat2,NMat,HomogeneousEquation2,MtildeMat2,NMat2,Solns2,Wronsk2,WronskInvPrime,WWinvprimeprod,WronskInv,opts=opts2,DEqnMatricesExpandedCopy,TurnOffPade,MyN,MatricesMSupj,nthOrderDifferentialEquations,TmpSols,HighestOrderDifferentialEquationPosition,SolveFrom,nthOrderDifferentialEquationsSolutions,MtildeMatrix,bSupjVecs,MyHomogeneousSolutions,MyNumberOfSolutions,MyInhomogeneousTerm,VanishingTerms,csCurr,OverdeterminedEqns,CsPartSol,CsNullVectors,CsGeneralSol,CsReps,DerivativeVec,BDerVec,LineRat,csFreedom,CouldntSolve,xAdd,IndeterminatesRemaining,VanishingTermsCurr,LogsPresent,AlgebraicRootsPresent,TmpSolutionsNormal,MatricesMSupjExp,InhomPlaceHolder,MtildeInv},
 
 If[line2[[0]]===List,line=line2//Association//KeySort,line=line2//KeySort];
+
+If[!MemberQ[opts,"TransportToCall"],
+BenchmarkData=Association[];
+BenchmarkData["Segments"]=Association[];
+];
+
+If[!KeyExistsQ[BenchmarkData["Segments"],line//N],
+BenchmarkData["Segments"][line//N]=Association[];
+BenchmarkData["Segments"]["ComputationTime"]=AbsoluteTime[];
+];
 
 If[Or@@(!DependsQ[Keys@line,#]&/@ExternalScalesVal),
 ReportError["The line does not fix all kinematic invariants and masses!"];
@@ -2135,11 +2290,17 @@ PrintWarning["Due to the presence of free parameters Pade approximants will be d
 DiffExpConfiguration[UsePade]=False;
 ];
 
-If[!MemberQ[opts,"DecreaseOrderBy1"],
+(*If[!FEC["Parallel"]===False,
+If[Kernels[]==={},
+LaunchKernels[FEC["Parallel"]];
+];
+$DistributedContexts=None;
+DistributeDefinitions[DiffExpConfiguration,FEC,SExpand,SMultiply];
+];*)
+
 BufferedData=Association[{}];
 MyWronsk=Association[{}];
 MyWronskDetInv=Association[{}];
-];
 
 (* To deal with the output of SaveExpansions = True *)
 If[MatchQ[bcs2,{{a_Association,__},_}],
@@ -2171,21 +2332,31 @@ If[!MemberQ[opts,"TransportToCall"],
 (* We do this because the user might have aborted TransportTo while using the option AccuracyGoal. *)
 ExpansionOrderVal=FEC[ExpansionOrder];
 ClearMatrices[];
+
+BenchmarkData["Segments"][line//N]["MatrixExpansion"]=AbsoluteTime[];
 ];
 
 PrepareMatrices[line];
+
+If[!MemberQ[opts,"TransportToCall"],
+BenchmarkData["Segments"][line//N]["MatrixExpansion"]=AbsoluteTime[]-BenchmarkData["Segments"][line//N]["MatrixExpansion"];
+];
+
 InitializeIntegrationSequence[line];
 
 IntegrationData=Association[{}];
 
 DEqnMatricesExpandedCopy=DEqnMatricesExpanded[line];
 
-If[MemberQ[opts,"DecreaseOrderBy1"],
-Do[DEqnMatricesExpandedCopy[lind]=DecreaseSeriesOrderBy[DEqnMatricesExpandedCopy[lind],IDecreaseOrderByErrorPrecise+MaxCouplingOrder],{lind,0,EpsilonOrderVal}];
-];
+BenchmarkData["Segments"][line//N]["ComputationTimes"]=Association[];
+BenchmarkData["Segments"][line//N]["ComputationTimes"]["Integrals"]=Association[];
+
+BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]=Association[];
+BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"]=Association[];
 
 Do[
 PrintInfo["Currently at order: \[Epsilon]^",epsord,"."][2];
+BenchmarkData["Segments"][line//N]["ComputationTimes"][epsord]=AbsoluteTime[];
 
 IntegrationDataTab=Table[IntegrationData[{ind,myeps}],{ind,NumIntegrals},{myeps,0,epsord-1}];
 
@@ -2197,6 +2368,11 @@ bVecRest=Sum[DEqnMatricesExpandedCopy[lind] . IntegrationDataTab[[All,epsord-lin
 ];
 
 Do[
+If[!KeyExistsQ[BenchmarkData["Segments"][line//N]["ComputationTimes"]["Integrals"],intind],
+BenchmarkData["Segments"][line//N]["ComputationTimes"]["Integrals"][intind]=Association[];
+];
+BenchmarkData["Segments"][line//N]["ComputationTimes"]["Integrals"][intind][epsord]=AbsoluteTime[];
+
 PrintInfo["Integrating integral(s) ",intind, " at order \[Epsilon]^",epsord,"."][3];
 
 PrintDebug["Getting inhomogeneous terms."][3];
@@ -2216,8 +2392,11 @@ PrintDebug["Done."][3];
 (*------------------------------------------------------------------------------------------------------------------------------*)
 Which[
 (* Integration of integral without homogeneous components *)
-
 Length[intind]===1&&PChop[DEqnMatricesExpanded[line][0][[intind,intind]]]==={{0}},
+
+If[epsord===0,
+BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"][intind]=0;
+];
 
 cIndices={Subscript[c, 1]};
 
@@ -2231,6 +2410,8 @@ fGeneral={DiffExpIntegrate[bVec[[1]],x]+Subscript[c, 1]+O[x]^(ExpansionOrderVal+
 (* Default integration strategy*)
 
 If[epsord===0&&!KeyExistsQ[BufferedData,intind],
+BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"][intind]=AbsoluteTime[];
+
 If[Length[intind]>1,
 PrintInfo["Combining differential equations: ",intind->intind[[1]],"."][3];
 ];
@@ -2256,6 +2437,9 @@ Wronsk=Table[
 SD[Solns[[iind]],Sequence@@CA[x,jind-1]]
 ,{jind,ll},{iind,ll}
 ]//SExpand;
+
+PrintDebug["Got Wronskian..."][3];
+PrintDebug["Inverting Wronskian..."][3];
 
 If[(FEC["InvWronskSolver"]==="Auto"),
 If[(DependsQ[Wronsk,Logx]),
@@ -2328,15 +2512,17 @@ If[CurrInvWronskSolver==="InverseLogx",
 WronskInv=MatrixLogxInverse[Wronsk];
 ];
 
+PrintDebug["Inverting MTilde... "][3];
+
 Check[
 If[FEC["HomogeneousSolve"]==="Expand",
 MtildeInv=Inverse[MtildeMat,Method->"DivisionFreeRowReduction",ZeroTest->(Normal[#]==0&)];,
 MtildeInv=DiffExpSeries[Inverse[MtildeMat]//Together];
 ];
-FMat=PChop@(MtildeInv . Wronsk//SExpand);
+FMat=PChop@(MatrixMultiplySExpand[MtildeInv,Wronsk]//SExpand);
 ,
 PrintWarning["Encountered numerical instability while inverting Mtilde. Turning off DivisionFreeRowReduction and trying again.."];
-FMat=PChop@(Inverse[MtildeMat] . Wronsk//SExpand);
+FMat=PChop@(MatrixMultiplySExpand[Inverse[MtildeMat],Wronsk]//SExpand);
 ];
 
 FMatInv=PChop@(MatrixMultiplySExpand[WronskInv,MtildeMat]);
@@ -2357,14 +2543,7 @@ ReportError["Cross-check of period matrix failed"];
 PrintDebug["Period matrix derived."][3];
 
 BufferedData[intind]={FMat,FMatInv};
-];
-
-If[MemberQ[opts,"DecreaseOrderBy1"],
-{FMat,FMatInv}=BufferedData[intind];
-FMat=DecreaseSeriesOrderBy[FMat];
-FMatInv=DecreaseSeriesOrderBy[FMatInv];
-,
-{FMat,FMatInv}=BufferedData[intind];
+BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"][intind]=AbsoluteTime[]-BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"][intind];
 ];
 
 {FMat,FMatInv}=BufferedData[intind];
@@ -2389,6 +2568,220 @@ ReportError["Cross-check of solution matrix failed"];
 
 fGeneral=Total[GMat//Transpose];
 
+
+
+
+
+
+
+
+
+
+
+(*------------------------------------------------------------------------------------------------------------------------------*)
+,FEC[IntegrationStrategy]==="VOPAlt",
+
+
+
+
+
+
+
+
+
+
+PrintDebug["Solving by alternative strategy. ",intind][3];
+
+MyN=intind//Length;
+
+If[epsord===0&&!KeyExistsQ[BufferedData,intind],
+BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"][intind]=AbsoluteTime[];
+
+If[FEC["HomogeneousSolve"]==="Expand",
+MatricesMSupj=PChop@NestList[SExpand[(SD[#,x]+MatrixMultiplySExpand[#,DEqnMatricesExpanded[line][0][[intind,intind]]])]&,IdentityMatrix[MyN],MyN];
+,
+MatricesMSupj=NestList[Together[(D[#,x]+# . DEqnMatricesFactored[line][0][[intind,intind]])]&,IdentityMatrix[MyN],MyN];
+];
+
+nthOrderDifferentialEquations=Table[
+If[FEC["HomogeneousSolve"]==="Expand",
+TmpSols=MatricesMSupj[[All,ind]]//Transpose//NullSpace[#,Method->"DivisionFreeRowReduction",Tolerance->10^-LinearSolveChopPrecisionVal]&;
+,
+TmpSols=MatricesMSupj[[All,ind]]//Transpose//NullSpace//Together;
+];
+TmpSols=Internal`DeleteTrailingZeros/@TmpSols;
+TmpSols=DiffExpSeries[MinimalBy[TmpSols,Length]//First];
+TmpSols/(TmpSols//Last)
+,
+{ind,MyN}
+];
+
+If[FEC["HomogeneousSolve"]==="Expand",
+MatricesMSupj=DiffExpSeries[MatricesMSupj];
+];
+
+HighestOrderDifferentialEquationPosition=FirstPosition[Length/@nthOrderDifferentialEquations,Max[Length/@nthOrderDifferentialEquations]][[1]];
+SolveFrom=Range@Length@nthOrderDifferentialEquations;
+nthOrderDifferentialEquationsSolutions=FrobeniusSolutions/@nthOrderDifferentialEquations;
+If[MyN==1,
+If[FEC["HomogeneousSolve"]==="Expand",
+MtildeMatrix=PChop@DiffExpSeries[MatricesMSupj[[All,SolveFrom[[1]]]][[Range[MyN],Range[MyN]]]];
+,
+MtildeMatrix=MatricesMSupj[[All,SolveFrom[[1]]]][[Range[MyN],Range[MyN]]];
+];
+,
+MtildeMatrix={};
+];
+PrintDebug["Determining Wronskian matrices."][3];
+
+Table[
+MyHomogeneousSolutions=nthOrderDifferentialEquationsSolutions[[myintind]];
+
+MyWronsk[{intind,myintind}]=Table[
+SD[MyHomogeneousSolutions[[mysolind]],Sequence@@ConstantArray[x,diffind]]
+,{diffind,0,Length[MyHomogeneousSolutions]-1},{mysolind,Length[MyHomogeneousSolutions]}];
+
+,{myintind,SolveFrom}
+];
+
+BufferedData[intind]={MatricesMSupj,nthOrderDifferentialEquations,nthOrderDifferentialEquationsSolutions,SolveFrom,MtildeMatrix};
+
+BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"][intind]=AbsoluteTime[]-BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"][intind];
+
+
+PrintDebug["Combining homogeneous solutions. ",intind][3];
+fGeneral=Table[
+MyHomogeneousSolutions=nthOrderDifferentialEquationsSolutions[[myintind]];
+
+SExpand@Sum[MyHomogeneousSolutions[[ind]](Subscript[c, myintind,ind])//SExpand,{ind,MyHomogeneousSolutions//Length}]
+
+,{myintind,SolveFrom}
+];
+
+PrintDebug["Done. ",intind][3];
+
+VanishingTerms=SExpand@(SD[fGeneral,x]-DEqnMatricesExpanded[line][0][[intind,intind]] . fGeneral);
+
+IndeterminatesRemaining=csCurr=GetCases[fGeneral,Subscript[c, i_,j_]];
+
+If[!DeleteDuplicates[Normal[VanishingTerms]]==={0},
+xAdd=-1;
+
+While[Length[IndeterminatesRemaining]>Length[fGeneral],
+VanishingTermsCurr=Series[VanishingTerms,{x,0,xAdd}];
+
+PrintDebug["Reducing number of indeterminate constants, considering terms up to O[x]^",xAdd][3];
+OverdeterminedEqns=Flatten[Flatten[LogxCoeffList/@VanishingTermsCurr][[All,3]]];
+
+If[Length[OverdeterminedEqns]>0,
+
+{Cmat,Cb}={#[[2]],-#[[1]]}&@CoefficientArrays[DeleteCases[OverdeterminedEqns,True],csCurr];
+
+CsPartSol=LinearSolve[Cmat,Cb,ZeroTest->(N[LSPChop@Expand@Normal[#1],LinearSolveChopPrecisionVal]==0&)];
+
+CsNullVectors=Cmat//NullSpace[#,Tolerance->10^-LinearSolveChopPrecisionVal]&;
+CsGeneralSol=CsPartSol+Sum[CsNullVectors[[ind]]Subscript[c, ind],{ind,Length[CsNullVectors]}]//SExpand;
+
+CsReps=Thread[csCurr->CsGeneralSol]//PChop;
+
+IndeterminatesRemaining=GetCases[CsGeneralSol,Subscript[c, __]];
+
+];
+
+xAdd+=1;
+];
+
+If[Length[IndeterminatesRemaining]<Length[fGeneral],
+Global`DebugData={Cmat,Cb,CsGeneralSol,fGeneral};
+ReportError["There was an error in obtaining the solutions for integrals ",intind," at order ",epsord," using the \"VOP\" strategy. Try decreasing the value of the option ChopPrecision or increasing the WorkingPrecision."];
+];
+
+fGeneral=fGeneral/.CsReps;
+
+,
+
+fGeneral=fGeneral/.Table[csCurr[[ind]]->Subscript[c, ind],{ind,Length@csCurr}];
+];
+
+
+cIndices=GetCases[fGeneral,Subscript[c, i_]];
+
+FMat=Table[fGeneral/.myc->1/.Subscript[c, _]:>0,{myc,cIndices}]//Transpose;
+FMatInv=MatrixLogxInverse[FMat];
+BufferedData[intind]={FMat,FMatInv};
+
+
+];
+
+
+{FMat,FMatInv}=BufferedData[intind];
+
+PrintDebug["Setting up general solution."][3];
+BMat=1/Length@intind Table[bVec,{iind,intind//Length}]//Transpose;
+cIndices=Table[Subscript[c, i],{i,intind//Length}];
+
+GMat=MatrixMultiplySExpand[FMat,DiffExpIntegrate[MatrixMultiplySExpand[FMatInv,BMat]]+DiagonalMatrix[cIndices]]//PChop;
+
+If[MemberQ[CurrCrosscheckFlags,"GeneralSolutionMatrix"]===True,
+PrintDebug["Cross-checking GMat with differential equations."][1];
+CrossC=SD[GMat,x]-MatrixMultiplySExpand[DEqnMatricesExpanded[line][0][[intind,intind]],GMat+O[x]^ICrossCheckVerifyResultOrder]-BMat//(CPChop@*SExpand);
+Global`DebugData={FMat,GMat,FMatInv,BMat,DEqnMatricesExpanded[line][0][[intind,intind]],CrossC,MtildeMat,Wronsk};
+PrintDebug["Found: ",CrossC+O[x]^ICrossCheckPrintResultOrder//SN][3];
+If[
+!(SameQ@@Append[CrossC+O[x]^ICrossCheckVerifyResultOrder//Normal//Flatten,0])
+,
+ReportError["Cross-check of solution matrix failed"];
+];
+];
+
+fGeneral=Total[GMat//Transpose];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 (*------------------------------------------------------------------------------------------------------------------------------*)
 ,FEC[IntegrationStrategy]==="VOP"||FEC[IntegrationStrategy]==="VariationOfParameters",
 
@@ -2397,6 +2790,8 @@ PrintDebug["Solving by variation of parameters. ",intind][3];
 MyN=intind//Length;
 
 If[epsord===0&&!KeyExistsQ[BufferedData,intind],
+BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"][intind]=AbsoluteTime[];
+
 If[FEC["HomogeneousSolve"]==="Expand",
 MatricesMSupj=PChop@NestList[SExpand[(SD[#,x]+MatrixMultiplySExpand[#,DEqnMatricesExpanded[line][0][[intind,intind]]])]&,IdentityMatrix[MyN],MyN];
 ,
@@ -2461,6 +2856,8 @@ PrintDebug["Done determining 1/WronskianDet: ",myintind][3];
 ];
 
 BufferedData[intind]={MatricesMSupj,nthOrderDifferentialEquations,nthOrderDifferentialEquationsSolutions,SolveFrom,MtildeMatrix};
+
+BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"][intind]=AbsoluteTime[]-BenchmarkData["Segments"][line//N]["HomogeneousSolveAllPreprocessing"]["Integrals"][intind];
 ];
 
 {MatricesMSupj,nthOrderDifferentialEquations,nthOrderDifferentialEquationsSolutions,SolveFrom,MtildeMatrix}=BufferedData[intind];
@@ -2478,10 +2875,6 @@ MyInhomogeneousTerm=nthOrderDifferentialEquations[[myintind]] . bSupjVecs[[All,m
 SExpand@Sum[
 MyWi=MyWronsk[{intind,myintind}];
 MyWi[[All,ind]]=Append[ConstantArray[0,MyNumberOfSolutions-1],PlaceHolder];
-
-If[MemberQ[opts,"DecreaseOrderBy1"],
-MyWi=DecreaseSeriesOrderBy[MyWi];
-];
 
 (MyHomogeneousSolutions[[ind]](Subscript[c, myintind,ind]+DiffExpIntegrate[
 MyWronskDetInv[{intind,myintind}]((MyWi//Det//SExpand)/.PlaceHolder->MyInhomogeneousTerm//SExpand)//SExpand
@@ -2637,11 +3030,8 @@ fGeneral=fGeneral/.CsReps//SExpand;
 ,
 
 If[Length[cIndices]>0,
-
-If[!MemberQ[opts,"DecreaseOrderBy1"],
 PrintWarning["Not enough boundary data was provided for integral(s): ",intind," at epsilon order ",epsord,"."];
 PrintWarning["Introducing free parameters: ",cIndices/.Subscript[c, i_]:>Subscript[Global`c, epsord,intind,i]][1];
-];
 
 TurnOffPade[];
 
@@ -2674,14 +3064,23 @@ IntegrationData,
 NewResults
 ];
 
+BenchmarkData["Segments"][line//N]["ComputationTimes"]["Integrals"][intind][epsord]=AbsoluteTime[]-BenchmarkData["Segments"][line//N]["ComputationTimes"]["Integrals"][intind][epsord];
+
 ,{intind,IntegrationSequence}
 ];
+
+BenchmarkData["Segments"][line//N]["ComputationTimes"][epsord]=AbsoluteTime[]-BenchmarkData["Segments"][line//N]["ComputationTimes"][epsord];
+
 ,{epsord,0,EpsilonOrderVal}];
 
 GiveMultivaluedError[]:=(
+If[(FEC["AbortOnAnalyticContinuationFail"]===False),
+PrintWarning["After fixing the boundary conditions, the solutions on the current line segment contain multivalued functions. However, the current point is not recognized as a branch point in the configuration, so DiffExp can't perform the analytic continuation! Please add a prescription for the analytic continuation using the option \"DeltaPrescriptions\"."];
+,
 ReportError["After fixing the boundary conditions, the solutions on the current line segment contain multivalued functions. However, the current point is not recognized as a branch point in the configuration, so DiffExp can't perform the analytic continuation! Please add a prescription for the analytic continuation using the option \"DeltaPrescriptions\".",False];
 
 MultivaluedFail=True;
+];
 );
 
 If[MemberQ[CurrCrosscheckFlags,"SingularityCheck"]===True,
@@ -2705,6 +3104,8 @@ PrintWarning["Could not transfer i\[Delta]-prescriptions to line parameter on cu
 If[MemberQ[opts,"TransportToCall"],
 Table[IntegrationData[{ind,epsord}],{ind,NumIntegrals},{epsord,0,EpsilonOrderVal}]
 ,
+BenchmarkData["Segments"]["ComputationTime"]=AbsoluteTime[]-BenchmarkData["Segments"]["ComputationTime"];
+
 ClearMatrices[];
 Table[ApplyAnalyticContinuation[IntegrationData[{ind,epsord}]]//Project\[Theta]s,{ind,NumIntegrals},{epsord,0,EpsilonOrderVal}]
 ]

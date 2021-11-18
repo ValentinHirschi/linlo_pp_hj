@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    732641,      14997]
-NotebookOptionsPosition[    732196,      14980]
-NotebookOutlinePosition[    732653,      14998]
-CellTagsIndexPosition[    732610,      14995]
+NotebookDataLength[    820033,      16787]
+NotebookOptionsPosition[    819594,      16770]
+NotebookOutlinePosition[    820046,      16788]
+CellTagsIndexPosition[    820003,      16785]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -22,7 +22,7 @@ Cell[BoxData[
  RowBox[{
   RowBox[{"(*", " ", 
    RowBox[{"Copyright", " ", 
-    RowBox[{"(", "C", ")"}], " ", "2020", " ", "Martijn", " ", "Hidding"}], 
+    RowBox[{"(", "C", ")"}], " ", "2021", " ", "Martijn", " ", "Hidding"}], 
    " ", "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
   RowBox[{"(*", " ", 
    RowBox[{
@@ -339,8 +339,10 @@ verbosity levels might be preferred.\>\""}], ";"}], "\[IndentingNewLine]",
         "\[IndentingNewLine]", 
         RowBox[{"ExpansionOrder", "\[Rule]", "50"}], ",", 
         "\[IndentingNewLine]", 
-        RowBox[{"\"\<InvWronskSolver\>\"", "\[Rule]", "\"\<Auto\>\""}], ",", 
+        RowBox[{"\"\<IgnoreIndicialCheck\>\"", "\[Rule]", "False"}], ",", 
         "\[IndentingNewLine]", 
+        RowBox[{"\"\<InvWronskSolver\>\"", "\[Rule]", "\"\<InverseLogx\>\""}],
+         ",", "\[IndentingNewLine]", 
         RowBox[{"\"\<KeepMatrixExpansions\>\"", "\[Rule]", "False"}], ",", 
         "\[IndentingNewLine]", 
         RowBox[{"\"\<LinearSolveChopPrecision\>\"", "\[Rule]", "250"}], ",", 
@@ -353,8 +355,10 @@ verbosity levels might be preferred.\>\""}], ";"}], "\[IndentingNewLine]",
         "\[IndentingNewLine]", 
         RowBox[{"\"\<SaveExpansionsCompress\>\"", "\[Rule]", "False"}], ",", 
         "\[IndentingNewLine]", 
-        RowBox[{"\"\<HomogeneousSolve\>\"", "\[Rule]", "\"\<Expand\>\""}], 
-        ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<HomogeneousSolve\>\"", "\[Rule]", "\"\<DontExpand\>\""}],
+         ",", "\[IndentingNewLine]", 
+        RowBox[{"\"\<Parallel\>\"", "\[Rule]", "False"}], ",", 
+        "\[IndentingNewLine]", 
         RowBox[{"SegmentationStrategy", "\[Rule]", "\"\<Predivision\>\""}], 
         ",", "\[IndentingNewLine]", 
         RowBox[{"IntegrationStrategy", "\[Rule]", "\"\<Default\>\""}], ",", 
@@ -509,6 +513,9 @@ verbosity levels might be preferred.\>\""}], ";"}], "\[IndentingNewLine]",
    RowBox[{"(*", " ", 
     RowBox[{"State", " ", "variables"}], " ", "*)"}], "\[IndentingNewLine]", 
    RowBox[{
+    RowBox[{"AnalyticContinuationFailed", "=", "False"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
     RowBox[{"AnalyticContinuationReplacements", "=", 
      RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
    RowBox[{
@@ -516,8 +523,19 @@ verbosity levels might be preferred.\>\""}], ";"}], "\[IndentingNewLine]",
      RowBox[{"Association", "[", 
       RowBox[{"{", "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
    RowBox[{
-    RowBox[{"UserDeltaPrescriptions", "=", 
+    RowBox[{"BenchmarkData", "=", 
+     RowBox[{"Association", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"CurrentSingularityWasAddedFromSquareRoot", "=", "False"}], ";"}],
+    "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"CurrentSingularityHasIDeltaPrescription", "=", "False"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"DEqnSquareRoots", "=", 
      RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"MultivaluedFail", "=", "False"}], ";"}], "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{
      RowBox[{"SquareRootPrescriptionsAdded", "[", "]"}], ":=", 
@@ -541,19 +559,8 @@ verbosity levels might be preferred.\>\""}], ";"}], "\[IndentingNewLine]",
                RowBox[{"All", ",", "1"}], "]"}], "]"}]}]}], "}"}]}]}]}], 
        "]"}]}]}], ";"}], "\[IndentingNewLine]", 
    RowBox[{
-    RowBox[{"DEqnSquareRoots", "=", 
+    RowBox[{"UserDeltaPrescriptions", "=", 
      RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"CurrentSingularityWasAddedFromSquareRoot", "=", "False"}], ";"}],
-    "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"CurrentSingularityHasIDeltaPrescription", "=", "False"}], ";"}], 
-   "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"AnalyticContinuationFailed", "=", "False"}], ";"}], 
-   "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"MultivaluedFail", "=", "False"}], ";"}], "\[IndentingNewLine]", 
    "\[IndentingNewLine]", 
    RowBox[{"(*", " ", 
     RowBox[{"Constants", " ", "for", " ", "internal", " ", 
@@ -1064,8 +1071,8 @@ series: \>\"", ",",
          RowBox[{"Dim1", "=", 
           RowBox[{"Dimensions", "[", "MatA", "]"}]}], ",", 
          RowBox[{"Dim2", "=", 
-          RowBox[{"Dimensions", "[", "MatB", "]"}]}]}], "}"}], ",", 
-       "\[IndentingNewLine]", 
+          RowBox[{"Dimensions", "[", "MatB", "]"}]}], ",", "ABFile"}], "}"}], 
+       ",", "\[IndentingNewLine]", 
        RowBox[{
         RowBox[{"If", "[", 
          RowBox[{
@@ -1086,34 +1093,181 @@ series: \>\"", ",",
            "ReportError", "[", "\"\<Matrix dimensions don't match.\>\"", 
             "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
         "\[IndentingNewLine]", "\[IndentingNewLine]", 
-        RowBox[{"Table", "[", "\[IndentingNewLine]", 
-         RowBox[{
-          RowBox[{"SExpand", "@", 
-           RowBox[{"Sum", "[", 
+        RowBox[{"If", "[", 
+         RowBox[{"(*", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"!", 
+             RowBox[{
+              RowBox[{"FEC", "[", "\"\<Parallel\>\"", "]"}], "===", 
+              "False"}]}], ")"}], "&&", 
+           RowBox[{"(", 
+            RowBox[{"!", 
+             RowBox[{
+              RowBox[{"Dimensions", "[", "MatA", "]"}], "===", 
+              RowBox[{"{", 
+               RowBox[{"1", ",", "1"}], "}"}]}]}], ")"}]}], "*)"}], 
+         RowBox[{"False", ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Export", "[", 
             RowBox[{
-             RowBox[{"SMultiply", "[", 
-              RowBox[{
-               RowBox[{"MatA", "[", 
-                RowBox[{"[", 
-                 RowBox[{"iind", ",", "kind"}], "]"}], "]"}], ",", 
-               RowBox[{"MatB", "[", 
-                RowBox[{"[", 
-                 RowBox[{"kind", ",", "jind"}], "]"}], "]"}]}], "]"}], ",", 
+             RowBox[{"ABFile", "=", 
+              RowBox[{"$TemporaryDirectory", "<>", "\"\</\>\"", "<>", 
+               RowBox[{"ToString", "[", "$SessionID", "]"}], "<>", 
+               "\"\<AB.mx\>\""}]}], ",", 
              RowBox[{"{", 
-              RowBox[{"kind", ",", 
-               RowBox[{"Dim1", "[", 
-                RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "]"}]}], 
-          "\[IndentingNewLine]", ",", 
-          RowBox[{"{", 
-           RowBox[{"iind", ",", 
-            RowBox[{"Dim1", "[", 
-             RowBox[{"[", "1", "]"}], "]"}]}], "}"}], ",", 
-          RowBox[{"{", 
-           RowBox[{"jind", ",", 
-            RowBox[{"Dim2", "[", 
-             RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "\[IndentingNewLine]",
-          "]"}]}]}], "\[IndentingNewLine]", "]"}]}], ";"}], 
-   "\[IndentingNewLine]", 
+              RowBox[{"MatA", ",", "MatB"}], "}"}]}], "]"}], 
+           RowBox[{"(*", 
+            RowBox[{"//", 
+             RowBox[{
+              RowBox[{"EchoTiming", "[", 
+               RowBox[{"#", ",", "\"\<export\>\""}], "]"}], "&"}]}], "*)"}], 
+           ";", "\[IndentingNewLine]", 
+           RowBox[{"With", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"dir", "=", "ABFile"}], "}"}], ",", 
+             RowBox[{
+              RowBox[{"ParallelEvaluate", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"MyMatA", ",", "MyMatB"}], "}"}], "=", 
+                 RowBox[{"Import", "[", "dir", "]"}]}], ";"}], "]"}], ";"}]}],
+             "]"}], 
+           RowBox[{"(*", 
+            RowBox[{"//", 
+             RowBox[{
+              RowBox[{"EchoTiming", "[", 
+               RowBox[{"#", ",", "\"\<import\>\""}], "]"}], "&"}]}], "*)"}], 
+           ";", "\[IndentingNewLine]", 
+           RowBox[{"DeleteFile", "[", "ABFile", "]"}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Table", "[", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"With", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"PDim1", "=", "Dim1"}], ",", 
+                  RowBox[{"piind", "=", "iind"}], ",", 
+                  RowBox[{"pjind", "=", "jind"}]}], "}"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"ParallelSubmit", "[", "\[IndentingNewLine]", 
+                 RowBox[{"SExpand", "@", 
+                  RowBox[{"Sum", "[", 
+                   RowBox[{
+                    RowBox[{"SMultiply", "[", 
+                    RowBox[{
+                    RowBox[{"MyMatA", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"piind", ",", "kind"}], "]"}], "]"}], ",", 
+                    RowBox[{"MyMatB", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"kind", ",", "pjind"}], "]"}], "]"}]}], "]"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"kind", ",", 
+                    RowBox[{"PDim1", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "]"}]}], 
+                 "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}],
+               "\[IndentingNewLine]", ",", 
+              RowBox[{"{", 
+               RowBox[{"iind", ",", 
+                RowBox[{"Dim1", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}]}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"jind", ",", 
+                RowBox[{"Dim2", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], 
+             "\[IndentingNewLine]", "]"}], "//", "WaitAll"}]}], 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{"Table", "[", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"With", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"PMatA", "=", 
+                   RowBox[{"Compress", "[", 
+                    RowBox[{"MatA", "[", 
+                    RowBox[{"[", "iind", "]"}], "]"}], "]"}]}], ",", 
+                  RowBox[{"PMatB", "=", 
+                   RowBox[{"Compress", "[", 
+                    RowBox[{"MatB", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"All", ",", "jind"}], "]"}], "]"}], "]"}]}], ",", 
+                  RowBox[{"PDim1", "=", "Dim1"}]}], 
+                 RowBox[{"(*", 
+                  RowBox[{",", 
+                   RowBox[{"piind", "=", "iind"}], ",", 
+                   RowBox[{"pjind", "=", "jind"}]}], "*)"}], "}"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"ParallelSubmit", "[", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"PMatAFix", "=", 
+                   RowBox[{"Uncompress", "[", "PMatA", "]"}]}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"PMatBFix", "=", 
+                   RowBox[{"Uncompress", "[", "PMatB", "]"}]}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"SExpand", "@", 
+                   RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"SMultiply", "[", 
+                    RowBox[{
+                    RowBox[{"PMatAFix", "[", 
+                    RowBox[{"[", "kind", "]"}], "]"}], ",", 
+                    RowBox[{"PMatBFix", "[", 
+                    RowBox[{"[", "kind", "]"}], "]"}]}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"kind", ",", 
+                    RowBox[{"PDim1", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "]"}]}]}], 
+                 "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}],
+               "\[IndentingNewLine]", ",", 
+              RowBox[{"{", 
+               RowBox[{"iind", ",", 
+                RowBox[{"Dim1", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}]}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"jind", ",", 
+                RowBox[{"Dim2", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], 
+             "\[IndentingNewLine]", "]"}], "//", "WaitAll"}], "*)"}], 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Table", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"SExpand", "@", 
+             RowBox[{"Sum", "[", 
+              RowBox[{
+               RowBox[{"SMultiply", "[", 
+                RowBox[{
+                 RowBox[{"MatA", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"iind", ",", "kind"}], "]"}], "]"}], ",", 
+                 RowBox[{"MatB", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"kind", ",", "jind"}], "]"}], "]"}]}], "]"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"kind", ",", 
+                 RowBox[{"Dim1", "[", 
+                  RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "]"}]}], 
+            "\[IndentingNewLine]", ",", 
+            RowBox[{"{", 
+             RowBox[{"iind", ",", 
+              RowBox[{"Dim1", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"jind", ",", 
+              RowBox[{"Dim2", "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], 
+           "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}]}]}], 
+      "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{
      RowBox[{"MatrixPowerSExpand", "[", 
@@ -2097,18 +2251,68 @@ not called with the option save_ set to True?\>\"", "]"}], ";"}]}],
          RowBox[{
           RowBox[{"FEC", "[", "\"\<SaveExpansionsCompress\>\"", "]"}], "===", 
           "True"}], ",", "\[IndentingNewLine]", 
-         RowBox[{
-          RowBox[{"Uncompressed", "=", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"!", 
+            RowBox[{
+             RowBox[{
+             "FEC", "[", "\"\<SaveExpansionsCompressDirectory\>\"", "]"}], 
+             "===", "\"\<?\>\""}]}], ",", "\[IndentingNewLine]", 
            RowBox[{
-            RowBox[{"SavedData", "[", 
-             RowBox[{"[", 
-              RowBox[{"1", ",", "5"}], "]"}], "]"}], "//", "Uncompress"}]}], 
-          ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"StringJoin", "[", 
+                RowBox[{
+                 RowBox[{"SavedData", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"1", ",", "5"}], "]"}], "]"}], "//", 
+                 RowBox[{
+                  RowBox[{"StringPart", "[", 
+                   RowBox[{"#", ",", 
+                    RowBox[{
+                    RowBox[{"-", "2"}], ";;", 
+                    RowBox[{"-", "1"}]}]}], "]"}], "&"}]}], "]"}], "===", 
+               "\"\<.m\>\""}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Uncompressed", "[", "ind_", "]"}], ":=", 
+                RowBox[{
+                 RowBox[{"Uncompressed", "[", "ind", "]"}], "=", 
+                 RowBox[{"Uncompress", "[", 
+                  RowBox[{"Import", "[", 
+                   RowBox[{"SavedData", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"ind", ",", "5"}], "]"}], "]"}], "]"}], "]"}]}]}],
+                ";"}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Uncompressed", "[", "ind_", "]"}], ":=", 
+                RowBox[{
+                 RowBox[{"Uncompressed", "[", "ind", "]"}], "=", 
+                 RowBox[{"Uncompress", "[", 
+                  RowBox[{"SavedData", "[", 
+                   RowBox[{"[", 
+                    RowBox[{"ind", ",", "5"}], "]"}], "]"}], "]"}]}]}], 
+               ";"}]}], "\[IndentingNewLine]", "]"}], ";"}], 
+           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Uncompressed", "[", "ind_", "]"}], ":=", 
+             RowBox[{
+              RowBox[{"Uncompressed", "[", "ind", "]"}], "=", 
+              RowBox[{"Uncompress", "[", 
+               RowBox[{"SavedData", "[", 
+                RowBox[{"[", 
+                 RowBox[{"ind", ",", "5"}], "]"}], "]"}], "]"}]}]}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", ",", 
+         "\[IndentingNewLine]", 
          RowBox[{
-          RowBox[{"Uncompressed", "=", 
+          RowBox[{
+           RowBox[{"Uncompressed", "[", "ind_", "]"}], ":=", 
            RowBox[{"SavedData", "[", 
             RowBox[{"[", 
-             RowBox[{"1", ",", "5"}], "]"}], "]"}]}], ";"}]}], 
+             RowBox[{"ind", ",", "5"}], "]"}], "]"}]}], ";"}]}], 
         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", 
        RowBox[{"Table", "[", "\[IndentingNewLine]", 
@@ -2123,25 +2327,6 @@ not called with the option save_ set to True?\>\"", "]"}], ";"}]}],
                 RowBox[{"{", 
                  RowBox[{"ind", ",", "intind", ",", "epsord"}], "}"}]}], ";", 
                "\[IndentingNewLine]", 
-               RowBox[{"If", "[", 
-                RowBox[{
-                 RowBox[{
-                  RowBox[{"FEC", "[", "\"\<SaveExpansionsCompress\>\"", "]"}],
-                   "===", "True"}], ",", "\[IndentingNewLine]", 
-                 RowBox[{
-                  RowBox[{"Uncompressed", "=", 
-                   RowBox[{
-                    RowBox[{"SavedData", "[", 
-                    RowBox[{"[", 
-                    RowBox[{"ind", ",", "5"}], "]"}], "]"}], "//", 
-                    "Uncompress"}]}], ";"}], "\[IndentingNewLine]", ",", 
-                 "\[IndentingNewLine]", 
-                 RowBox[{
-                  RowBox[{"Uncompressed", "=", 
-                   RowBox[{"SavedData", "[", 
-                    RowBox[{"[", 
-                    RowBox[{"ind", ",", "5"}], "]"}], "]"}]}], ";"}]}], 
-                "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
                RowBox[{"{", "\[IndentingNewLine]", 
                 RowBox[{
                  RowBox[{"(", 
@@ -2193,7 +2378,8 @@ not called with the option save_ set to True?\>\"", "]"}], ";"}]}],
                     "\[IndentingNewLine]", "]"}], "&"}], "@", 
                    RowBox[{"(", 
                     RowBox[{
-                    RowBox[{"Uncompressed", "[", 
+                    RowBox[{
+                    RowBox[{"Uncompressed", "[", "ind", "]"}], "[", 
                     RowBox[{"[", 
                     RowBox[{"intind", ",", "epsord"}], "]"}], "]"}], "+", 
                     RowBox[{"If", "[", 
@@ -2224,13 +2410,15 @@ not called with the option save_ set to True?\>\"", "]"}], ";"}]}],
          RowBox[{"{", 
           RowBox[{"intind", ",", 
            RowBox[{
-            RowBox[{"Uncompressed", "//", "Dimensions"}], "//", "First"}]}], 
-          "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Uncompressed", "[", "1", "]"}], "//", "Dimensions"}], "//",
+             "First"}]}], "}"}], ",", "\[IndentingNewLine]", 
          RowBox[{"{", 
           RowBox[{"epsord", ",", 
            RowBox[{
-            RowBox[{"Uncompressed", "//", "Dimensions"}], "//", "Last"}]}], 
-          "}"}]}], "]"}]}]}], "\[IndentingNewLine]", "]"}]}], 
+            RowBox[{
+             RowBox[{"Uncompressed", "[", "1", "]"}], "//", "Dimensions"}], "//",
+             "Last"}]}], "}"}]}], "]"}]}]}], "\[IndentingNewLine]", "]"}]}], 
    "\[IndentingNewLine]", "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{
@@ -2471,8 +2659,7 @@ of the kinematic variables or masses.\>\"", "]"}], ";"}]}],
                  RowBox[{"MemberQ", "[", 
                   RowBox[{
                    RowBox[{"{", 
-                    RowBox[{"\"\<Precise\>\"", ",", "\"\<Fast\>\""}], "}"}], 
-                   ",", 
+                    RowBox[{"True", ",", "\"\<Fast\>\""}], "}"}], ",", 
                    RowBox[{"assoc", "[", "\"\<EstimateError\>\"", "]"}]}], 
                   "]"}]}], ",", "\[IndentingNewLine]", 
                 RowBox[{
@@ -2775,7 +2962,6 @@ using the configuration option \\\"LineParameter\\\".\>\"", "]"}], ";"}]}],
              RowBox[{
               RowBox[{
               "ReportError", "[", 
-               
                "\"\<The matrix d_1.m is not of the right form. It should be \
 given as a combination of logarithms with numeric prefactors.\>\"", "]"}], 
               ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
@@ -4769,14 +4955,21 @@ matrix. Try setting the option \\\"HomogeneousSolve\\\" -> \\\"DontExpand\\\" \
              RowBox[{"NestList", "[", 
               RowBox[{
                RowBox[{
-                RowBox[{"SExpand", "[", 
-                 RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"If", "[", 
                   RowBox[{
-                   RowBox[{"SD", "[", 
+                   RowBox[{
+                    RowBox[{"FEC", "[", "\"\<VerbosityDebug\>\"", "]"}], 
+                    "\[GreaterEqual]", "3"}], ",", "EchoTiming", ",", 
+                   "Identity"}], "]"}], "[", 
+                 RowBox[{"SExpand", "[", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"SD", "[", 
                     RowBox[{"#", ",", "x"}], "]"}], "+", 
-                   RowBox[{"MatrixMultiplySExpand", "[", 
-                    RowBox[{"#", ",", "Amat"}], "]"}]}], ")"}], "]"}], "&"}], 
-               ",", 
+                    RowBox[{"MatrixMultiplySExpand", "[", 
+                    RowBox[{"#", ",", "Amat"}], "]"}]}], ")"}], "]"}], "]"}], 
+                "&"}], ",", 
                RowBox[{"IdentityMatrix", "[", "n", "]"}], ",", "n"}], 
               "]"}]}]}], ";", "\[IndentingNewLine]", 
            RowBox[{"Solns", "=", 
@@ -4795,22 +4988,23 @@ matrix. Try setting the option \\\"HomogeneousSolve\\\" -> \\\"DontExpand\\\" \
                 RowBox[{"Tolerance", "\[Rule]", 
                  RowBox[{"10", "^", 
                   RowBox[{"-", "LinearSolveChopPrecisionVal"}]}]}]}], "]"}], 
-              "&"}]}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
-          ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+              "&"}]}]}], ";"}], "\[IndentingNewLine]", ",", 
+          "\[IndentingNewLine]", 
           RowBox[{
-           RowBox[{"Amats", "=", 
-            RowBox[{"PChop", "@", 
-             RowBox[{"NestList", "[", 
-              RowBox[{
+           RowBox[{"MyAMats", "=", 
+            RowBox[{"Amats", "=", 
+             RowBox[{"PChop", "@", 
+              RowBox[{"NestList", "[", 
                RowBox[{
-                RowBox[{"Together", "[", 
-                 RowBox[{"(", 
-                  RowBox[{
-                   RowBox[{"D", "[", 
+                RowBox[{
+                 RowBox[{"Together", "[", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"D", "[", 
                     RowBox[{"#", ",", "x"}], "]"}], "+", 
-                   RowBox[{"#", ".", "Amat"}]}], ")"}], "]"}], "&"}], ",", 
-               RowBox[{"IdentityMatrix", "[", "n", "]"}], ",", "n"}], 
-              "]"}]}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"#", ".", "Amat"}]}], ")"}], "]"}], "&"}], ",", 
+                RowBox[{"IdentityMatrix", "[", "n", "]"}], ",", "n"}], 
+               "]"}]}]}]}], ";", "\[IndentingNewLine]", 
            RowBox[{"Solns", "=", 
             RowBox[{"DiffExpSeries", "[", 
              RowBox[{
@@ -5011,8 +5205,9 @@ in Fuchsian form.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";"}],
             RowBox[{"Denominator", "[", "rMax", "]"}], ">", "2"}], "&&", 
            RowBox[{"!", 
             RowBox[{"(", 
-             RowBox[{"IgnoreIndicialCheck", "===", "True"}], ")"}]}]}], ",", 
-          "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"FEC", "[", "\"\<IgnoreIndicialCheck\>\"", "]"}], "===",
+               "True"}], ")"}]}]}], ",", "\[IndentingNewLine]", 
           RowBox[{
            RowBox[{"ReportError", "[", 
             RowBox[{
@@ -5864,7 +6059,9 @@ segment. Such line segments are not currently supported.\>\""}], "]"}],
       RowBox[{"to2", ":", 
        RowBox[{"_", "?", "NumericQ"}], ":", "1"}], ",", 
       RowBox[{"SaveExpansions", ":", 
-       RowBox[{"_", "?", "BooleanQ"}], ":", "False"}]}], "]"}], ":=", 
+       RowBox[{"_", "?", "BooleanQ"}], ":", "False"}], ",", 
+      RowBox[{"SampleAtList_List", ":", 
+       RowBox[{"{", "}"}]}]}], "]"}], ":=", 
     RowBox[{"Module", "[", 
      RowBox[{
       RowBox[{"{", 
@@ -5907,9 +6104,18 @@ segment. Such line segments are not currently supported.\>\""}], "]"}],
          RowBox[{"{", "}"}]}], ",", "bcsprev", ",", "CurrStatusBackup", ",", 
         "BoundaryFixPoint", ",", "CurrEvalErrorEx", ",", "CurrEvalError1", 
         ",", "CurrEvalError2", ",", "CurrEvalAtBoundaryFixPoint", ",", 
-        "CurrEvalEx"}], "\[IndentingNewLine]", "}"}], ",", 
+        "CurrEvalEx", ",", "AllSegmentsPredivision", ",", "TmpFile", ",", 
+        "Ses", ",", "CompressedTermForExport", ",", 
+        "CompressedTermForExportFN", ",", "CurrLineLR", ",", "FullLineLR", 
+        ",", "TmpTmp"}], "\[IndentingNewLine]", "}"}], ",", 
       "\[IndentingNewLine]", "\[IndentingNewLine]", 
       RowBox[{
+       RowBox[{"BenchmarkData", "=", 
+        RowBox[{"Association", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<TimeStart\>\"", "]"}], "=", 
+        RowBox[{"AbsoluteTime", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
        RowBox[{"MultivaluedFail", "=", "False"}], ";", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", 
        RowBox[{"If", "[", 
@@ -6208,6 +6414,18 @@ The vanishing factors are: \>\"", ",",
           RowBox[{"to", "//", "N"}]}], "]"}], "[", "1", "]"}], ";", 
        "\[IndentingNewLine]", "\[IndentingNewLine]", 
        RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<BasicPreprocessing\>\"", "]"}], 
+        "=", 
+        RowBox[{
+         RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+         RowBox[{"BenchmarkData", "[", "\"\<TimeStart\>\"", "]"}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<MatrixPreprocessing\>\"", "]"}], 
+        "=", 
+        RowBox[{"AbsoluteTime", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{
         RowBox[{
         "PrintInfo", "[", 
          "\"\<Preparing differential equations along current line..\>\"", 
@@ -6285,6 +6503,18 @@ The vanishing factors are: \>\"", ",",
              RowBox[{"\[Infinity]", "|", 
               RowBox[{"-", "\[Infinity]"}]}]}], "]"}], "//", "N"}], ",", 
           "\"\<.\>\""}], "]"}], "[", "1", "]"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<MatrixPreprocessing\>\"", "]"}], 
+        "=", 
+        RowBox[{
+         RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+         RowBox[{
+         "BenchmarkData", "[", "\"\<MatrixPreprocessing\>\"", "]"}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<PoleIntervals\>\"", "]"}], "=", 
+        RowBox[{"AbsoluteTime", "[", "]"}]}], ";", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", 
        RowBox[{"If", "[", 
         RowBox[{
@@ -6397,6 +6627,12 @@ The vanishing factors are: \>\"", ",",
            RowBox[{"sline", ",", "SingularitySegments"}], "}"}]}], 
          "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<PoleIntervals\>\"", "]"}], "=", 
+        RowBox[{
+         RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+         RowBox[{"BenchmarkData", "[", "\"\<PoleIntervals\>\"", "]"}]}]}], 
+       ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
        RowBox[{"(*", " ", 
         RowBox[{"Main", " ", 
          RowBox[{"loop", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
@@ -6419,7 +6655,11 @@ The vanishing factors are: \>\"", ",",
        "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-       "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<SegmentCounting\>\"", "]"}], "=", 
+        RowBox[{"AbsoluteTime", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
        RowBox[{"(*", " ", 
         RowBox[{
          RowBox[{
@@ -6429,6 +6669,8 @@ The vanishing factors are: \>\"", ",",
           RowBox[{"integrations", ".", " ", "This"}], " ", "counts", " ", 
           "the", " ", "number", " ", "of", " ", 
           RowBox[{"segments", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"AllSegmentsPredivision", "=", 
+        RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
        RowBox[{"If", "[", 
         RowBox[{
          RowBox[{
@@ -6448,7 +6690,9 @@ The vanishing factors are: \>\"", ",",
              RowBox[{"{", 
               RowBox[{"MySingularities", ",", "MySingularitiesImaginary"}], 
               "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
-          "\[IndentingNewLine]", 
+          RowBox[{"AppendTo", "[", 
+           RowBox[{"AllSegmentsPredivision", ",", "CurrLine"}], "]"}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
           RowBox[{"Done", "=", "False"}], ";", "\[IndentingNewLine]", 
           RowBox[{"While", "[", 
            RowBox[{
@@ -6690,6 +6934,9 @@ The vanishing factors are: \>\"", ",",
                     "}"}]}], "]"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], 
                 ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
              "\[IndentingNewLine]", "\[IndentingNewLine]", 
+             RowBox[{"AppendTo", "[", 
+              RowBox[{"AllSegmentsPredivision", ",", "CurrLine"}], "]"}], ";",
+              "\[IndentingNewLine]", "\[IndentingNewLine]", 
              RowBox[{"PoleIntervals", "=", "PoleIntervals1"}], ";"}]}], 
            "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
           "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]",
@@ -6700,11 +6947,208 @@ The vanishing factors are: \>\"", ",",
              RowBox[{"SegmentsToIntegrate", "=", "SegmentCounter"}], ",", 
              "\"\<.\>\""}], "]"}], "[", "1", "]"}], ";"}]}], 
         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-       "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-       "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-       "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-       "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<SegmentCounting\>\"", "]"}], "=", 
+        RowBox[{
+         RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+         RowBox[{"BenchmarkData", "[", "\"\<SegmentCounting\>\"", "]"}]}]}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<AllPreprocessing\>\"", "]"}], "=", 
+        RowBox[{
+         RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+         RowBox[{"BenchmarkData", "[", "\"\<TimeStart\>\"", "]"}]}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"!", 
+          RowBox[{
+           RowBox[{"FEC", "[", "\"\<Parallel\>\"", "]"}], "===", "False"}]}], 
+         ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+           "PrintInfo", "[", "\"\<Starting parallel matrix expansion..\>\"", 
+            "]"}], "[", "1", "]"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"TmpFile", "=", 
+           RowBox[{"FileNameJoin", "[", 
+            RowBox[{"{", 
+             RowBox[{"$TemporaryDirectory", ",", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"Ses", "=", 
+                 RowBox[{"ToString", "[", "$SessionID", "]"}]}], ")"}], "<>", 
+               "\"\<SessionData.mx\>\""}]}], "}"}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"DumpSave", "[", 
+           RowBox[{"TmpFile", ",", 
+            RowBox[{"{", 
+             RowBox[{"\"\<DiffExp`\>\"", ",", "\"\<DiffExpGridSampler`\>\""}],
+              "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"CloseKernels", "[", "]"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"LaunchKernels", "[", 
+           RowBox[{"FEC", "[", "\"\<Parallel\>\"", "]"}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"$DistributedContexts", "=", "None"}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"With", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"file", "=", "TmpFile"}], "}"}], ",", 
+            RowBox[{"ParallelEvaluate", "[", 
+             RowBox[{"Get", "[", "file", "]"}], "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"DeleteFile", "[", "TmpFile", "]"}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"AllSegmentsPredivision", "=", 
+           RowBox[{"AllSegmentsPredivision", "//", "DeleteDuplicates"}]}], 
+          ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"AParallelCounter", "=", "0"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"SetSharedVariable", "[", "AParallelCounter", "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Print", "[", 
+           RowBox[{
+            RowBox[{"Dynamic", "[", "AParallelCounter", "]"}], ",", 
+            "\"\< / \>\"", ",", 
+            RowBox[{"Length", "@", "AllSegmentsPredivision"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Table", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"With", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"lin", "=", "line"}], ",", 
+                 RowBox[{"CurrLin", "=", "mylin"}], ",", 
+                 RowBox[{"tmpdir", "=", "$TemporaryDirectory"}], ",", 
+                 RowBox[{"PSes", "=", "Ses"}]}], "}"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"ParallelSubmit", "[", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"MyTiming", "=", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"PrepareMatricesFrom", "[", 
+                    RowBox[{"lin", ",", "CurrLin"}], "]"}], "//", 
+                    "AbsoluteTiming"}], "//", "First"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"MyFileName", "=", 
+                  RowBox[{"FileNameJoin", "[", 
+                   RowBox[{"{", 
+                    RowBox[{"tmpdir", ",", 
+                    RowBox[{"PSes", "<>", 
+                    RowBox[{"Hash", "[", 
+                    RowBox[{
+                    "CurrLin", ",", "\"\<SHA256\>\"", ",", 
+                    "\"\<HexString\>\""}], "]"}], "<>", "\"\<.mx\>\""}]}], 
+                    "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"Export", "[", 
+                  RowBox[{"MyFileName", ",", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"DEqnMatricesFactored", "[", "CurrLin", "]"}], 
+                    ",", 
+                    RowBox[{"AlphabetLogRulesFactored", "[", "CurrLin", "]"}],
+                     ",", 
+                    RowBox[{"DEqnMatricesExpanded", "[", "CurrLin", "]"}]}], 
+                    "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"ClearMatrices", "[", "CurrLin", "]"}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"PrintInfo", "[", 
+                   RowBox[{"\"\<Finished: \>\"", ",", 
+                    RowBox[{"CurrLin", "//", "N"}], ",", "\"\< in \>\"", ",", 
+                    RowBox[{"MyTiming", "//", "N"}], ",", "\"\<s.\>\""}], 
+                   "]"}], "[", "1", "]"}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"AParallelCounter", "++"}], ";"}], 
+                "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], 
+             ",", 
+             RowBox[{"{", 
+              RowBox[{"mylin", ",", "AllSegmentsPredivision"}], "}"}]}], 
+            "]"}], "//", "WaitAll"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"PrintInfo", "[", "\"\<Loading results..\>\"", "]"}], "[", 
+           "1", "]"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"Do", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Check", "[", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"TmpFile", "=", 
+                 RowBox[{"Import", "@", 
+                  RowBox[{"FileNameJoin", "[", 
+                   RowBox[{"{", 
+                    RowBox[{"$TemporaryDirectory", ",", 
+                    RowBox[{"Ses", "<>", 
+                    RowBox[{"Hash", "[", 
+                    RowBox[{
+                    "mylin", ",", "\"\<SHA256\>\"", ",", 
+                    "\"\<HexString\>\""}], "]"}], "<>", "\"\<.mx\>\""}]}], 
+                    "}"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"DEqnMatricesFactored", "[", "mylin", "]"}], "=", 
+                 RowBox[{"TmpFile", "[", 
+                  RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"AlphabetLogRulesFactored", "[", "mylin", "]"}], "=", 
+                 RowBox[{"TmpFile", "[", 
+                  RowBox[{"[", "2", "]"}], "]"}]}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"DEqnMatricesExpanded", "[", "mylin", "]"}], "=", 
+                 RowBox[{"TmpFile", "[", 
+                  RowBox[{"[", "3", "]"}], "]"}]}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"PrintInfo", "[", 
+                  RowBox[{"\"\<Loaded: \>\"", ",", 
+                   RowBox[{"mylin", "//", "N"}]}], "]"}], "[", "1", "]"}], 
+                ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"KeyDropFrom", "[", 
+                 RowBox[{"DEqnMatricesFactored", ",", "mylin"}], "]"}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"KeyDropFrom", "[", 
+                 RowBox[{"AlphabetLogRulesFactored", ",", "mylin"}], "]"}], 
+                ";", "\[IndentingNewLine]", 
+                RowBox[{"KeyDropFrom", "[", 
+                 RowBox[{"DEqnMatricesExpanded", ",", "mylin"}], "]"}], 
+                ";"}]}], "\[IndentingNewLine]", "]"}], ";"}], 
+            "\[IndentingNewLine]", ",", 
+            RowBox[{"{", 
+             RowBox[{"mylin", ",", "AllSegmentsPredivision"}], "}"}]}], 
+           "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Do", "[", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"DeleteFile", "[", 
+              RowBox[{"FileNameJoin", "[", 
+               RowBox[{"{", 
+                RowBox[{"$TemporaryDirectory", ",", 
+                 RowBox[{"Ses", "<>", 
+                  RowBox[{"Hash", "[", 
+                   RowBox[{
+                   "mylin", ",", "\"\<SHA256\>\"", ",", "\"\<HexString\>\""}],
+                    "]"}], "<>", "\"\<.mx\>\""}]}], "}"}], "]"}], "]"}], 
+             ";"}], "\[IndentingNewLine]", ",", 
+            RowBox[{"{", 
+             RowBox[{"mylin", ",", "AllSegmentsPredivision"}], "}"}]}], 
+           "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"CloseKernels", "[", "]"}], ";"}]}], "\[IndentingNewLine]", 
+        "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
        RowBox[{"SegmentCounter", "=", "1"}], ";", "\[IndentingNewLine]", 
        RowBox[{"ExpansionOrders", "=", 
         RowBox[{"{", "ExpansionOrderVal", "}"}]}], ";", "\[IndentingNewLine]",
@@ -7020,38 +7464,22 @@ The vanishing factors are: \>\"", ",",
                    "\[IndentingNewLine]", "]"}], ";"}]}], 
                 "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", 
              "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-            RowBox[{"LastBoundaryConditions", "=", 
-             RowBox[{"Append", "[", 
-              RowBox[{"Currbcs", ",", "CurrErrorAccs"}], "]"}]}], ";", 
-            "\[IndentingNewLine]", 
-            RowBox[{"LastIntegrateSystemCall", "=", 
-             RowBox[{"IntegrateSystem2", "[", 
-              RowBox[{"Currbcs", ",", "CurrLine", ",", 
-               RowBox[{"{", "\"\<TransportToCall\>\"", "}"}]}], "]"}]}], ";", 
-            "\[IndentingNewLine]", 
+            RowBox[{"(*", 
+             RowBox[{
+              RowBox[{"LastBoundaryConditions", "=", 
+               RowBox[{"Append", "[", 
+                RowBox[{"Currbcs", ",", "CurrErrorAccs"}], "]"}]}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"LastIntegrateSystemCall", "=", 
+               RowBox[{"IntegrateSystem2", "[", 
+                RowBox[{"Currbcs", ",", "CurrLine", ",", 
+                 RowBox[{"{", "\"\<TransportToCall\>\"", "}"}]}], "]"}]}], 
+              ";"}], "*)"}], "\[IndentingNewLine]", 
             RowBox[{"CurrIntegrated", "=", 
              RowBox[{"IntegrateSystem", "[", 
               RowBox[{"Currbcs", ",", "CurrLine", ",", 
                RowBox[{"{", "\"\<TransportToCall\>\"", "}"}]}], "]"}]}], ";", 
             "\[IndentingNewLine]", "\[IndentingNewLine]", 
-            RowBox[{"If", "[", 
-             RowBox[{
-              RowBox[{
-               RowBox[{"FEC", "[", "\"\<EstimateError\>\"", "]"}], "===", 
-               "\"\<Precise\>\""}], ",", "\[IndentingNewLine]", 
-              RowBox[{
-               RowBox[{
-                RowBox[{"PrintInfo", "[", "\"\<Estimating error..\>\"", "]"}],
-                 "[", "2", "]"}], ";", "\[IndentingNewLine]", 
-               RowBox[{"CurrIntegratedError", "=", 
-                RowBox[{"IntegrateSystem", "[", 
-                 RowBox[{"CurrbcsError", ",", "CurrLine", ",", 
-                  RowBox[{"{", 
-                   RowBox[{
-                   "\"\<TransportToCall\>\"", ",", 
-                    "\"\<DecreaseOrderBy1\>\""}], "}"}]}], "]"}]}], ";"}]}], 
-             "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-            "\[IndentingNewLine]", 
             RowBox[{"If", "[", 
              RowBox[{
               RowBox[{"SaveExpansions", "===", "True"}], ",", 
@@ -7116,17 +7544,48 @@ The vanishing factors are: \>\"", ",",
                     "FEC", "[", "\"\<SaveExpansionsCompress\>\"", "]"}], "===",
                      "True"}], ",", "\[IndentingNewLine]", 
                     RowBox[{
+                    RowBox[{"CompressedTermForExport", "=", 
+                    RowBox[{
                     RowBox[{"(", 
                     RowBox[{
                     RowBox[{
                     "ApplyAnalyticContinuation", "[", "CurrIntegrated", "]"}],
-                     "//", "Project\[Theta]s"}], ")"}], "//", "Compress"}], 
+                     "//", "Project\[Theta]s"}], ")"}], "//", "Compress"}]}], 
                     " ", 
                     RowBox[{"(*", " ", 
                     RowBox[{
                     "And", " ", "the", " ", "expansion", " ", "data", " ", 
-                    "itself"}], " ", "*)"}], "\[IndentingNewLine]", ",", 
-                    "\[IndentingNewLine]", 
+                    "itself"}], " ", "*)"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"!", 
+                    RowBox[{
+                    RowBox[{
+                    "FEC", "[", "\"\<SaveExpansionsCompressDirectory\>\"", 
+                    "]"}], "===", "\"\<?\>\""}]}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"CompressedTermForExportFN", "=", 
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{
+                    "FEC", "[", "\"\<SaveExpansionsCompressDirectory\>\"", 
+                    "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"Hash", "[", 
+                    RowBox[{
+                    "CompressedTermForExport", ",", "\"\<SHA256\>\"", ",", 
+                    "\"\<HexString\>\""}], "]"}], "<>", "\"\<.m\>\""}]}], 
+                    "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"Export", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    "CompressedTermForExportFN", ",", "\[IndentingNewLine]", 
+                    "CompressedTermForExport"}], "\[IndentingNewLine]", "]"}],
+                     ";", "\[IndentingNewLine]", 
+                    "CompressedTermForExportFN"}], "\[IndentingNewLine]", ",",
+                     "\[IndentingNewLine]", "CompressedTermForExport"}], 
+                    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+                    ",", "\[IndentingNewLine]", 
                     RowBox[{"(", 
                     RowBox[{
                     RowBox[{
@@ -7137,6 +7596,131 @@ The vanishing factors are: \>\"", ",",
                     "And", " ", "the", " ", "expansion", " ", "data", " ", 
                     "itself"}], " ", "*)"}], "\[IndentingNewLine]", "]"}]}], 
                   "\[IndentingNewLine]", "}"}]}], "]"}], ";"}]}], 
+             "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+            "\[IndentingNewLine]", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+             "Write", " ", "out", " ", "points", " ", "if", " ", "provided"}],
+              " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"!", 
+               RowBox[{"SampleAtList", "===", 
+                RowBox[{"{", "}"}]}]}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"CurrLineLR", "=", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"Limit", "[", 
+                   RowBox[{
+                    RowBox[{"RelateLines", "[", 
+                    RowBox[{"CurrLine", ",", 
+                    RowBox[{"Currbcs", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}], ",", 
+                    RowBox[{"x", "\[Rule]", "0"}]}], "]"}], ",", 
+                  "CurrEvalPointCurrLine"}], "}"}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"FullLineLR", "=", 
+                RowBox[{
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{"to", ">", "FixAt"}], ",", "Identity", ",", 
+                   "Reverse"}], "]"}], "@", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"Limit", "[", 
+                    RowBox[{
+                    RowBox[{"RelateLines", "[", 
+                    RowBox[{"line", ",", 
+                    RowBox[{"Currbcs", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}], ",", 
+                    RowBox[{"x", "\[Rule]", "0"}]}], "]"}], ",", 
+                   "CurrEvalPoint"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+               "\[IndentingNewLine]", 
+               RowBox[{"(*", " ", 
+                RowBox[{
+                "SampleAtList", " ", "has", " ", "the", " ", "form", " ", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"xval", ",", " ", "filename"}], "}"}], ",", " ", 
+                   "..."}], "}"}]}], "*)"}], "\[IndentingNewLine]", 
+               RowBox[{"Do", "[", "\[IndentingNewLine]", 
+                RowBox[{"(*", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"PrintInfo", "[", 
+                    RowBox[{"\"\<Evaluating and exporting at x = \>\"", ",", 
+                    RowBox[{"MyPoint", "//", "N"}], ",", "\"\<.\>\""}], "]"}],
+                    "[", "2", "]"}], ";"}], "*)"}], "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"Export", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"SampleAtList", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"line", "/.", 
+                    RowBox[{"x", "\[Rule]", "MyPoint"}]}], " ", "//", " ", 
+                    RowBox[{
+                    RowBox[{"Hash", "[", 
+                    RowBox[{
+                    RowBox[{"Normal", "[", 
+                    RowBox[{"KeySort", "[", "#", "]"}], "]"}], ",", " ", 
+                    "\"\<SHA256\>\"", ",", " ", "\"\<HexString\>\""}], "]"}], 
+                    "&"}]}], ")"}], "<>", "\"\<.m\>\""}]}], 
+                    "\[IndentingNewLine]", "}"}], "\[IndentingNewLine]", 
+                    "]"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"{", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"line", "/.", 
+                    RowBox[{"x", "\[Rule]", "MyPoint"}]}], "//", "Normal"}], "//",
+                     "Association"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"SEval", "[", "\[IndentingNewLine]", 
+                    RowBox[{"CurrIntegrated", ",", "\[IndentingNewLine]", 
+                    RowBox[{"RelateLinesPoint", "[", 
+                    RowBox[{"CurrLine", ",", "line", ",", "MyPoint"}], 
+                    "]"}]}], "\[IndentingNewLine]", "]"}], "//", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", "SampleAtList", "]"}], "===", 
+                    "3"}], ",", 
+                    RowBox[{
+                    RowBox[{"N", "[", 
+                    RowBox[{"#", ",", 
+                    RowBox[{"SampleAtList", "[", 
+                    RowBox[{"[", "3", "]"}], "]"}]}], "]"}], "&"}], ",", 
+                    "Identity"}], "]"}]}]}], "\[IndentingNewLine]", "}"}]}], 
+                   "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]",
+                  "\[IndentingNewLine]", ",", 
+                 RowBox[{"{", 
+                  RowBox[{"MyPoint", ",", 
+                   RowBox[{"(*", " ", 
+                    RowBox[{
+                    "All", " ", "points", " ", "lying", " ", "in", " ", "the",
+                     " ", "current", " ", "segment"}], " ", "*)"}], 
+                   RowBox[{"Select", "[", 
+                    RowBox[{
+                    RowBox[{"SampleAtList", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FullLineLR", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "\[LessEqual]", "#", "<=", 
+                    RowBox[{"FullLineLR", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "&"}]}], "]"}]}], 
+                  "}"}]}], "\[IndentingNewLine]", "]"}], ";"}]}], 
              "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
             "\[IndentingNewLine]", 
             RowBox[{"(*", " ", 
@@ -7267,15 +7851,8 @@ The vanishing factors are: \>\"", ",",
                     RowBox[{"CurrEvalError2", "=", "CurrEvalError1"}], ";", 
                     "\[IndentingNewLine]", 
                     RowBox[{"CurrEvalAtBoundaryFixPoint", "=", "CurrEval"}], 
-                    ";"}]}], "\[IndentingNewLine]", "]"}], ";"}], 
-                    "\[IndentingNewLine]", "\[IndentingNewLine]", ",", 
-                    "\"\<Precise\>\"", ",", 
-                    RowBox[{
-                    RowBox[{"CurrEvalError", "=", 
-                    RowBox[{"SEval", "[", 
-                    RowBox[{
-                    "CurrIntegratedError", ",", "CurrEvalPointCurrLine"}], 
-                    "]"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";"}]}], 
+                    ";"}]}], "\[IndentingNewLine]", "]"}], ";"}]}], 
+                   "\[IndentingNewLine]", "]"}], ";"}]}], 
                 "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
                "\[IndentingNewLine]", 
                RowBox[{
@@ -7461,8 +8038,7 @@ The vanishing factors are: \>\"", ",",
               RowBox[{"Switch", "[", 
                RowBox[{
                 RowBox[{"FEC", "[", "\"\<EstimateError\>\"", "]"}], ",", 
-                "\[IndentingNewLine]", "\"\<Precise\>\"", ",", "CurrError", 
-                ",", "\[IndentingNewLine]", "\"\<Fast\>\"", ",", 
+                "\[IndentingNewLine]", "\"\<Fast\>\"", ",", 
                 "\[IndentingNewLine]", 
                 RowBox[{
                  RowBox[{"CurrErrorAcc", "=", 
@@ -7488,15 +8064,6 @@ The vanishing factors are: \>\"", ",",
                   RowBox[{"PrintInfo", "[", 
                    RowBox[{
                    "\"\<Total error estimate: \>\"", ",", "CurrErrorAcc"}], 
-                   "]"}], "[", "1", "]"}], ";"}], "\[IndentingNewLine]", ",", 
-                RowBox[{
-                 RowBox[{"FEC", "[", "\"\<EstimateError\>\"", "]"}], 
-                 "\[Equal]", "\"\<Precise\>\""}], ",", "\[IndentingNewLine]", 
-                RowBox[{
-                 RowBox[{
-                  RowBox[{"PrintInfo", "[", 
-                   RowBox[{
-                   "\"\<Current error estimate: \>\"", ",", "CurrError"}], 
                    "]"}], "[", "1", "]"}], ";"}]}], "\[IndentingNewLine]", 
                "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
               RowBox[{"If", "[", 
@@ -7532,14 +8099,29 @@ indicates a numerical instability.\>\"", "]"}], ";"}]}],
        RowBox[{"Currbcs", "=", 
         RowBox[{"CurrbcsError", "=", "bcs"}]}], ";", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "=", 
+        RowBox[{"Association", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
        RowBox[{"Done", "=", "False"}], ";", "\[IndentingNewLine]", 
        RowBox[{"While", "[", 
         RowBox[{
          RowBox[{"!", "Done"}], ",", "\[IndentingNewLine]", 
          RowBox[{
-          RowBox[{"TimeStart", "=", 
-           RowBox[{"AbsoluteTime", "[", "]"}]}], ";", "\[IndentingNewLine]", 
-          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+            RowBox[{"CurrLine", "//", "N"}], "]"}], "=", 
+           RowBox[{"Association", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+             RowBox[{"CurrLine", "//", "N"}], "]"}], "[", 
+            "\"\<ComputationTime\>\"", "]"}], "=", 
+           RowBox[{"TimeStart", "=", 
+            RowBox[{"AbsoluteTime", "[", "]"}]}]}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
           RowBox[{"CurrStatusBackup", "=", 
            RowBox[{"{", 
             RowBox[{
@@ -7617,6 +8199,13 @@ current line segment. Please integrate in the positive line direction.\>\"",
 singularities by transporting along a different line.\>\"", "]"}], ";"}]}], 
               "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", 
            "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+             RowBox[{"LastLine", "//", "N"}], "]"}], "[", 
+            "\"\<MatrixExpansion\>\"", "]"}], "=", 
+           RowBox[{"AbsoluteTime", "[", "]"}]}], ";", "\[IndentingNewLine]", 
           RowBox[{"If", "[", 
            RowBox[{
             RowBox[{
@@ -7655,6 +8244,20 @@ singularities by transporting along a different line.\>\"", "]"}], ";"}]}],
                  RowBox[{"FEC", "[", "DivisionOrder", "]"}]}]}], "}"}]}], 
              ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
           "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+             RowBox[{"LastLine", "//", "N"}], "]"}], "[", 
+            "\"\<MatrixExpansion\>\"", "]"}], "=", 
+           RowBox[{
+            RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+              RowBox[{"LastLine", "//", "N"}], "]"}], "[", 
+             "\"\<MatrixExpansion\>\"", "]"}]}]}], ";", "\[IndentingNewLine]",
+           "\[IndentingNewLine]", 
           RowBox[{"CurrIntervalLine", "=", 
            RowBox[{
             RowBox[{
@@ -7958,6 +8561,20 @@ singularities by transporting along a different line.\>\"", "]"}], ";"}]}],
                 RowBox[{"PrintError", "[", "]"}], ";"}]}], 
               "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", 
            "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+             RowBox[{"LastLine", "//", "N"}], "]"}], "[", 
+            "\"\<ComputationTime\>\"", "]"}], "=", 
+           RowBox[{
+            RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+              RowBox[{"LastLine", "//", "N"}], "]"}], "[", 
+             "\"\<ComputationTime\>\"", "]"}]}]}], ";", "\[IndentingNewLine]",
+           "\[IndentingNewLine]", 
           RowBox[{"(*", " ", 
            RowBox[{"Analytic", " ", "continuation", " ", 
             RowBox[{"failed", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
@@ -8015,6 +8632,16 @@ requested AccuracyGoal. The expansions will be repeated at the order \>\"",
                     ",", "MyCenter", ",", "FixAt", ",", "CurrErrorAcc", ",", 
                    "CurrErrorAccs"}], "}"}], "=", "CurrStatusBackup"}], ";", 
                 "\[IndentingNewLine]", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"SaveExpansions", "===", "True"}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"AllIntegrationData", "=", 
+                    RowBox[{"Delete", "[", 
+                    RowBox[{"AllIntegrationData", ",", 
+                    RowBox[{"-", "1"}]}], "]"}]}], ";"}]}], 
+                 "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
                 RowBox[{"(*", " ", 
                  RowBox[{
                  "Drop", " ", "the", " ", "expansion", " ", "matrices"}], " ",
@@ -8094,6 +8721,20 @@ order.\>\""}], "]"}], "[", "1", "]"}], ";", "\[IndentingNewLine]",
             RowBox[{"x", "\[Rule]", "to"}]}]}], ";"}]}], 
         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
        "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<TimeEnd\>\"", "]"}], "=", 
+        RowBox[{"AbsoluteTime", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"BenchmarkData", "[", "\"\<ComputationTime\>\"", "]"}], "=", 
+        RowBox[{
+         RowBox[{"BenchmarkData", "[", "\"\<TimeEnd\>\"", "]"}], "-", 
+         RowBox[{"BenchmarkData", "[", "\"\<TimeStart\>\"", "]"}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"KeyDropFrom", "[", 
+        RowBox[{"BenchmarkData", ",", 
+         RowBox[{"{", 
+          RowBox[{"\"\<TimeEnd\>\"", ",", "\"\<TimeStart\>\""}], "}"}]}], 
+        "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
        RowBox[{"If", "[", 
         RowBox[{
          RowBox[{"SaveExpansions", "===", "True"}], ",", 
@@ -9603,10 +10244,10 @@ centered at current line.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}],
            "\[IndentingNewLine]", 
            RowBox[{
             RowBox[{"BB", "[", "mm", "]"}], "=", 
-            RowBox[{
-             RowBox[{"-", 
+            RowBox[{"-", 
+             RowBox[{"MatrixMultiplySExpand", "[", 
               RowBox[{
-               RowBox[{"BB", "[", "0", "]"}], ".", 
+               RowBox[{"BB", "[", "0", "]"}], ",", 
                RowBox[{"(", 
                 RowBox[{"Sum", "[", 
                  RowBox[{
@@ -9616,8 +10257,7 @@ centered at current line.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}],
                     RowBox[{"mm", "-", "jj"}], "]"}]}], ",", 
                   RowBox[{"{", 
                    RowBox[{"jj", ",", "1", ",", "mm"}], "}"}]}], "]"}], 
-                ")"}]}]}], "//", "DiffExp`Private`SExpand"}]}]}], 
-          "\[IndentingNewLine]", ",", 
+                ")"}]}], "]"}]}]}], ";"}], "\[IndentingNewLine]", ",", 
           RowBox[{"{", 
            RowBox[{"mm", ",", "1", ",", "MaxLogxPower"}], "}"}]}], "]"}], ";",
          "\[IndentingNewLine]", 
@@ -9682,6 +10322,41 @@ centered at current line.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}],
           RowBox[{"line", "=", 
            RowBox[{"line2", "//", "KeySort"}]}]}], "]"}], ";", 
         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"!", 
+           RowBox[{"MemberQ", "[", 
+            RowBox[{"opts", ",", "\"\<TransportToCall\>\""}], "]"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"BenchmarkData", "=", 
+            RowBox[{"Association", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "=", 
+            RowBox[{"Association", "[", "]"}]}], ";"}]}], 
+         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"!", 
+           RowBox[{"KeyExistsQ", "[", 
+            RowBox[{
+             RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], ",", 
+             RowBox[{"line", "//", "N"}]}], "]"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+             RowBox[{"line", "//", "N"}], "]"}], "=", 
+            RowBox[{"Association", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+             "\"\<ComputationTime\>\"", "]"}], "=", 
+            RowBox[{"AbsoluteTime", "[", "]"}]}], ";"}]}], 
+         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
         RowBox[{"If", "[", 
          RowBox[{
           RowBox[{"Or", "@@", 
@@ -9754,23 +10429,42 @@ configuration by setting UsePade -> True!\>\"", "]"}], ";",
              RowBox[{"DiffExpConfiguration", "[", "UsePade", "]"}], "=", 
              "False"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], ";", 
         "\[IndentingNewLine]", "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
+        RowBox[{"(*", 
          RowBox[{
-          RowBox[{"!", 
-           RowBox[{"MemberQ", "[", 
-            RowBox[{"opts", ",", "\"\<DecreaseOrderBy1\>\""}], "]"}]}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"BufferedData", "=", 
-            RowBox[{"Association", "[", 
-             RowBox[{"{", "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
-           RowBox[{"MyWronsk", "=", 
-            RowBox[{"Association", "[", 
-             RowBox[{"{", "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
-           RowBox[{"MyWronskDetInv", "=", 
-            RowBox[{"Association", "[", 
-             RowBox[{"{", "}"}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
-         "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"!", 
+             RowBox[{
+              RowBox[{"FEC", "[", "\"\<Parallel\>\"", "]"}], "===", 
+              "False"}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Kernels", "[", "]"}], "===", 
+                RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"LaunchKernels", "[", 
+                 RowBox[{"FEC", "[", "\"\<Parallel\>\"", "]"}], "]"}], 
+                ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"$DistributedContexts", "=", "None"}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"DistributeDefinitions", "[", 
+              RowBox[{
+              "DiffExpConfiguration", ",", "FEC", ",", "SExpand", ",", 
+               "SMultiply"}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], 
+          ";"}], "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"BufferedData", "=", 
+         RowBox[{"Association", "[", 
+          RowBox[{"{", "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"MyWronsk", "=", 
+         RowBox[{"Association", "[", 
+          RowBox[{"{", "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"MyWronskDetInv", "=", 
+         RowBox[{"Association", "[", 
+          RowBox[{"{", "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
         RowBox[{"(*", " ", 
          RowBox[{
           RowBox[{
@@ -9873,10 +10567,40 @@ configuration by setting UsePade -> True!\>\"", "]"}], ";",
            RowBox[{"ExpansionOrderVal", "=", 
             RowBox[{"FEC", "[", "ExpansionOrder", "]"}]}], ";", 
            "\[IndentingNewLine]", 
-           RowBox[{"ClearMatrices", "[", "]"}], ";"}]}], 
+           RowBox[{"ClearMatrices", "[", "]"}], ";", "\[IndentingNewLine]", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+              RowBox[{"line", "//", "N"}], "]"}], "[", 
+             "\"\<MatrixExpansion\>\"", "]"}], "=", 
+            RowBox[{"AbsoluteTime", "[", "]"}]}], ";"}]}], 
          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
         "\[IndentingNewLine]", 
         RowBox[{"PrepareMatrices", "[", "line", "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"!", 
+           RowBox[{"MemberQ", "[", 
+            RowBox[{"opts", ",", "\"\<TransportToCall\>\""}], "]"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+              RowBox[{"line", "//", "N"}], "]"}], "[", 
+             "\"\<MatrixExpansion\>\"", "]"}], "=", 
+            RowBox[{
+             RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+               RowBox[{"line", "//", "N"}], "]"}], "[", 
+              "\"\<MatrixExpansion\>\"", "]"}]}]}], ";"}]}], 
+         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
         "\[IndentingNewLine]", 
         RowBox[{"InitializeIntegrationSequence", "[", "line", "]"}], ";", 
         "\[IndentingNewLine]", "\[IndentingNewLine]", 
@@ -9887,26 +10611,40 @@ configuration by setting UsePade -> True!\>\"", "]"}], ";",
         RowBox[{"DEqnMatricesExpandedCopy", "=", 
          RowBox[{"DEqnMatricesExpanded", "[", "line", "]"}]}], ";", 
         "\[IndentingNewLine]", "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
+        RowBox[{
          RowBox[{
-          RowBox[{"MemberQ", "[", 
-           RowBox[{"opts", ",", "\"\<DecreaseOrderBy1\>\""}], "]"}], ",", 
-          "\[IndentingNewLine]", 
           RowBox[{
-           RowBox[{"Do", "[", 
-            RowBox[{
-             RowBox[{
-              RowBox[{"DEqnMatricesExpandedCopy", "[", "lind", "]"}], "=", 
-              RowBox[{"DecreaseSeriesOrderBy", "[", 
-               RowBox[{
-                RowBox[{"DEqnMatricesExpandedCopy", "[", "lind", "]"}], ",", 
-                RowBox[{
-                "IDecreaseOrderByErrorPrecise", "+", "MaxCouplingOrder"}]}], 
-               "]"}]}], ",", 
-             RowBox[{"{", 
-              RowBox[{"lind", ",", "0", ",", "EpsilonOrderVal"}], "}"}]}], 
-            "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
-        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+           RowBox[{"line", "//", "N"}], "]"}], "[", 
+          "\"\<ComputationTimes\>\"", "]"}], "=", 
+         RowBox[{"Association", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+            RowBox[{"line", "//", "N"}], "]"}], "[", 
+           "\"\<ComputationTimes\>\"", "]"}], "[", "\"\<Integrals\>\"", "]"}],
+          "=", 
+         RowBox[{"Association", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+           RowBox[{"line", "//", "N"}], "]"}], "[", 
+          "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "=", 
+         RowBox[{"Association", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+            RowBox[{"line", "//", "N"}], "]"}], "[", 
+           "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+          "\"\<Integrals\>\"", "]"}], "=", 
+         RowBox[{"Association", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
         RowBox[{"Do", "[", "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{
@@ -9915,7 +10653,16 @@ configuration by setting UsePade -> True!\>\"", "]"}], ";",
              RowBox[{
              "\"\<Currently at order: \[Epsilon]^\>\"", ",", "epsord", ",", 
               "\"\<.\>\""}], "]"}], "[", "2", "]"}], ";", 
-           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+               RowBox[{"line", "//", "N"}], "]"}], "[", 
+              "\"\<ComputationTimes\>\"", "]"}], "[", "epsord", "]"}], "=", 
+            RowBox[{"AbsoluteTime", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+           "\[IndentingNewLine]", 
            RowBox[{"IntegrationDataTab", "=", 
             RowBox[{"Table", "[", 
              RowBox[{
@@ -9964,6 +10711,47 @@ configuration by setting UsePade -> True!\>\"", "]"}], ";",
            RowBox[{"Do", "[", "\[IndentingNewLine]", 
             RowBox[{
              RowBox[{
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{"!", 
+                 RowBox[{"KeyExistsQ", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<ComputationTimes\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], ",", "intind"}], "]"}]}], ",",
+                 "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<ComputationTimes\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "=", 
+                  RowBox[{"Association", "[", "]"}]}], ";"}]}], 
+               "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                   "\"\<ComputationTimes\>\"", "]"}], "[", 
+                  "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "[", 
+                "epsord", "]"}], "=", 
+               RowBox[{"AbsoluteTime", "[", "]"}]}], ";", 
+              "\[IndentingNewLine]", "\[IndentingNewLine]", 
               RowBox[{
                RowBox[{"PrintInfo", "[", 
                 RowBox[{
@@ -10107,7 +10895,7 @@ configuration by setting UsePade -> True!\>\"", "]"}], ";",
                 RowBox[{
                 "Integration", " ", "of", " ", "integral", " ", "without", 
                  " ", "homogeneous", " ", "components"}], " ", "*)"}], 
-               "\[IndentingNewLine]", "\[IndentingNewLine]", 
+               "\[IndentingNewLine]", 
                RowBox[{
                 RowBox[{
                  RowBox[{
@@ -10124,6 +10912,22 @@ configuration by setting UsePade -> True!\>\"", "]"}], ";",
                    RowBox[{"{", "0", "}"}], "}"}]}]}], ",", 
                 "\[IndentingNewLine]", "\[IndentingNewLine]", 
                 RowBox[{
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{"epsord", "===", "0"}], ",", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "=", 
+                    "0"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+                 "\[IndentingNewLine]", "\[IndentingNewLine]", 
                  RowBox[{"cIndices", "=", 
                   RowBox[{"{", 
                    SubscriptBox["c", "1"], "}"}]}], ";", 
@@ -10182,6 +10986,18 @@ configuration by setting UsePade -> True!\>\"", "]"}], ";",
                     RowBox[{"BufferedData", ",", "intind"}], "]"}]}]}], ",", 
                    "\[IndentingNewLine]", 
                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "=", 
+                    RowBox[{"AbsoluteTime", "[", "]"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
                     RowBox[{"If", "[", 
                     RowBox[{
                     RowBox[{
@@ -10291,6 +11107,15 @@ configuration by setting UsePade -> True!\>\"", "]"}], ";",
                     RowBox[{"iind", ",", "ll"}], "}"}]}], 
                     "\[IndentingNewLine]", "]"}], "//", "SExpand"}]}], ";", 
                     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    "PrintDebug", "[", "\"\<Got Wronskian...\>\"", "]"}], "[",
+                     "3", "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    "PrintDebug", "[", "\"\<Inverting Wronskian...\>\"", 
+                    "]"}], "[", "3", "]"}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
                     RowBox[{"If", "[", 
                     RowBox[{
                     RowBox[{"(", 
@@ -10584,6 +11409,11 @@ Wronskian does not match identity. Try increasing \\\"ChopPrecision\\\" or \\\
                     RowBox[{"MatrixLogxInverse", "[", "Wronsk", "]"}]}], 
                     ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
                     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    "PrintDebug", "[", "\"\<Inverting MTilde... \>\"", "]"}], 
+                    "[", "3", "]"}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
                     RowBox[{"Check", "[", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{
@@ -10617,9 +11447,10 @@ Wronskian does not match identity. Try increasing \\\"ChopPrecision\\\" or \\\
                     RowBox[{"PChop", "@", 
                     RowBox[{"(", 
                     RowBox[{
-                    RowBox[{"MtildeInv", ".", "Wronsk"}], "//", "SExpand"}], 
-                    ")"}]}]}], ";"}], "\[IndentingNewLine]", ",", 
-                    "\[IndentingNewLine]", 
+                    RowBox[{"MatrixMultiplySExpand", "[", 
+                    RowBox[{"MtildeInv", ",", "Wronsk"}], "]"}], "//", 
+                    "SExpand"}], ")"}]}]}], ";"}], "\[IndentingNewLine]", ",",
+                     "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{
                     "PrintWarning", "[", 
@@ -10630,9 +11461,10 @@ Mtilde. Turning off DivisionFreeRowReduction and trying again..\>\"", "]"}],
                     RowBox[{"PChop", "@", 
                     RowBox[{"(", 
                     RowBox[{
+                    RowBox[{"MatrixMultiplySExpand", "[", 
                     RowBox[{
-                    RowBox[{"Inverse", "[", "MtildeMat", "]"}], ".", 
-                    "Wronsk"}], "//", "SExpand"}], ")"}]}]}], ";"}]}], 
+                    RowBox[{"Inverse", "[", "MtildeMat", "]"}], ",", 
+                    "Wronsk"}], "]"}], "//", "SExpand"}], ")"}]}]}], ";"}]}], 
                     "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
                     "\[IndentingNewLine]", 
                     RowBox[{"FMatInv", "=", 
@@ -10724,33 +11556,31 @@ Mtilde. Turning off DivisionFreeRowReduction and trying again..\>\"", "]"}],
                     RowBox[{
                     RowBox[{"BufferedData", "[", "intind", "]"}], "=", 
                     RowBox[{"{", 
-                    RowBox[{"FMat", ",", "FMatInv"}], "}"}]}], ";"}]}], 
-                  "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-                 "\[IndentingNewLine]", 
-                 RowBox[{"If", "[", 
-                  RowBox[{
-                   RowBox[{"MemberQ", "[", 
-                    RowBox[{"opts", ",", "\"\<DecreaseOrderBy1\>\""}], "]"}], 
-                   ",", "\[IndentingNewLine]", 
-                   RowBox[{
-                    RowBox[{
-                    RowBox[{"{", 
-                    RowBox[{"FMat", ",", "FMatInv"}], "}"}], "=", 
-                    RowBox[{"BufferedData", "[", "intind", "]"}]}], ";", 
+                    RowBox[{"FMat", ",", "FMatInv"}], "}"}]}], ";", 
                     "\[IndentingNewLine]", 
-                    RowBox[{"FMat", "=", 
-                    RowBox[{"DecreaseSeriesOrderBy", "[", "FMat", "]"}]}], 
-                    ";", "\[IndentingNewLine]", 
-                    RowBox[{"FMatInv", "=", 
-                    RowBox[{"DecreaseSeriesOrderBy", "[", "FMatInv", "]"}]}], 
-                    ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-                   RowBox[{
                     RowBox[{
-                    RowBox[{"{", 
-                    RowBox[{"FMat", ",", "FMatInv"}], "}"}], "=", 
-                    RowBox[{"BufferedData", "[", "intind", "]"}]}], ";"}]}], 
-                  "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-                 "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "=", 
+                    RowBox[{
+                    RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}]}]}], 
+                    ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+                 "\[IndentingNewLine]", "\[IndentingNewLine]", 
                  RowBox[{
                   RowBox[{"{", 
                    RowBox[{"FMat", ",", "FMatInv"}], "}"}], "=", 
@@ -10872,6 +11702,760 @@ equations.\>\"", "]"}], "[", "1", "]"}], ";", "\[IndentingNewLine]",
                   RowBox[{"Total", "[", 
                    RowBox[{"GMat", "//", "Transpose"}], "]"}]}], ";"}], 
                 "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                RowBox[{"(*", 
+                 RowBox[{"--", 
+                  RowBox[{"--", 
+                   RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"-", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"-", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"-", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"-", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"-", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{"--", 
+                    RowBox[{
+                    "--", "-"}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}\
+]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}\
+]}], "*)"}], "\[IndentingNewLine]", ",", 
+                RowBox[{
+                 RowBox[{"FEC", "[", "IntegrationStrategy", "]"}], "===", 
+                 "\"\<VOPAlt\>\""}], ",", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"PrintDebug", "[", 
+                   RowBox[{
+                   "\"\<Solving by alternative strategy. \>\"", ",", 
+                    "intind"}], "]"}], "[", "3", "]"}], ";", 
+                 "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                 RowBox[{"MyN", "=", 
+                  RowBox[{"intind", "//", "Length"}]}], ";", 
+                 "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"epsord", "===", "0"}], "&&", 
+                    RowBox[{"!", 
+                    RowBox[{"KeyExistsQ", "[", 
+                    RowBox[{"BufferedData", ",", "intind"}], "]"}]}]}], ",", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "=", 
+                    RowBox[{"AbsoluteTime", "[", "]"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FEC", "[", "\"\<HomogeneousSolve\>\"", "]"}], 
+                    "===", "\"\<Expand\>\""}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"MatricesMSupj", "=", 
+                    RowBox[{"PChop", "@", 
+                    RowBox[{"NestList", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"SExpand", "[", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"SD", "[", 
+                    RowBox[{"#", ",", "x"}], "]"}], "+", 
+                    RowBox[{"MatrixMultiplySExpand", "[", 
+                    RowBox[{"#", ",", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"DEqnMatricesExpanded", "[", "line", "]"}], "[", 
+                    "0", "]"}], "[", 
+                    RowBox[{"[", 
+                    RowBox[{"intind", ",", "intind"}], "]"}], "]"}]}], 
+                    "]"}]}], ")"}], "]"}], "&"}], ",", 
+                    RowBox[{"IdentityMatrix", "[", "MyN", "]"}], ",", "MyN"}],
+                     "]"}]}]}], ";"}], "\[IndentingNewLine]", ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"MatricesMSupj", "=", 
+                    RowBox[{"NestList", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Together", "[", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"D", "[", 
+                    RowBox[{"#", ",", "x"}], "]"}], "+", 
+                    RowBox[{"#", ".", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"DEqnMatricesFactored", "[", "line", "]"}], "[", 
+                    "0", "]"}], "[", 
+                    RowBox[{"[", 
+                    RowBox[{"intind", ",", "intind"}], "]"}], "]"}]}]}], 
+                    ")"}], "]"}], "&"}], ",", 
+                    RowBox[{"IdentityMatrix", "[", "MyN", "]"}], ",", "MyN"}],
+                     "]"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"nthOrderDifferentialEquations", "=", 
+                    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FEC", "[", "\"\<HomogeneousSolve\>\"", "]"}], 
+                    "===", "\"\<Expand\>\""}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"TmpSols", "=", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"MatricesMSupj", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"All", ",", "ind"}], "]"}], "]"}], "//", 
+                    "Transpose"}], "//", 
+                    RowBox[{
+                    RowBox[{"NullSpace", "[", 
+                    RowBox[{"#", ",", 
+                    RowBox[{
+                    "Method", "\[Rule]", "\"\<DivisionFreeRowReduction\>\""}],
+                     ",", 
+                    RowBox[{"Tolerance", "\[Rule]", 
+                    RowBox[{"10", "^", 
+                    RowBox[{"-", "LinearSolveChopPrecisionVal"}]}]}]}], "]"}],
+                     "&"}]}]}], ";"}], "\[IndentingNewLine]", ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"TmpSols", "=", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"MatricesMSupj", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"All", ",", "ind"}], "]"}], "]"}], "//", 
+                    "Transpose"}], "//", "NullSpace"}], "//", "Together"}]}], 
+                    ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"TmpSols", "=", 
+                    RowBox[{
+                    "Internal`DeleteTrailingZeros", "/@", "TmpSols"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"TmpSols", "=", 
+                    RowBox[{"DiffExpSeries", "[", 
+                    RowBox[{
+                    RowBox[{"MinimalBy", "[", 
+                    RowBox[{"TmpSols", ",", "Length"}], "]"}], "//", 
+                    "First"}], "]"}]}], ";", "\[IndentingNewLine]", 
+                    FractionBox["TmpSols", 
+                    RowBox[{"TmpSols", "//", "Last"}]]}], 
+                    "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+                    RowBox[{"{", 
+                    RowBox[{"ind", ",", "MyN"}], "}"}]}], 
+                    "\[IndentingNewLine]", "]"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FEC", "[", "\"\<HomogeneousSolve\>\"", "]"}], 
+                    "===", "\"\<Expand\>\""}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"MatricesMSupj", "=", 
+                    RowBox[{"DiffExpSeries", "[", "MatricesMSupj", "]"}]}], 
+                    ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"HighestOrderDifferentialEquationPosition", "=", 
+                    RowBox[{
+                    RowBox[{"FirstPosition", "[", 
+                    RowBox[{
+                    RowBox[{"Length", "/@", "nthOrderDifferentialEquations"}],
+                     ",", 
+                    RowBox[{"Max", "[", 
+                    RowBox[{"Length", "/@", "nthOrderDifferentialEquations"}],
+                     "]"}]}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"SolveFrom", "=", 
+                    RowBox[{"Range", "@", 
+                    RowBox[{
+                    "Length", "@", "nthOrderDifferentialEquations"}]}]}], ";",
+                     "\[IndentingNewLine]", 
+                    RowBox[{"nthOrderDifferentialEquationsSolutions", "=", 
+                    RowBox[{
+                    "FrobeniusSolutions", "/@", 
+                    "nthOrderDifferentialEquations"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"MyN", "\[Equal]", "1"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FEC", "[", "\"\<HomogeneousSolve\>\"", "]"}], 
+                    "===", "\"\<Expand\>\""}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"MtildeMatrix", "=", 
+                    RowBox[{"PChop", "@", 
+                    RowBox[{"DiffExpSeries", "[", 
+                    RowBox[{
+                    RowBox[{"MatricesMSupj", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"All", ",", 
+                    RowBox[{"SolveFrom", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "]"}], "[", 
+                    RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"Range", "[", "MyN", "]"}], ",", 
+                    RowBox[{"Range", "[", "MyN", "]"}]}], "]"}], "]"}], 
+                    "]"}]}]}], ";"}], "\[IndentingNewLine]", ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"MtildeMatrix", "=", 
+                    RowBox[{
+                    RowBox[{"MatricesMSupj", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"All", ",", 
+                    RowBox[{"SolveFrom", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "]"}], "[", 
+                    RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"Range", "[", "MyN", "]"}], ",", 
+                    RowBox[{"Range", "[", "MyN", "]"}]}], "]"}], "]"}]}], 
+                    ";"}]}], "\[IndentingNewLine]", "]"}], ";"}], 
+                    "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"MtildeMatrix", "=", 
+                    RowBox[{"{", "}"}]}], ";"}]}], "\[IndentingNewLine]", 
+                    "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    "PrintDebug", "[", 
+                    "\"\<Determining Wronskian matrices.\>\"", "]"}], "[", 
+                    "3", "]"}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"MyHomogeneousSolutions", "=", 
+                    RowBox[{"nthOrderDifferentialEquationsSolutions", "[", 
+                    RowBox[{"[", "myintind", "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"MyWronsk", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"intind", ",", "myintind"}], "}"}], "]"}], "=", 
+                    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"SD", "[", 
+                    RowBox[{
+                    RowBox[{"MyHomogeneousSolutions", "[", 
+                    RowBox[{"[", "mysolind", "]"}], "]"}], ",", 
+                    RowBox[{"Sequence", "@@", 
+                    RowBox[{"ConstantArray", "[", 
+                    RowBox[{"x", ",", "diffind"}], "]"}]}]}], "]"}], 
+                    "\[IndentingNewLine]", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"diffind", ",", "0", ",", 
+                    RowBox[{
+                    RowBox[{"Length", "[", "MyHomogeneousSolutions", "]"}], 
+                    "-", "1"}]}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"mysolind", ",", 
+                    RowBox[{"Length", "[", "MyHomogeneousSolutions", "]"}]}], 
+                    "}"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"myintind", ",", "SolveFrom"}], "}"}]}], 
+                    "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"BufferedData", "[", "intind", "]"}], "=", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "MatricesMSupj", ",", "nthOrderDifferentialEquations", 
+                    ",", "nthOrderDifferentialEquationsSolutions", ",", 
+                    "SolveFrom", ",", "MtildeMatrix"}], "}"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "=", 
+                    RowBox[{
+                    RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}]}]}], ";",
+                     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"PrintDebug", "[", 
+                    RowBox[{
+                    "\"\<Combining homogeneous solutions. \>\"", ",", 
+                    "intind"}], "]"}], "[", "3", "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"fGeneral", "=", 
+                    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"MyHomogeneousSolutions", "=", 
+                    RowBox[{"nthOrderDifferentialEquationsSolutions", "[", 
+                    RowBox[{"[", "myintind", "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"SExpand", "@", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"MyHomogeneousSolutions", "[", 
+                    RowBox[{"[", "ind", "]"}], "]"}], 
+                    RowBox[{"(", 
+                    SubscriptBox["c", 
+                    RowBox[{"myintind", ",", "ind"}]], ")"}]}], "//", 
+                    "SExpand"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"ind", ",", 
+                    RowBox[{"MyHomogeneousSolutions", "//", "Length"}]}], 
+                    "}"}]}], "]"}]}]}], "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"myintind", ",", "SolveFrom"}], "}"}]}], 
+                    "\[IndentingNewLine]", "]"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"PrintDebug", "[", 
+                    RowBox[{"\"\<Done. \>\"", ",", "intind"}], "]"}], "[", 
+                    "3", "]"}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"VanishingTerms", "=", 
+                    RowBox[{"SExpand", "@", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"SD", "[", 
+                    RowBox[{"fGeneral", ",", "x"}], "]"}], "-", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"DEqnMatricesExpanded", "[", "line", "]"}], "[", 
+                    "0", "]"}], "[", 
+                    RowBox[{"[", 
+                    RowBox[{"intind", ",", "intind"}], "]"}], "]"}], ".", 
+                    "fGeneral"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"IndeterminatesRemaining", "=", 
+                    RowBox[{"csCurr", "=", 
+                    RowBox[{"GetCases", "[", 
+                    RowBox[{"fGeneral", ",", 
+                    SubscriptBox["c", 
+                    RowBox[{"i_", ",", "j_"}]]}], "]"}]}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"!", 
+                    RowBox[{
+                    RowBox[{"DeleteDuplicates", "[", 
+                    RowBox[{"Normal", "[", "VanishingTerms", "]"}], "]"}], "===", 
+                    RowBox[{"{", "0", "}"}]}]}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"xAdd", "=", 
+                    RowBox[{"-", "1"}]}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"While", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", "IndeterminatesRemaining", "]"}], 
+                    ">", 
+                    RowBox[{"Length", "[", "fGeneral", "]"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"VanishingTermsCurr", "=", 
+                    RowBox[{"Series", "[", 
+                    RowBox[{"VanishingTerms", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"x", ",", "0", ",", "xAdd"}], "}"}]}], "]"}]}], 
+                    ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"PrintDebug", "[", 
+                    RowBox[{
+                    "\"\<Reducing number of indeterminate constants, \
+considering terms up to O[x]^\>\"", ",", "xAdd"}], "]"}], "[", "3", "]"}], 
+                    ";", "\[IndentingNewLine]", 
+                    RowBox[{"OverdeterminedEqns", "=", 
+                    RowBox[{"Flatten", "[", 
+                    RowBox[{
+                    RowBox[{"Flatten", "[", 
+                    RowBox[{"LogxCoeffList", "/@", "VanishingTermsCurr"}], 
+                    "]"}], "[", 
+                    RowBox[{"[", 
+                    RowBox[{"All", ",", "3"}], "]"}], "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", "OverdeterminedEqns", "]"}], ">", 
+                    "0"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"Cmat", ",", "Cb"}], "}"}], "=", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"#", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"-", 
+                    RowBox[{"#", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}]}], "}"}], "&"}], "@", 
+                    RowBox[{"CoefficientArrays", "[", 
+                    RowBox[{
+                    RowBox[{"DeleteCases", "[", 
+                    RowBox[{"OverdeterminedEqns", ",", "True"}], "]"}], ",", 
+                    "csCurr"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"CsPartSol", "=", 
+                    RowBox[{"LinearSolve", "[", 
+                    RowBox[{"Cmat", ",", "Cb", ",", 
+                    RowBox[{"ZeroTest", "\[Rule]", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"N", "[", 
+                    RowBox[{
+                    RowBox[{"LSPChop", "@", 
+                    RowBox[{"Expand", "@", 
+                    RowBox[{"Normal", "[", "#1", "]"}]}]}], ",", 
+                    "LinearSolveChopPrecisionVal"}], "]"}], "==", "0"}], 
+                    "&"}], ")"}]}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"CsNullVectors", "=", 
+                    RowBox[{"Cmat", "//", 
+                    RowBox[{
+                    RowBox[{"NullSpace", "[", 
+                    RowBox[{"#", ",", 
+                    RowBox[{"Tolerance", "\[Rule]", 
+                    SuperscriptBox["10", 
+                    RowBox[{"-", "LinearSolveChopPrecisionVal"}]]}]}], "]"}], 
+                    "&"}]}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"CsGeneralSol", "=", 
+                    RowBox[{
+                    RowBox[{"CsPartSol", "+", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"CsNullVectors", "[", 
+                    RowBox[{"[", "ind", "]"}], "]"}], 
+                    SubscriptBox["c", "ind"]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"ind", ",", 
+                    RowBox[{"Length", "[", "CsNullVectors", "]"}]}], "}"}]}], 
+                    "]"}]}], "//", "SExpand"}]}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"CsReps", "=", 
+                    RowBox[{
+                    RowBox[{"Thread", "[", 
+                    RowBox[{"csCurr", "\[Rule]", "CsGeneralSol"}], "]"}], "//",
+                     "PChop"}]}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"IndeterminatesRemaining", "=", 
+                    RowBox[{"GetCases", "[", 
+                    RowBox[{"CsGeneralSol", ",", 
+                    SubscriptBox["c", "__"]}], "]"}]}], ";"}]}], 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", "]"}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"xAdd", "+=", "1"}], ";"}]}], 
+                    "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", "IndeterminatesRemaining", "]"}], 
+                    "<", 
+                    RowBox[{"Length", "[", "fGeneral", "]"}]}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Global`DebugData", "=", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "Cmat", ",", "Cb", ",", "CsGeneralSol", ",", "fGeneral"}],
+                     "}"}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"ReportError", "[", 
+                    RowBox[{
+                    "\"\<There was an error in obtaining the solutions for \
+integrals \>\"", ",", "intind", ",", "\"\< at order \>\"", ",", "epsord", 
+                    ",", "\"\< using the \\\"VOP\\\" strategy. Try decreasing \
+the value of the option ChopPrecision or increasing the \
+WorkingPrecision.\>\""}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"fGeneral", "=", 
+                    RowBox[{"fGeneral", "/.", "CsReps"}]}], ";"}], 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", ",", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"fGeneral", "=", 
+                    RowBox[{"fGeneral", "/.", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"csCurr", "[", 
+                    RowBox[{"[", "ind", "]"}], "]"}], "\[Rule]", 
+                    SubscriptBox["c", "ind"]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"ind", ",", 
+                    RowBox[{"Length", "@", "csCurr"}]}], "}"}]}], "]"}]}]}], 
+                    ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"cIndices", "=", 
+                    RowBox[{"GetCases", "[", 
+                    RowBox[{"fGeneral", ",", 
+                    SubscriptBox["c", "i_"]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"FMat", "=", 
+                    RowBox[{
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"fGeneral", "/.", 
+                    RowBox[{"myc", "\[Rule]", "1"}]}], "/.", 
+                    RowBox[{
+                    SubscriptBox["c", "_"], "\[RuleDelayed]", "0"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"myc", ",", "cIndices"}], "}"}]}], "]"}], "//", 
+                    "Transpose"}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"FMatInv", "=", 
+                    RowBox[{"MatrixLogxInverse", "[", "FMat", "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"BufferedData", "[", "intind", "]"}], "=", 
+                    RowBox[{"{", 
+                    RowBox[{"FMat", ",", "FMatInv"}], "}"}]}], ";"}]}], 
+                  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                  "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+                 "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{"FMat", ",", "FMatInv"}], "}"}], "=", 
+                  RowBox[{"BufferedData", "[", "intind", "]"}]}], ";", 
+                 "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{
+                  "PrintDebug", "[", "\"\<Setting up general solution.\>\"", 
+                   "]"}], "[", "3", "]"}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"BMat", "=", 
+                  RowBox[{
+                   RowBox[{
+                    FractionBox["1", 
+                    RowBox[{"Length", "@", "intind"}]], 
+                    RowBox[{"Table", "[", 
+                    RowBox[{"bVec", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"iind", ",", 
+                    RowBox[{"intind", "//", "Length"}]}], "}"}]}], "]"}]}], "//",
+                    "Transpose"}]}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"cIndices", "=", 
+                  RowBox[{"Table", "[", 
+                   RowBox[{
+                    SubscriptBox["c", "i"], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", 
+                    RowBox[{"intind", "//", "Length"}]}], "}"}]}], "]"}]}], 
+                 ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                 RowBox[{"GMat", "=", 
+                  RowBox[{
+                   RowBox[{"MatrixMultiplySExpand", "[", 
+                    RowBox[{"FMat", ",", 
+                    RowBox[{
+                    RowBox[{"DiffExpIntegrate", "[", 
+                    RowBox[{"MatrixMultiplySExpand", "[", 
+                    RowBox[{"FMatInv", ",", "BMat"}], "]"}], "]"}], "+", 
+                    RowBox[{"DiagonalMatrix", "[", "cIndices", "]"}]}]}], 
+                    "]"}], "//", "PChop"}]}], ";", "\[IndentingNewLine]", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"MemberQ", "[", 
+                    RowBox[{
+                    "CurrCrosscheckFlags", ",", 
+                    "\"\<GeneralSolutionMatrix\>\""}], "]"}], "===", "True"}],
+                    ",", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    "PrintDebug", "[", 
+                    "\"\<Cross-checking GMat with differential \
+equations.\>\"", "]"}], "[", "1", "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"CrossC", "=", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"SD", "[", 
+                    RowBox[{"GMat", ",", "x"}], "]"}], "-", 
+                    RowBox[{"MatrixMultiplySExpand", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"DEqnMatricesExpanded", "[", "line", "]"}], "[", 
+                    "0", "]"}], "[", 
+                    RowBox[{"[", 
+                    RowBox[{"intind", ",", "intind"}], "]"}], "]"}], ",", 
+                    RowBox[{"GMat", "+", 
+                    SuperscriptBox[
+                    RowBox[{"O", "[", "x", "]"}], 
+                    "ICrossCheckVerifyResultOrder"]}]}], "]"}], "-", "BMat"}],
+                     "//", 
+                    RowBox[{"(", 
+                    RowBox[{"CPChop", "@*", "SExpand"}], ")"}]}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Global`DebugData", "=", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "FMat", ",", "GMat", ",", "FMatInv", ",", "BMat", ",", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"DEqnMatricesExpanded", "[", "line", "]"}], "[", 
+                    "0", "]"}], "[", 
+                    RowBox[{"[", 
+                    RowBox[{"intind", ",", "intind"}], "]"}], "]"}], ",", 
+                    "CrossC", ",", "MtildeMat", ",", "Wronsk"}], "}"}]}], ";",
+                     "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"PrintDebug", "[", 
+                    RowBox[{"\"\<Found: \>\"", ",", 
+                    RowBox[{
+                    RowBox[{"CrossC", "+", 
+                    SuperscriptBox[
+                    RowBox[{"O", "[", "x", "]"}], 
+                    "ICrossCheckPrintResultOrder"]}], "//", "SN"}]}], "]"}], 
+                    "[", "3", "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"!", 
+                    RowBox[{"(", 
+                    RowBox[{"SameQ", "@@", 
+                    RowBox[{"Append", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"CrossC", "+", 
+                    SuperscriptBox[
+                    RowBox[{"O", "[", "x", "]"}], 
+                    "ICrossCheckVerifyResultOrder"]}], "//", "Normal"}], "//",
+                     "Flatten"}], ",", "0"}], "]"}]}], ")"}]}], 
+                    "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    "ReportError", "[", 
+                    "\"\<Cross-check of solution matrix failed\>\"", "]"}], 
+                    ";"}]}], "\[IndentingNewLine]", "]"}], ";"}]}], 
+                  "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"fGeneral", "=", 
+                  RowBox[{"Total", "[", 
+                   RowBox[{"GMat", "//", "Transpose"}], "]"}]}], ";"}], 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
                 RowBox[{"(*", 
                  RowBox[{"--", 
                   RowBox[{"--", 
@@ -10968,6 +12552,18 @@ equations.\>\"", "]"}], "[", "1", "]"}], ";", "\[IndentingNewLine]",
                     RowBox[{"BufferedData", ",", "intind"}], "]"}]}]}], ",", 
                    "\[IndentingNewLine]", 
                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "=", 
+                    RowBox[{"AbsoluteTime", "[", "]"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
                     RowBox[{"If", "[", 
                     RowBox[{
                     RowBox[{
@@ -11288,9 +12884,31 @@ equations.\>\"", "]"}], "[", "1", "]"}], ";", "\[IndentingNewLine]",
                     RowBox[{
                     "MatricesMSupj", ",", "nthOrderDifferentialEquations", 
                     ",", "nthOrderDifferentialEquationsSolutions", ",", 
-                    "SolveFrom", ",", "MtildeMatrix"}], "}"}]}], ";"}]}], 
-                  "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-                 "\[IndentingNewLine]", 
+                    "SolveFrom", ",", "MtildeMatrix"}], "}"}]}], ";", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "=", 
+                    RowBox[{
+                    RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<HomogeneousSolveAllPreprocessing\>\"", "]"}], "[", 
+                    "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}]}]}], 
+                    ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+                 "\[IndentingNewLine]", "\[IndentingNewLine]", 
                  RowBox[{
                   RowBox[{"{", 
                    RowBox[{
@@ -11368,16 +12986,6 @@ equations.\>\"", "]"}], "[", "1", "]"}], ";", "\[IndentingNewLine]",
                     RowBox[{"MyNumberOfSolutions", "-", "1"}]}], "]"}], ",", 
                     "PlaceHolder"}], "]"}]}], ";", "\[IndentingNewLine]", 
                     "\[IndentingNewLine]", 
-                    RowBox[{"If", "[", 
-                    RowBox[{
-                    RowBox[{"MemberQ", "[", 
-                    RowBox[{"opts", ",", "\"\<DecreaseOrderBy1\>\""}], "]"}], 
-                    ",", "\[IndentingNewLine]", 
-                    RowBox[{
-                    RowBox[{"MyWi", "=", 
-                    RowBox[{"DecreaseSeriesOrderBy", "[", "MyWi", "]"}]}], 
-                    ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
-                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{"(", 
                     RowBox[{
@@ -12118,14 +13726,7 @@ integral(s): \>\"", ",", "intind", ",", "\"\< at epsilon order \>\"", ",",
                     RowBox[{
                     RowBox[{
                     RowBox[{"Length", "[", "cIndices", "]"}], ">", "0"}], ",",
-                     "\[IndentingNewLine]", "\[IndentingNewLine]", 
-                    RowBox[{
-                    RowBox[{"If", "[", 
-                    RowBox[{
-                    RowBox[{"!", 
-                    RowBox[{"MemberQ", "[", 
-                    RowBox[{"opts", ",", "\"\<DecreaseOrderBy1\>\""}], 
-                    "]"}]}], ",", "\[IndentingNewLine]", 
+                     "\[IndentingNewLine]", 
                     RowBox[{
                     RowBox[{"PrintWarning", "[", 
                     RowBox[{
@@ -12141,8 +13742,8 @@ integral(s): \>\"", ",", "intind", ",", "\"\< at epsilon order \>\"", ",",
                     SubscriptBox["c", "i_"], "\[RuleDelayed]", 
                     SubscriptBox["Global`c", 
                     RowBox[{"epsord", ",", "intind", ",", "i"}]]}]}]}], "]"}],
-                     "[", "1", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], 
-                    ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                     "[", "1", "]"}], ";", "\[IndentingNewLine]", 
+                    "\[IndentingNewLine]", 
                     RowBox[{"TurnOffPade", "[", "]"}], ";", 
                     "\[IndentingNewLine]", "\[IndentingNewLine]", 
                     RowBox[{"fGeneral", "=", 
@@ -12249,11 +13850,54 @@ differential equations.\>\"", "]"}], "[", "1", "]"}], ";",
               RowBox[{"AssociateTo", "[", "\[IndentingNewLine]", 
                RowBox[{
                "IntegrationData", ",", "\[IndentingNewLine]", "NewResults"}], 
-               "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+               "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+              "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                   "\"\<ComputationTimes\>\"", "]"}], "[", 
+                  "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "[", 
+                "epsord", "]"}], "=", 
+               RowBox[{
+                RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], 
+                    "[", 
+                    RowBox[{"line", "//", "N"}], "]"}], "[", 
+                    "\"\<ComputationTimes\>\"", "]"}], "[", 
+                   "\"\<Integrals\>\"", "]"}], "[", "intind", "]"}], "[", 
+                 "epsord", "]"}]}]}], ";"}], "\[IndentingNewLine]", 
              "\[IndentingNewLine]", ",", 
              RowBox[{"{", 
               RowBox[{"intind", ",", "IntegrationSequence"}], "}"}]}], 
-            "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", ",", 
+            "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+               RowBox[{"line", "//", "N"}], "]"}], "[", 
+              "\"\<ComputationTimes\>\"", "]"}], "[", "epsord", "]"}], "=", 
+            RowBox[{
+             RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+                RowBox[{"line", "//", "N"}], "]"}], "[", 
+               "\"\<ComputationTimes\>\"", "]"}], "[", "epsord", "]"}]}]}], 
+           ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", ",", 
           RowBox[{"{", 
            RowBox[{"epsord", ",", "0", ",", "EpsilonOrderVal"}], "}"}]}], 
          "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
@@ -12261,18 +13905,36 @@ differential equations.\>\"", "]"}], "[", "1", "]"}], ";",
          RowBox[{"GiveMultivaluedError", "[", "]"}], ":=", 
          RowBox[{"(", "\[IndentingNewLine]", 
           RowBox[{
-           RowBox[{"ReportError", "[", 
+           RowBox[{"If", "[", 
             RowBox[{
-            "\"\<After fixing the boundary conditions, the solutions on the \
-current line segment contain multivalued functions. However, the current \
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{
+               "FEC", "[", "\"\<AbortOnAnalyticContinuationFail\>\"", "]"}], "===",
+                "False"}], ")"}], ",", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{
+              "PrintWarning", "[", 
+               "\"\<After fixing the boundary conditions, the solutions on \
+the current line segment contain multivalued functions. However, the current \
+point is not recognized as a branch point in the configuration, so DiffExp \
+can't perform the analytic continuation! Please add a prescription for the \
+analytic continuation using the option \\\"DeltaPrescriptions\\\".\>\"", 
+               "]"}], ";"}], "\[IndentingNewLine]", ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"ReportError", "[", 
+               RowBox[{
+               "\"\<After fixing the boundary conditions, the solutions on \
+the current line segment contain multivalued functions. However, the current \
 point is not recognized as a branch point in the configuration, so DiffExp \
 can't perform the analytic continuation! Please add a prescription for the \
 analytic continuation using the option \\\"DeltaPrescriptions\\\".\>\"", ",", 
-             "False"}], "]"}], ";", "\[IndentingNewLine]", 
-           "\[IndentingNewLine]", 
-           RowBox[{"MultivaluedFail", "=", "True"}], ";"}], 
-          "\[IndentingNewLine]", ")"}]}], ";", "\[IndentingNewLine]", 
-        "\[IndentingNewLine]", 
+                "False"}], "]"}], ";", "\[IndentingNewLine]", 
+              "\[IndentingNewLine]", 
+              RowBox[{"MultivaluedFail", "=", "True"}], ";"}]}], 
+            "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+          ")"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
         RowBox[{"If", "[", 
          RowBox[{
           RowBox[{
@@ -12361,6 +14023,16 @@ x < 0) where the boundary conditions were given.\>\"", "]"}], ";"}]}],
              RowBox[{"epsord", ",", "0", ",", "EpsilonOrderVal"}], "}"}]}], 
            "]"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
           RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+             "\"\<ComputationTime\>\"", "]"}], "=", 
+            RowBox[{
+             RowBox[{"AbsoluteTime", "[", "]"}], "-", 
+             RowBox[{
+              RowBox[{"BenchmarkData", "[", "\"\<Segments\>\"", "]"}], "[", 
+              "\"\<ComputationTime\>\"", "]"}]}]}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
            RowBox[{"ClearMatrices", "[", "]"}], ";", "\[IndentingNewLine]", 
            RowBox[{"Table", "[", 
             RowBox[{
@@ -14974,15 +16646,133 @@ x < 0) where the boundary conditions were given.\>\"", "]"}], ";"}]}],
    3.830113002268765*^9, 3.830113045469206*^9}, {3.8301130975819263`*^9, 
    3.830113120220068*^9}, {3.830113161223939*^9, 3.8301131854646807`*^9}, {
    3.830415968102189*^9, 3.8304159708018208`*^9}, {3.8304177971883087`*^9, 
-   3.830417800621674*^9}, {3.830417860380824*^9, 
-   3.830417867659587*^9}},ExpressionUUID->"a0add7bf-20b0-46a8-9f1e-\
+   3.830417800621674*^9}, {3.830417860380824*^9, 3.830417867659587*^9}, {
+   3.831459247108519*^9, 3.831459251484914*^9}, {3.831459511237279*^9, 
+   3.83145951677358*^9}, {3.831459577838149*^9, 3.83145958459944*^9}, {
+   3.831459617166361*^9, 3.8314596420857553`*^9}, {3.831459725928245*^9, 
+   3.831459826555949*^9}, {3.831459880837851*^9, 3.831459884522204*^9}, {
+   3.831459940187334*^9, 3.831460071714039*^9}, {3.831460383088449*^9, 
+   3.831460405024659*^9}, {3.831460439813548*^9, 3.8314604836423483`*^9}, {
+   3.8314606140557203`*^9, 3.831460627449621*^9}, {3.831460699809019*^9, 
+   3.831460738641782*^9}, {3.8314609809419193`*^9, 3.831461015288094*^9}, 
+   3.8314612526397753`*^9, 3.831461283410564*^9, {3.8314619872202387`*^9, 
+   3.831462034947894*^9}, {3.83146231782502*^9, 3.831462368636252*^9}, {
+   3.8314624008554707`*^9, 3.831462450216228*^9}, {3.831634599031227*^9, 
+   3.831634604064837*^9}, {3.831634749456726*^9, 3.83163475696152*^9}, {
+   3.831634795408421*^9, 3.8316347972588997`*^9}, {3.8316348356291933`*^9, 
+   3.831634835929044*^9}, {3.831635108345455*^9, 3.831635112806913*^9}, {
+   3.8316373409474983`*^9, 3.831637399939439*^9}, {3.831637446360806*^9, 
+   3.8316374769968433`*^9}, {3.831637554063117*^9, 3.8316376103594913`*^9}, {
+   3.831637675240224*^9, 3.831637683840622*^9}, {3.8316377379463882`*^9, 
+   3.8316377382494507`*^9}, {3.831639045306323*^9, 3.83163919794279*^9}, {
+   3.831639403136567*^9, 3.831639404474143*^9}, {3.831639484887184*^9, 
+   3.831639491749095*^9}, {3.831639784570326*^9, 3.8316398237975388`*^9}, {
+   3.831639860441852*^9, 3.83163995752112*^9}, {3.83164000288888*^9, 
+   3.831640008697566*^9}, {3.831640096298279*^9, 3.831640111232291*^9}, {
+   3.831640199701442*^9, 3.831640230651565*^9}, {3.8316403295288877`*^9, 
+   3.8316403451941566`*^9}, 3.831640765169574*^9, {3.831640815628952*^9, 
+   3.831640845168331*^9}, {3.8316408772098627`*^9, 3.831640892156781*^9}, {
+   3.831640944883885*^9, 3.831640962962422*^9}, {3.8316410222924843`*^9, 
+   3.8316410245764647`*^9}, {3.831641084735634*^9, 3.831641093615376*^9}, {
+   3.831641129410839*^9, 3.831641132795904*^9}, {3.8316411856042337`*^9, 
+   3.831641185793438*^9}, {3.831641477347439*^9, 3.831641575188216*^9}, {
+   3.831641680621853*^9, 3.831641841010488*^9}, {3.831641930387998*^9, 
+   3.831641983998743*^9}, {3.831642022391082*^9, 3.831642069198667*^9}, {
+   3.83164211554574*^9, 3.831642118958539*^9}, {3.831642389986259*^9, 
+   3.8316424044599733`*^9}, {3.831642451196607*^9, 3.831642462559916*^9}, {
+   3.831642526225349*^9, 3.831642606353426*^9}, {3.8316621939227657`*^9, 
+   3.831662222954262*^9}, {3.8316624453702593`*^9, 3.831662479495145*^9}, {
+   3.831662616446281*^9, 3.831662617948737*^9}, {3.831662665889701*^9, 
+   3.8316626666347637`*^9}, {3.835164176007341*^9, 3.8351642110999727`*^9}, {
+   3.8363640168301697`*^9, 3.836364025798687*^9}, {3.8363643550782146`*^9, 
+   3.836364379404792*^9}, {3.836364430211162*^9, 3.836364496435313*^9}, {
+   3.8363645307624083`*^9, 3.836364552318894*^9}, {3.836364586072769*^9, 
+   3.836364643202216*^9}, {3.836364698070157*^9, 3.836364771825304*^9}, {
+   3.836364806442981*^9, 3.836364834600816*^9}, {3.836365308159606*^9, 
+   3.836365311013987*^9}, {3.836365543249256*^9, 3.836365544027461*^9}, {
+   3.836366500284216*^9, 3.836366518119814*^9}, {3.83636655227489*^9, 
+   3.83636656508807*^9}, {3.836366739746305*^9, 3.83636673992772*^9}, {
+   3.836391490156893*^9, 3.836391490241498*^9}, {3.8365408862411222`*^9, 
+   3.83654089814441*^9}, {3.8365410756283817`*^9, 3.8365412302435513`*^9}, {
+   3.836541520206194*^9, 3.836541731373046*^9}, {3.8365417962157087`*^9, 
+   3.836541829661779*^9}, {3.836541882766893*^9, 3.836541914801497*^9}, {
+   3.836541962465191*^9, 3.836541978039226*^9}, {3.8365420276270237`*^9, 
+   3.8365420870725803`*^9}, {3.83654217858914*^9, 3.836542533501709*^9}, {
+   3.836542898532134*^9, 3.836542901302967*^9}, {3.836543026862754*^9, 
+   3.836543053071784*^9}, {3.836543083215106*^9, 3.836543120048602*^9}, {
+   3.836543181338676*^9, 3.836543203360993*^9}, {3.8365432592294407`*^9, 
+   3.8365433339967623`*^9}, {3.836543398741749*^9, 3.8365435227177362`*^9}, {
+   3.836551752666922*^9, 3.83655175428493*^9}, 3.836622803617949*^9, {
+   3.836623272592448*^9, 3.8366232766957197`*^9}, {3.83662331590427*^9, 
+   3.8366233198154497`*^9}, 3.836623460537257*^9, {3.8366235205948763`*^9, 
+   3.8366235784111137`*^9}, {3.836623629220454*^9, 3.836623670917136*^9}, {
+   3.836623705152021*^9, 3.836623826699442*^9}, {3.836623900452552*^9, 
+   3.836623983224848*^9}, {3.836624323306182*^9, 3.83662435922091*^9}, {
+   3.836624406800508*^9, 3.836624480011796*^9}, {3.836624521068755*^9, 
+   3.836624550300585*^9}, {3.836624833401568*^9, 3.836624836008308*^9}, 
+   3.836626317299511*^9, {3.83662647700413*^9, 3.83662648009441*^9}, {
+   3.836626841314582*^9, 3.836626888734378*^9}, {3.836626929121587*^9, 
+   3.8366269425868673`*^9}, {3.8366275432235394`*^9, 3.836627549371566*^9}, {
+   3.836627654327758*^9, 3.8366276784077*^9}, {3.836627826166717*^9, 
+   3.836627855214389*^9}, {3.836627941213244*^9, 3.836627973660246*^9}, {
+   3.836628153734161*^9, 3.836628161320526*^9}, {3.8366283825146112`*^9, 
+   3.836628389733663*^9}, {3.836628542730811*^9, 3.836628604067762*^9}, {
+   3.8366287111143637`*^9, 3.836628712921383*^9}, {3.8366287800121737`*^9, 
+   3.836628793754105*^9}, {3.836628848995802*^9, 3.8366289672350283`*^9}, {
+   3.8366291321593857`*^9, 3.8366291463241158`*^9}, {3.836629187695856*^9, 
+   3.836629223191957*^9}, {3.8366293108515997`*^9, 3.836629431311615*^9}, {
+   3.836629475344492*^9, 3.836629488404551*^9}, {3.836631115786481*^9, 
+   3.836631154265418*^9}, 3.836631293076852*^9, {3.8366317699787483`*^9, 
+   3.836631770034799*^9}, {3.836635681890955*^9, 3.836635721096706*^9}, {
+   3.83663576564886*^9, 3.83663583589097*^9}, {3.836635910150375*^9, 
+   3.836635911761544*^9}, {3.8366361766282797`*^9, 3.836636184791521*^9}, {
+   3.836636234670844*^9, 3.836636238574542*^9}, {3.836636562158415*^9, 
+   3.836636596967792*^9}, {3.836648308567317*^9, 3.836648366427854*^9}, {
+   3.836648974602169*^9, 3.836648983031147*^9}, {3.8366490288356524`*^9, 
+   3.83664906893071*^9}, {3.836653001598319*^9, 3.836653003772736*^9}, 
+   3.836653138446677*^9, {3.8367102417596073`*^9, 3.836710275716401*^9}, {
+   3.836710309386395*^9, 3.836710400086177*^9}, {3.836710444914316*^9, 
+   3.836710477436462*^9}, {3.8367107237613773`*^9, 3.836710724424594*^9}, {
+   3.836710810532117*^9, 3.836710816183869*^9}, {3.83671084853349*^9, 
+   3.836710862707123*^9}, {3.836710914628929*^9, 3.836710960914225*^9}, 
+   3.836746980677085*^9, {3.836747217955583*^9, 3.836747253822323*^9}, {
+   3.836747286009947*^9, 3.836747377440084*^9}, {3.836747415691103*^9, 
+   3.8367474264699183`*^9}, {3.836747458246022*^9, 3.836747486860281*^9}, {
+   3.836747716154889*^9, 3.836747739560494*^9}, {3.836748515948515*^9, 
+   3.836748527240662*^9}, {3.8367485658525267`*^9, 3.83674858631601*^9}, {
+   3.83674884211413*^9, 3.8367488515126*^9}, {3.836748975091049*^9, 
+   3.8367489789114723`*^9}, 3.83680890142257*^9, {3.836808932941225*^9, 
+   3.8368089414849787`*^9}, {3.8368150401341763`*^9, 3.836815041328*^9}, {
+   3.836816029764696*^9, 3.836816054739973*^9}, {3.836817759317355*^9, 
+   3.83681776318521*^9}, {3.836902124342411*^9, 3.83690223177479*^9}, {
+   3.836902264372983*^9, 3.836902466990847*^9}, {3.836902792947496*^9, 
+   3.836902915257367*^9}, {3.836902969256234*^9, 3.836902992214406*^9}, {
+   3.836903277616664*^9, 3.836903284901989*^9}, {3.836903322766337*^9, 
+   3.83690340131465*^9}, {3.836903831230298*^9, 3.8369038319173*^9}, {
+   3.8369039745971212`*^9, 3.8369040088700943`*^9}, {3.836904149466234*^9, 
+   3.836904149751446*^9}, {3.836904194096943*^9, 3.83690422748988*^9}, {
+   3.8369043765307713`*^9, 3.836904378765489*^9}, {3.8369044380892057`*^9, 
+   3.8369044407938957`*^9}, {3.836904492554579*^9, 3.836904497617996*^9}, {
+   3.836904539910688*^9, 3.836904595415567*^9}, 3.8369047084448643`*^9, {
+   3.836904804993073*^9, 3.836904822300914*^9}, {3.836904934343074*^9, 
+   3.836904976919116*^9}, {3.8369050124453087`*^9, 3.836905014960546*^9}, {
+   3.836905156186281*^9, 3.8369051621877337`*^9}, {3.8369061925674543`*^9, 
+   3.836906200855568*^9}, {3.836906586983878*^9, 3.836906587383799*^9}, {
+   3.836906651253359*^9, 3.83690665308127*^9}, {3.8369071240429583`*^9, 
+   3.836907151180387*^9}, {3.8383827310173492`*^9, 3.8383827316652718`*^9}, {
+   3.838382797541563*^9, 3.838382798591467*^9}, {3.83838284333298*^9, 
+   3.838382847652206*^9}, 3.838447467415547*^9, {3.839585674176548*^9, 
+   3.839585674310513*^9}, {3.840257349610183*^9, 3.840257437312415*^9}, {
+   3.840257478593546*^9, 3.840257639544276*^9}, {3.840258367106018*^9, 
+   3.8402584195858088`*^9}, {3.8462296256012*^9, 
+   3.846229627597611*^9}},ExpressionUUID->"a0add7bf-20b0-46a8-9f1e-\
 72b3e99126c5"]
 },
 AutoGeneratedPackage->Automatic,
-WindowSize->{1368, 737},
+WindowSize->{1368, 735},
 WindowMargins->{{0, Automatic}, {0, Automatic}},
-Magnification:>1.65 Inherited,
-FrontEndVersion->"12.2 for Linux x86 (64-bit) (December 12, 2020)",
+Magnification:>1.15 Inherited,
+FrontEndVersion->"12.3 for Linux x86 (64-bit) (July 9, 2021)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"0fbde26b-c0bc-484f-9f20-3cc67f10b0cf"
 ]
@@ -14997,7 +16787,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 731634, 14958, 112412, "Input",ExpressionUUID->"a0add7bf-20b0-46a8-9f1e-72b3e99126c5",
+Cell[558, 20, 819032, 16748, 77443, "Input",ExpressionUUID->"a0add7bf-20b0-46a8-9f1e-72b3e99126c5",
  InitializationCell->True]
 }
 ]
