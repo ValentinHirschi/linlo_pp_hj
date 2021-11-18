@@ -27,9 +27,13 @@ IndexingFile = FileNameJoin[{DataDirectory, "ExactMode", "Indexing.mx"}];
 AmplitudeDataDirectory = FileNameJoin[{DataDirectory, "Amplitude"}];
 
 GaveThreadSafeWarning = False;
-ThreadSafeExport[fn_,data_]:=Module[{TmpFile = CreateFile[], FileDirectory = fn // FileNameSplit // Part[#, 1 ;; -2]& // FileNameJoin},
+ThreadSafeExport[fn_,data_]:=Module[{TmpFile = CreateFile[], FileDirectory = fn // FileNameSplit // Part[#, 1 ;; -2]& // FileNameJoin, fFileExtension = fn // FileExtension},
 	If[$OperatingSystem == "MacOSX" || $OperatingSystem == "Unix",
-		Export[TmpFile, data, "MX"];
+		If[fFileExtension == "mx",
+			Export[TmpFile, data, "MX"];
+			,
+			Export[TmpFile, data  // ToString[#, InputForm]&, "Text"];
+		];
 	
 		If[!DirectoryQ[FileDirectory], CreateDirectory[FileDirectory]];
 	
