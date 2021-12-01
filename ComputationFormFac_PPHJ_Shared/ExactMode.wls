@@ -22,6 +22,8 @@ Data2LDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "2LCombi
 DataHeDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "HeCombined", "DataPoints/"}];
 DynamicIntegralsTopDirectory = FileNameJoin[{DataDirectory, "ExactMode", "Integrals"}];
 
+TrimDataDirectory[fl_] := StringReplace[fl, DataDirectory -> ""];
+
 IndexingFile = FileNameJoin[{DataDirectory, "ExactMode", "Indexing.mx"}];
 
 AmplitudeDataDirectory = FileNameJoin[{DataDirectory, "Amplitude"}];
@@ -110,7 +112,7 @@ DoIndexing[Dirs_, IndType_] := Module[{HaveRead, CurrFileStream, Counter = 0, Cu
 		AppendTo[HaveRead, ReadLine[CurrFileStream] // EndOfFileToBlank];
 	
 		(* Seemed faster than using AppendTo? Might have been HDD caching. I keep it like this for now. *)
-		IndexingData[IndType] = {IndexingData[IndType], A @ {CurrFile, 
+		IndexingData[IndType] = {IndexingData[IndType], A @ {TrimDataDirectory @ CurrFile, 
 			Check[
 			CurrPoint = (HaveRead // StringJoin // StringReplace[#, "\n" -> ""]& // StringCases[#, "<|" ~~ Shortest[a__] ~~ "|>" ]& // First // ToExpression);
 			,
@@ -224,7 +226,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 						ExpansionOrder -> 55,
 						If[ParallelMatrixExpansionCores > 1,
 							"Parallel" -> ParallelMatrixExpansionCores,
-							Sequence @@ {}
+							"Parallel" -> False
 						]
 					]
 				]
@@ -232,6 +234,11 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	
 			Print["Nearest point: "];
 			Print[NearestPointFile = Nearest[IndexingData[ComputeType][[All, 2]] -> IndexingData[ComputeType][[All, 1]], ComputePoint // Values] // Last];
+			NearestPointFile = FileNameJoin[{DataDirectory, NearestPointFile}];
+			If[!FileExistsQ[NearestPointFile],
+				Print["Could not find boundary conditions file. Remove Indexing.mx and try again."];
+				Abort[];
+			];
 			NearestPointData = Import @ NearestPointFile;
 			
 			If[DeleteDuplicates[Rationalize[({s, t, pp4, mmt, mmb, mm} /. ComputePoint) - ({s, t, pp4, mmt, mmb, mm} /. NearestPointData[[1]]), RationalizePointsPrecision]] === {0},
@@ -256,7 +263,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			
 				(* This is not fully thread-safe but at worst a point is lost in the indexing. *)
 				IndexingData = Import[IndexingFile];
-				IndexingData[ComputeType] = Append[IndexingData[ComputeType], {FExport, PointCanonical[ComputeType, NewPointComputed[[1]]]}];
+				IndexingData[ComputeType] = Append[IndexingData[ComputeType], {TrimDataDirectory @ FExport, PointCanonical[ComputeType, NewPointComputed[[1]]]}];
 				ThreadSafeExport[IndexingFile, IndexingData];
 			];
 		];
