@@ -14,7 +14,7 @@ DiffExpPath = FileNameJoin[{BaseDirectory, "DiffExp", "DiffExp.m"}];
 
 Get[DiffExpPath];
 
-ParallelMatrixExpansionCores = 16;
+ParallelMatrixExpansionCores = 1;
 
 DataDirectory = FileNameJoin[{BaseDirectory, "Data"}];
 Data1LDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "1LCombined", "DataPoints/"}];
@@ -219,7 +219,8 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			Block[{Print}, 
 				If[ComputeType === "1L", 
 					UpdateConfiguration[
-						ExpansionOrder -> 80
+						ExpansionOrder -> 80,
+						"Parallel" -> False
 					],
 					
 					UpdateConfiguration[
