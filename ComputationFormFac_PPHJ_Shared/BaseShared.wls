@@ -1,17 +1,20 @@
 #!/usr/bin/env wolframscript
 (* ::Package:: *)
 
+FloatRationalizePrecision = 10^-20;
+FRationalize[a_] := Rationalize[a, FloatRationalizePrecision];
+
 (* Fudge factors (ideally we'd like these to be 1.) *)
 OneLoopFudgeFactor["gghg"] = 1/(2 Sqrt[2]);
 TwoLoopFudgeFactor["gghg"] = 1/(2 Sqrt[2]);
 
-OneLoopFudgeFactor["qqhg"] = 1/(2 Sqrt[2]);
-TwoLoopFudgeFactor["qqhg"] = 1/(2 Sqrt[2]);
+OneLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
+TwoLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 
 BaseDirectory = FileNameJoin[{PPHJSharedDirectory, "Dependencies"}];
 
 ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput = 16, args},
-	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression // SetPrecision[#, precinput]&;
+	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression // SetPrecision[#, precinput]& // Map[FRationalize];
 	
 	Which[
 		AmplitudeType == "gghg", 
