@@ -235,11 +235,18 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			Print["Nearest point: "];
 			Print[NearestPointFile = Nearest[IndexingData[ComputeType][[All, 2]] -> IndexingData[ComputeType][[All, 1]], ComputePoint // Values] // Last];
 			NearestPointFile = FileNameJoin[{DataDirectory, NearestPointFile}];
+			Print["Nearest point file is: ", NearestPointFile];
+			
 			If[!FileExistsQ[NearestPointFile],
 				Print["Could not find boundary conditions file. Remove Indexing.mx and try again."];
 				Abort[];
 			];
+			
 			NearestPointData = Import @ NearestPointFile;
+			If[Length[Cases[NearestPointData, $Failed, Infinity]] > 0,
+				Print["There seems to be an error with the imported file."];
+				Abort[];
+			];
 			
 			If[DeleteDuplicates[Rationalize[({s, t, pp4, mmt, mmb, mm} /. ComputePoint) - ({s, t, pp4, mmt, mmb, mm} /. NearestPointData[[1]]), RationalizePointsPrecision]] === {0},
 				Print["Nearest available point is within delta of: ", RationalizePointsPrecision];
@@ -262,9 +269,9 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				ThreadSafeExport[FExport = FileNameJoin[{DynamicIntegralsTopDirectory, ComputeType, MyHash <> ".m"}], NewPointComputed];
 			
 				(* This is not fully thread-safe but at worst a point is lost in the indexing. *)
-				IndexingData = Import[IndexingFile];
+				(* IndexingData = Import[IndexingFile];
 				IndexingData[ComputeType] = Append[IndexingData[ComputeType], {TrimDataDirectory @ FExport, PointCanonical[ComputeType, NewPointComputed[[1]]]}];
-				ThreadSafeExport[IndexingFile, IndexingData];
+				ThreadSafeExport[IndexingFile, IndexingData]; *)
 			];
 		];
 	
