@@ -213,6 +213,9 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
        	exit (EXIT_FAILURE);
 	}
 
+	// The glu-glu channel is by convention #3	
+	const int selected_channel = 3;
+
 	ostr<<s<< " ";
     ostr<<t<<" ";
 	ostr<<mu_r<<" ";
@@ -223,6 +226,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
     ostr<<yt<<" ";
     ostr<<nloop<<" ";
 	ostr<<eval_mode<<" ";
+	ostr<<selected_channel<<" ";
 	ostr<<pphj_eps_order<<" ";
 	ostr<<nf<<" ";
 	ostr<<HEFT_selected<<" ";
