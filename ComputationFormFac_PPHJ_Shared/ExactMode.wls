@@ -186,12 +186,12 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	];	
 	
 	Which[
-		AmplitudeType == "gghg",
-		CurrAmplitudeType = AmplitudeType;
+		args["amplitude_type"] == "gghg",
+		CurrAmplitudeType = args["amplitude_type"];
 		
-		, AmplitudeType == "qqhg",
+		, args["amplitude_type"] == "qqhg",
 		(* Add channel index from argument. *)
-		CurrAmplitudeType = AmplitudeType <> ToString[args["selected_channel"]];
+		CurrAmplitudeType = args["amplitude_type"] <> ToString[args["selected_channel"]];
 	];
 		
 	MyPoint = {s -> args["s"], t -> args["t"], pp4 -> args["mh"]^2, mmt -> args["mt"]^2, mmb -> args["mb"]^2} // Association;

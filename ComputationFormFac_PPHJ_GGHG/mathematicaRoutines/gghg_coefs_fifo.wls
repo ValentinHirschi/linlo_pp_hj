@@ -8,5 +8,4 @@ ScriptDirectory = FileNameJoin @ FileNameSplit[ScriptPath][[1 ;; -2]];
 
 PPHJSharedDirectory = FileNameJoin[{ScriptDirectory, "..", "..", "ComputationFormFac_PPHJ_Shared/"}];
 
-AmplitudeType = "gghg";
 Get[FileNameJoin[{PPHJSharedDirectory, "FIFOBase.wls"}]];

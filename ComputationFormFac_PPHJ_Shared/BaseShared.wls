@@ -15,15 +15,8 @@ BaseDirectory = FileNameJoin[{PPHJSharedDirectory, "Dependencies"}];
 ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput = 16, args},
 	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression // SetPrecision[#, precinput]& // Map[FRationalize];
 	
-	Which[
-		AmplitudeType == "gghg", 
-		intArgs = StringReplace[commandsin[[8+1 ;; 8+4]], "e" -> "*10^"] // ToExpression;
-		boolArgs = StringReplace[commandsin[[12+1 ;; 12+7]], "e" -> "*10^"] // ToExpression // Map[#>0&];
-		
-		, AmplitudeType == "qqhg",
-		intArgs = StringReplace[commandsin[[8+1 ;; 8+5]], "e" -> "*10^"] // ToExpression;
-		boolArgs = StringReplace[commandsin[[13+1 ;; 13+7]], "e" -> "*10^"] // ToExpression // Map[#>0&];
-	];
+	intArgs = StringReplace[commandsin[[8+1 ;; 8+5]], "e" -> "*10^"] // ToExpression;
+	boolArgs = StringReplace[commandsin[[13+1 ;; 13+7]], "e" -> "*10^"] // ToExpression // Map[ # > 0 &];
 	
 	args = <| 
 	  "s" -> floatArgs[[1]],
@@ -36,21 +29,16 @@ ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput =
 	  "yt" -> floatArgs[[8]],
 	  "nloop" -> intArgs[[1]],
 	  "eval_mode" -> intArgs[[2]],
-	  Sequence @@ Which[
-		  AmplitudeType == "gghg",
-		  {
-			  "eps_order" -> intArgs[[3]],
-			  "nf" -> intArgs[[4]]
-		  },
-		  
-		  AmplitudeType == "qqhg",
-		  {
-			  "selected_channel" -> intArgs[[3]]+1,
-			  "eps_order" -> intArgs[[4]],
-			  "nf" -> intArgs[[5]]
-		  }
-	  ]
-	  ,
+	  
+	  (* 1, 2, 3 indicate the quark channels. 4 indicates the gluons. *)
+	  "selected_channel" -> intArgs[[3]] + 1,
+	  If[intArgs[[3]] <= 2,
+	      "amplitude_type" -> "qqhg",
+	      "amplitude_type" -> "gghg"
+	  ],
+	  
+	  "eps_order" -> intArgs[[4]],
+	  "nf" -> intArgs[[5]],
 	  "is_HEFT" -> boolArgs[[1]],
 	  "inc_ytqcd" -> boolArgs[[2]],
 	  "inc_ytmb" -> boolArgs[[3]],
@@ -106,8 +94,8 @@ ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFa
 		FormFactors *= (ProcessingFunctionExact[argsAlt] // Map[Sqrt[Re[#]^2 + Im[#]^2] &]);
 	];
 	
-	Which[args["nloop"] == 1, FudgeFactor = OneLoopFudgeFactor[AmplitudeType];
-		, args["nloop"] == 2, FudgeFactor = TwoLoopFudgeFactor[AmplitudeType]; ];
+	Which[args["nloop"] == 1, FudgeFactor = OneLoopFudgeFactor[args["amplitude_type"]];
+		, args["nloop"] == 2, FudgeFactor = TwoLoopFudgeFactor[args["amplitude_type"]];];
 	
 	FormFactors = FudgeFactor * FormFactors;
 	

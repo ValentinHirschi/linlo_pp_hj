@@ -11,8 +11,6 @@ InterpolatedModeDirectory = FileNameJoin[{BaseDirectory, "Data", "InterpolatedMo
 InterpolationDataLinker = Import[FileNameJoin[{BaseDirectory, "InterpolationDataLinker.wl"}]];
 InterpolationDataFiles = Association[ # -> Import[FileNameJoin[{InterpolatedModeDirectory, #}]] & /@ Values[InterpolationDataLinker][[All, -1]] ];
 
-LinkerFileChopPrecision = 10^-5;
-
 ConditionalsList = {};
 
 ProcessingFunctionInterpolated[args__]:=Module[{LinkerKey, SatisfiesArguments, CurrentConditionals, InterpolationDataLinker2, InterpolationData, 
@@ -73,7 +71,7 @@ ProcessingFunctionInterpolated[args__]:=Module[{LinkerKey, SatisfiesArguments, C
 	FormFactors = Table[
 		Sum[
 			(
-				yt If[args["inc_ytqcd"] === False && args["nloop"] === 1, 0, 1]InterpolationData[{args["nloop"], ffind, epsilonPoleIndex, muord, 1, 0, TF10 @ args["inc_ytqcd"], TF10 @ args["inc_ytmt"], TF10 @ args["inc_ybqcd"], TF10 @ args["inc_ybmb"], TF10 @ args["inc_ytmb"], TF10 @ args["inc_ybmt"], Re}][Sequence @@ nmFromst] +
+				yt InterpolationData[{args["nloop"], ffind, epsilonPoleIndex, muord, 1, 0, TF10 @ args["inc_ytqcd"], TF10 @ args["inc_ytmt"], TF10 @ args["inc_ybqcd"], TF10 @ args["inc_ybmb"], TF10 @ args["inc_ytmb"], TF10 @ args["inc_ybmt"], Re}][Sequence @@ nmFromst] +
 				yb InterpolationData[{args["nloop"], ffind, epsilonPoleIndex, muord, 0, 1, TF10 @ args["inc_ytqcd"], TF10 @ args["inc_ytmt"], TF10 @ args["inc_ybqcd"], TF10 @ args["inc_ybmb"], TF10 @ args["inc_ytmb"], TF10 @ args["inc_ybmt"], Re}][Sequence @@ nmFromst] +
 				
 				I (
@@ -82,7 +80,7 @@ ProcessingFunctionInterpolated[args__]:=Module[{LinkerKey, SatisfiesArguments, C
 				)
 			) * Log[mmuu]^muord /. {mmuu -> args["mu"], yt -> args["yt"], yb -> args["yb"]}
 		, {muord, 0, Which[args["nloop"] == 1, 0, args["nloop"] == 2 || args["nloop"] == "2/1", 2 + epsilonPoleIndex]}]
-	, {ffind, Which[AmplitudeType == "gghg", 4, AmplitudeType == "qqhg", 2]}];
+	, {ffind, Which[args["amplitude_type"] == "gghg", 4, args["amplitude_type"] == "qqhg", 2]}];
 
 	FormFactors
 ]

@@ -36,7 +36,7 @@ MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
 	(* Conditionals *)
 	(       And[
 			SharedConditionsTop[#],
-			AmplitudeType=="gghg"//EchoLabelAlt["amptype"]
+			#["amplitude_type"]=="gghg"//EchoLabelAlt["amptype"]
 		]&)->{
 	(* Replacement for n,m in the interpolation functions *)
 		{n->-42+Sqrt[s]/3,m->(-349643-1053108 n-12537 n^2-1400 t)/(-16566-49896 n-594 n^2)},
@@ -46,7 +46,7 @@ MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
 
 	(       And[
 			SharedConditionsTopBottom[#],
-			AmplitudeType=="gghg"//EchoLabelAlt["amptype"]
+			#["amplitude_type"]=="gghg"//EchoLabelAlt["amptype"]
 		]&)->{
 	(* Replacement for n,m in the interpolation functions *)
 		{n->-42+Sqrt[s]/3,m->(-349643-1053108 n-12537 n^2-1400 t)/(-16566-49896 n-594 n^2)},
@@ -56,7 +56,7 @@ MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
 
 	(       And[
 			SharedConditionsTop[#],
-			AmplitudeType=="qqhg"//EchoLabelAlt["amptype"],
+			#["amplitude_type"]=="qqhg"//EchoLabelAlt["amptype"],
 	   #["selected_channel"] == 1
 		]&)->{
 	(* Replacement for n,m in the interpolation functions *)
@@ -67,7 +67,7 @@ MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
 
 (       And[
 			SharedConditionsTop[#],
-			AmplitudeType=="qqhg"//EchoLabelAlt["amptype"],
+			#["amplitude_type"]=="qqhg"//EchoLabelAlt["amptype"],
 	   #["selected_channel"] == 2
 		]&)->{
 	(* Replacement for n,m in the interpolation functions *)
@@ -78,7 +78,7 @@ MatchQ[#["nloop"],1|2|"2/1"] //EchoLabelAlt["nloop"]
 
 (       And[
 			SharedConditionsTop[#],
-			AmplitudeType=="qqhg"//EchoLabelAlt["amptype"],
+			#["amplitude_type"]=="qqhg"//EchoLabelAlt["amptype"],
 	   #["selected_channel"] == 3
 		]&)->{
 	(* Replacement for n,m in the interpolation functions *)
