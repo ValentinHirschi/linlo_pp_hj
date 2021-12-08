@@ -70,3 +70,7 @@ SwapRelations = {
 (* Reversed *)
 {1->{s,t},2->{t,s},3->{u,t},4->{s,u},5->{t,u},6->{u,s}}
 };
+
+SwapRelationsInversed = {
+	1 -> SwapRelations[[1]][[1]], 2 -> SwapRelations[[1]][[2]], 3 -> SwapRelations[[1]][[3]], 4 -> SwapRelations[[1]][[4]], 5 -> SwapRelations[[1]][[6]], 6 -> SwapRelations[[1]][[5]]
+} // Association;

@@ -61,11 +61,13 @@ Module[{MyFile},
 	Do[
 		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "top" <> ".mx"}];
 		If[FileExistsQ[MyFile],
+			Print["Importing: ", MyFile];
 			{FFs1Loop[CurrAmpType, "top"], FFs2Loop[CurrAmpType, "top"]} = Import[MyFile];
 		];
 		
 		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "topbottom" <> ".mx"}];
 		If[FileExistsQ[MyFile],
+			Print["Importing: ", MyFile];
 			{FFs1Loop[CurrAmpType, "topbottom"], FFs2Loop[CurrAmpType, "topbottom"]} = Import[MyFile];
 		];
 		,
@@ -359,7 +361,9 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		incybqcd -> If[args["inc_ybqcd"], 1, 0],
 		incybmb -> If[args["inc_ybmb"], 1, 0],
 		incytmb -> If[args["inc_ytmb"], 1, 0],
-		incybmt -> If[args["inc_ybmt"], 1, 0]
+		incybmt -> If[args["inc_ybmt"], 1, 0],
+		Kmos -> KmOSReplace,
+		Kyos -> KyOSReplace
 	};
 
 	FormFactors = SeriesCoefficient[FormFactors /. CouplingReplacements, {eps, 0, args["eps_order"]}];

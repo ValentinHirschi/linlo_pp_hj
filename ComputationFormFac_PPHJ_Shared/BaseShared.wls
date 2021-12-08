@@ -4,6 +4,9 @@
 FloatRationalizePrecision = 10^-20;
 FRationalize[a_] := Rationalize[a, FloatRationalizePrecision];
 
+KyOSReplace = 0;
+KmOSReplace = 0;
+
 (* Fudge factors (ideally we'd like these to be 1.) *)
 OneLoopFudgeFactor["gghg"] = 1/(2 Sqrt[2]);
 TwoLoopFudgeFactor["gghg"] = 1/(2 Sqrt[2]);
