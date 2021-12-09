@@ -1,7 +1,7 @@
 #!/usr/bin/env wolframscript
 (* ::Package:: *)
 
-FloatRationalizePrecision = 10^-20;
+FloatRationalizePrecision = 10^-16;
 FRationalize[a_] := Rationalize[a, FloatRationalizePrecision];
 
 KyOSReplace = 0;
@@ -16,7 +16,7 @@ TwoLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 BaseDirectory = FileNameJoin[{PPHJSharedDirectory, "Dependencies"}];
 
 ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput = 16, args},
-	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression // SetPrecision[#, precinput]& // Map[FRationalize];
+	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression (*// SetPrecision[#, precinput]&*) // Map[FRationalize];
 	
 	intArgs = StringReplace[commandsin[[8+1 ;; 8+5]], "e" -> "*10^"] // ToExpression;
 	boolArgs = StringReplace[commandsin[[13+1 ;; 13+7]], "e" -> "*10^"] // ToExpression // Map[ # > 0 &];

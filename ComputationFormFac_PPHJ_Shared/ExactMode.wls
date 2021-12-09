@@ -2,7 +2,7 @@
 (* ::Package:: *)
 
 ExportPrecision = 100;
-RationalizePointsPrecision = 10^-25;
+RationalizePointsPrecision = 10^-12;
 NumericsPlugInFFPrecision = 10^-50;
 
 ReuseProcessedIntegrals = True;
@@ -259,7 +259,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				
 				NewPointComputed = TransportTo[
 					NearestPointData,
-					ComputePoint // Map[Rationalize[#, RationalizePointsPrecision]&]
+					ComputePoint
 				];
 			
 				(*  
@@ -272,9 +272,9 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				ThreadSafeExport[FExport = FileNameJoin[{DynamicIntegralsTopDirectory, ComputeType, MyHash <> ".m"}], NewPointComputed];
 			
 				(* This is not fully thread-safe but at worst a point is lost in the indexing. *)
-				(* IndexingData = Import[IndexingFile];
+				IndexingData = Import[IndexingFile];
 				IndexingData[ComputeType] = Append[IndexingData[ComputeType], {TrimDataDirectory @ FExport, PointCanonical[ComputeType, NewPointComputed[[1]]]}];
-				ThreadSafeExport[IndexingFile, IndexingData]; *)
+				ThreadSafeExport[IndexingFile, IndexingData];
 			];
 		];
 	
