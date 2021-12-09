@@ -264,7 +264,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				Abort[];
 			];
 			
-			If[DeleteDuplicates[Chop[Echo@N[({s, t, pp4, mmt, mmb, mm} /. ComputePoint // Echo) - ({s, t, pp4, mmt, mmb, mm} /. NearestPointData[[1]] // Echo), 200], RationalizePointsPrecision]] === {0},
+			If[DeleteDuplicates[Chop[N[({s, t, pp4, mmt, mmb, mm} /. ComputePoint) - ({s, t, pp4, mmt, mmb, mm} /. NearestPointData[[1]]), 200], RationalizePointsPrecision]] === {0},
 				Print["Nearest available point is within delta of: ", RationalizePointsPrecision];
 				NewPointComputed = NearestPointData;
 				
