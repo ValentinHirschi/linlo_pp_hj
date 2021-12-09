@@ -5,6 +5,7 @@ ExportPrecision = 100;
 RationalizePointsPrecision = 10^-12;
 NumericsPlugInFFPrecision = 10^-50;
 
+DynamicIndexing = False;
 ReuseProcessedIntegrals = True;
 ReuseFFs = True;
 
@@ -134,9 +135,15 @@ DoIndexing[Dirs_, IndType_] := Module[{HaveRead, CurrFileStream, Counter = 0, Cu
 
 
 If[!FileExistsQ[IndexingFile],
-	DoIndexing[{Data1LDirectoryStatic, FileNameJoin[{DynamicIntegralsTopDirectory, "1L"}]}, "1L"];
-	DoIndexing[{Data2LDirectoryStatic, FileNameJoin[{DynamicIntegralsTopDirectory, "2L"}]}, "2L"];
-	DoIndexing[{DataHeDirectoryStatic, FileNameJoin[{DynamicIntegralsTopDirectory, "He"}]}, "He"];
+	If[DynamicIndexing === True,
+		DoIndexing[{Data1LDirectoryStatic, FileNameJoin[{DynamicIntegralsTopDirectory, "1L"}]}, "1L"];
+		DoIndexing[{Data2LDirectoryStatic, FileNameJoin[{DynamicIntegralsTopDirectory, "2L"}]}, "2L"];
+		DoIndexing[{DataHeDirectoryStatic, FileNameJoin[{DynamicIntegralsTopDirectory, "He"}]}, "He"];
+		,
+		DoIndexing[{Data1LDirectoryStatic}, "1L"];
+		DoIndexing[{Data2LDirectoryStatic}, "2L"];
+		DoIndexing[{DataHeDirectoryStatic}, "He"];
+	];
 	
 	Export[IndexingFile, IndexingData]
 	,
@@ -251,7 +258,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				Abort[];
 			];
 			
-			If[DeleteDuplicates[Rationalize[({s, t, pp4, mmt, mmb, mm} /. ComputePoint) - ({s, t, pp4, mmt, mmb, mm} /. NearestPointData[[1]]), RationalizePointsPrecision]] === {0},
+			If[DeleteDuplicates[Chop[N[({s, t, pp4, mmt, mmb, mm} /. ComputePoint) - ({s, t, pp4, mmt, mmb, mm} /. NearestPointData[[1]]), RationalizePointsPrecision^2], RationalizePointsPrecision]] === {0},
 				Print["Nearest available point is within delta of: ", RationalizePointsPrecision];
 				NewPointComputed = NearestPointData;
 				
@@ -270,11 +277,13 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				
 				MyHash = (GetPointHash @ ComputePoint);
 				ThreadSafeExport[FExport = FileNameJoin[{DynamicIntegralsTopDirectory, ComputeType, MyHash <> ".m"}], NewPointComputed];
-			
-				(* This is not fully thread-safe but at worst a point is lost in the indexing. *)
-				IndexingData = Import[IndexingFile];
-				IndexingData[ComputeType] = Append[IndexingData[ComputeType], {TrimDataDirectory @ FExport, PointCanonical[ComputeType, NewPointComputed[[1]]]}];
-				ThreadSafeExport[IndexingFile, IndexingData];
+				
+				If[DynamicIndexing === True,
+					(* This is not fully thread-safe but at worst a point is lost in the indexing. *)
+					IndexingData = Import[IndexingFile];
+					IndexingData[ComputeType] = Append[IndexingData[ComputeType], {TrimDataDirectory @ FExport, PointCanonical[ComputeType, NewPointComputed[[1]]]}];
+					ThreadSafeExport[IndexingFile, IndexingData];
+				];
 			];
 		];
 	
