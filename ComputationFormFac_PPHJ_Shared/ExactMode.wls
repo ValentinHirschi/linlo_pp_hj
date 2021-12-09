@@ -181,7 +181,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		(* Variable definitions copied over from the original script. *)
 		floatArgs, intArgs, boolArgs, FormFactors,
 		Compute1L = True (* Note that the 1L integrals also appear in the 2-loop form factors, due to the UV subtraction. *), Compute2L, ComputeHe,
-		CurrAmplitudeType},
+		CurrAmplitudeType, FormFactorsExist},
 		
 	Which[
 		args["nf"] === 5, 
@@ -219,6 +219,12 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	];
 	
 	Print["Processing point: ", MyPoint];
+	
+	(* Since the script can be called multiple times for the same point with different options for eps order and mu, we check if the FormFactors are already in the data directory. *)
+	FFExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "FormFactors", 
+		RunMode <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> CurrAmplitudeType, (GetPointHash @ MyPoint) <> ".mx"}];
+		
+	FormFactorsExist = (FileExistsQ[FFExportFileName] && ReuseFFs);
 	
 	ComputeNext[ComputeType_, ComputePoint_] := Module[{MyHash, NearestPointFile, NearestPointData, FExport},
 			Print["Computing " <> ComputeType <> " integrals.."];
@@ -289,7 +295,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	
 	ExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
 	
-	If[!(FileExistsQ[ExportFileName] && ReuseProcessedIntegrals),
+	If[(!(FileExistsQ[ExportFileName] && ReuseProcessedIntegrals)) && !FormFactorsExist,
 		If[Compute1L, 
 			If[MemberQ[RunModes, "top"], 
 				ComputeNext["1L", MyPointTop];
@@ -336,15 +342,11 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		
 		Print["Integrals are already computed.. Skipping."];
 	];
-	
-	(* {1-loop ffs, 2-loop ffs} *)
-	NumericalPointData = Import[ExportFileName];
-	
-	(* Since the script can be called multiple times for the same point with different options for eps order and mu, we save the FormFactors in the data directory as well. *)
-	FFExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "FormFactors", 
-		RunMode <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> CurrAmplitudeType, (GetPointHash @ MyPoint) <> ".mx"}];
 		
-	If[! (FileExistsQ[FFExportFileName] && ReuseFFs), 
+	If[! FormFactorsExist, 
+		(* {1-loop ffs, 2-loop ffs} *)
+		NumericalPointData = Import[ExportFileName];
+	
 		Print["Plugging point into form factors"];
 		
 		If[args["nloop"] === 1,
