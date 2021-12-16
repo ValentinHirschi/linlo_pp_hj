@@ -298,7 +298,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	Print["Location of the processed integral files: ", ExportFileName];
 	Print["Processed integrals exist: ", FileExistsQ[ExportFileName]];
 	Print["Reusing processed integrals: ", ReuseProcessedIntegrals];
-	Print["Location of the form factors:", Print[FFExportFileName]];
+	Print["Location of the form factors:", FFExportFileName];
 	Print["Form factors exist: ", FormFactorsExist];
 	
 	If[(IntegralsExist = !(FileExistsQ[ExportFileName] && ReuseProcessedIntegrals)) && !FormFactorsExist,
