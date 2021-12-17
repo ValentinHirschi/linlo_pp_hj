@@ -364,11 +364,16 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
 		];
 		
-		ThreadSafeExport[FFExportFileName, FormFactors];
+		ThreadSafeExport[FFExportFileName, {MyPoint, FormFactors}];
 		,
 		
 		Print["Form factors already computed. Loading result."];
 		FormFactors = Import[FFExportFileName];
+		
+		(* Check if point was saved together with the form factors. *)
+		If[FormFactors[[1,0]] === Association,
+			FormFactors = FormFactors[[2]];
+		];
 	];
 	
 	CouplingReplacements = {
