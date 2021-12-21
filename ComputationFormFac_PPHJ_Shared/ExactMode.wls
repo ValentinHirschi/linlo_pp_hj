@@ -293,7 +293,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				
 				MyHash = (GetPointHash @ ComputePoint);
 				
-				If[!WriteIntegralsToCache === False,
+				If[!WriteIntegralsToCacheBoundaryData === False,
 					ThreadSafeExport[FExport = FileNameJoin[{DynamicIntegralsTopDirectory, ComputeType, MyHash <> ".m"}], NewPointComputed];
 					
 					If[DynamicIndexing === True,
@@ -355,7 +355,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				AllDataComputed
 			};
 		
-		If[!WriteIntegralsToCache === False,
+		If[!WriteIntegralsToCacheProcessed === False,
 			Print["Exporting processed results.."];
 			
 			ThreadSafeExport[ExportFileName, NumericalPointData];
