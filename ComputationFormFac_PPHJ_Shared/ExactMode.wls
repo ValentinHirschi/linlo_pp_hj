@@ -1,13 +1,10 @@
 #!/usr/bin/env wolframscript
 (* ::Package:: *)
 
-ExportPrecision = 100;
-RationalizePointsPrecision = 10^-12;
-NumericsPlugInFFPrecision = 10^-50;
-
-DynamicIndexing = False;
-ReuseProcessedIntegrals = True;
-ReuseFFs = True;
+If[!ValueQ[ExactModeDirectory],
+	ExactModeDirectory = DefaultExactModeDirectory;
+];
+Print["Directory for exact mode results: ", ExactModeDirectory];
 
 NotationPath = FileNameJoin[{BaseDirectory, "Dependencies"}];
 SessionsPath = FileNameJoin[{BaseDirectory, "Server", "Sessions"}];
@@ -15,17 +12,29 @@ DiffExpPath = FileNameJoin[{BaseDirectory, "DiffExp", "DiffExp.m"}];
 
 Get[DiffExpPath];
 
-ParallelMatrixExpansionCores = 1;
-
 DataDirectory = FileNameJoin[{BaseDirectory, "Data"}];
 Data1LDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "1LCombined", "DataPoints/"}];
 Data2LDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "2LCombined", "DataPoints/"}];
 DataHeDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "HeCombined", "DataPoints/"}];
-DynamicIntegralsTopDirectory = FileNameJoin[{DataDirectory, "ExactMode", "Integrals"}];
+DynamicIntegralsTopDirectory = FileNameJoin[{DataDirectory, ExactModeDirectory, "Integrals"}];
 
 TrimDataDirectory[fl_] := StringReplace[fl, DataDirectory -> ""];
 
-IndexingFile = FileNameJoin[{DataDirectory, "ExactMode", "Indexing.mx"}];
+If[!ValueQ[IndexingFile],
+	IndexingFile = FileNameJoin[{DataDirectory, ExactModeDirectory, "Indexing.mx"}];
+	,
+	(* Append data directory to the path *)
+	IndexingFile = FileNameJoin[{DataDirectory, IndexingFile}];
+	
+	If[DynamicIndexing === True,
+		DynamicIndexing = False;
+
+		Print[];
+		Print["Note: dynamic indexing is automatically turned off when a global indexing file is specified."];
+		Print[];
+	];
+];
+Print["Indexing file for boundary points: ", IndexingFile];
 
 AmplitudeDataDirectory = FileNameJoin[{DataDirectory, "Amplitude"}];
 
@@ -60,19 +69,19 @@ Get[FileNameJoin[{NotationPath, "FamilyHeProcessing.m"}]];
 
 Module[{MyFile},
 	Do[
-		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "top" <> ".mx"}];
+		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> If[stflip, "-stflip", ""] <> "-" <> "top" <> ".mx"}];
 		If[FileExistsQ[MyFile],
 			Print["Importing: ", MyFile];
-			{FFs1Loop[CurrAmpType, "top"], FFs2Loop[CurrAmpType, "top"]} = Import[MyFile];
+			{FFs1Loop[CurrAmpType, "top", stflip], FFs2Loop[CurrAmpType, "top", stflip]} = Import[MyFile];
 		];
 		
-		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "topbottom" <> ".mx"}];
+		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> If[stflip, "-stflip", ""] <> "-" <> "topbottom" <> ".mx"}];
 		If[FileExistsQ[MyFile],
 			Print["Importing: ", MyFile];
-			{FFs1Loop[CurrAmpType, "topbottom"], FFs2Loop[CurrAmpType, "topbottom"]} = Import[MyFile];
+			{FFs1Loop[CurrAmpType, "topbottom", stflip], FFs2Loop[CurrAmpType, "topbottom", stflip]} = Import[MyFile];
 		];
 		,
-		{CurrAmpType, {"gghg", "qqhg1", "qqhg2", "qqhg3"}}
+		{CurrAmpType, {"gghg", "qqhg1", "qqhg2", "qqhg3"}}, {stflip, {False, True}}
 	];
 ];
 
@@ -181,7 +190,8 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		(* Variable definitions copied over from the original script. *)
 		floatArgs, intArgs, boolArgs, FormFactors,
 		Compute1L = True (* Note that the 1L integrals also appear in the 2-loop form factors, due to the UV subtraction. *), Compute2L, ComputeHe,
-		CurrAmplitudeType, FormFactorsExist, IntegralsExist},
+		CurrAmplitudeType, FormFactorsExist,
+		FoundProcessedIntegrals},
 		
 	Which[
 		args["nf"] === 5, 
@@ -221,8 +231,8 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	Print["Processing point: ", MyPoint];
 	
 	(* Since the script can be called multiple times for the same point with different options for eps order and mu, we check if the FormFactors are already in the data directory. *)
-	FFExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "FormFactors", 
-		RunMode <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> CurrAmplitudeType, (GetPointHash @ MyPoint) <> ".mx"}];
+	FFExportFileName = FileNameJoin[{DataDirectory, ExactModeDirectory, "FormFactors", 
+		RunMode <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> CurrAmplitudeType <> If[args["stflip"], "-stflip", ""], (GetPointHash @ MyPoint) <> ".mx"}];
 		
 	FormFactorsExist = (FileExistsQ[FFExportFileName] && ReuseFFs);
 	
@@ -234,12 +244,12 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			Block[{Print}, 
 				If[ComputeType === "1L", 
 					UpdateConfiguration[
-						ExpansionOrder -> 80,
+						ExpansionOrder -> ExpansionOrder1L,
 						"Parallel" -> False
 					],
 					
 					UpdateConfiguration[
-						ExpansionOrder -> 55,
+						ExpansionOrder -> ExpansionOrder2L,
 						If[ParallelMatrixExpansionCores > 1,
 							"Parallel" -> ParallelMatrixExpansionCores,
 							"Parallel" -> False
@@ -264,8 +274,8 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				Abort[];
 			];
 			
-			If[DeleteDuplicates[Chop[N[({s, t, pp4, mmt, mmb, mm} /. ComputePoint) - ({s, t, pp4, mmt, mmb, mm} /. NearestPointData[[1]]), 200], RationalizePointsPrecision]] === {0},
-				Print["Nearest available point is within delta of: ", RationalizePointsPrecision];
+			If[DeleteDuplicates[Chop[N[({s, t, pp4, mmt, mmb, mm} /. ComputePoint) - ({s, t, pp4, mmt, mmb, mm} /. NearestPointData[[1]]), 200], BoundaryPointDelta]] === {0},
+				Print["Nearest available point is within delta of: ", BoundaryPointDelta];
 				NewPointComputed = NearestPointData;
 				
 				,
@@ -282,26 +292,30 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				NewPointComputed[[2]] = NewPointComputed[[2]] // N[#, ExportPrecision] &; 
 				
 				MyHash = (GetPointHash @ ComputePoint);
-				ThreadSafeExport[FExport = FileNameJoin[{DynamicIntegralsTopDirectory, ComputeType, MyHash <> ".m"}], NewPointComputed];
 				
-				If[DynamicIndexing === True,
-					(* This is not fully thread-safe but at worst a point is lost in the indexing. *)
-					IndexingData = Import[IndexingFile];
-					IndexingData[ComputeType] = Append[IndexingData[ComputeType], {TrimDataDirectory @ FExport, PointCanonical[ComputeType, NewPointComputed[[1]]]}];
-					ThreadSafeExport[IndexingFile, IndexingData];
+				If[!WriteIntegralsToCache === False,
+					ThreadSafeExport[FExport = FileNameJoin[{DynamicIntegralsTopDirectory, ComputeType, MyHash <> ".m"}], NewPointComputed];
+					
+					If[DynamicIndexing === True,
+						(* This is not fully thread-safe but at worst a point is lost in the indexing. *)
+						IndexingData = Import[IndexingFile];
+						IndexingData[ComputeType] = Append[IndexingData[ComputeType], {TrimDataDirectory @ FExport, PointCanonical[ComputeType, NewPointComputed[[1]]]}];
+						ThreadSafeExport[IndexingFile, IndexingData];
+					];
 				];
 			];
 		];
 	
-	ExportFileName = FileNameJoin[{DataDirectory, "ExactMode", "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
+	ExportFileName = FileNameJoin[{DataDirectory, ExactModeDirectory, "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
+	FoundProcessedIntegrals = FileExistsQ[ExportFileName];
 	
-	Print["Location of the processed integral files: ", ExportFileName];
-	Print["Processed integrals exist: ", FileExistsQ[ExportFileName]];
+	Print["Locations of the processed integrals: ", ExportFileName];
+	Print["Found match?: ", FoundProcessedIntegrals];
 	Print["Reusing processed integrals: ", ReuseProcessedIntegrals];
 	Print["Location of the form factors:", FFExportFileName];
 	Print["Form factors exist: ", FormFactorsExist];
 	
-	If[(IntegralsExist = !(FileExistsQ[ExportFileName] && ReuseProcessedIntegrals)) && !FormFactorsExist,
+	If[(!(FoundProcessedIntegrals && ReuseProcessedIntegrals)) && !FormFactorsExist,
 		If[Compute1L, 
 			If[MemberQ[RunModes, "top"], 
 				ComputeNext["1L", MyPointTop];
@@ -335,33 +349,33 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		];
 		
 		AllDataComputed = AllDataComputed // Flatten;
-	
-		Print["Exporting processed results.."];
-		ThreadSafeExport[ExportFileName, 
-			{
+		
+		NumericalPointData = {
 				MyPoint,
 				AllDataComputed
-			}
+			};
+		
+		If[!WriteIntegralsToCache === False,
+			Print["Exporting processed results.."];
+			
+			ThreadSafeExport[ExportFileName, NumericalPointData];
 		];
 		
 		,
 		
-		If[IntegralsExist,
-			Print["Integrals are already computed.. Skipping."];
+		If[FoundProcessedIntegrals,
+			Print["Integrals are already computed. Importing.."];
+			NumericalPointData = Import[ExportFileName];
 		];
 	];
 		
 	If[! FormFactorsExist, 
 		(* {1-loop ffs, 2-loop ffs} *)
-		NumericalPointData = Import[ExportFileName];
-	
-		Print["Plugging point into form factors"];
-		
 		If[args["nloop"] === 1,
-			FormFactors = FFs1Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 2] &;
+			FormFactors = FFs1Loop[CurrAmplitudeType, RunMode, args["stflip"]] // PlugNumericsIntoExpression[#, NumericalPointData, 2] &;
 		];
 		If[args["nloop"] === 2,
-			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
+			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode, args["stflip"]] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
 		];
 		
 		ThreadSafeExport[FFExportFileName, {MyPoint, FormFactors}];
@@ -370,7 +384,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		Print["Form factors already computed. Loading result."];
 		FormFactors = Import[FFExportFileName];
 		
-		(* Check if point was saved together with the form factors. *)
+		(* Check if point was saved together with the form factors. This was not the case in an older version of the code. *)
 		If[FormFactors[[1,0]] === Association,
 			FormFactors = FormFactors[[2]];
 		];

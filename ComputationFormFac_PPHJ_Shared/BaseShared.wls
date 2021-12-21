@@ -1,23 +1,19 @@
 #!/usr/bin/env wolframscript
 (* ::Package:: *)
 
-FloatRationalizePrecision = 10^-16;
-FRationalize[a_] := Rationalize[a, FloatRationalizePrecision];
-
-KyOSReplace = 0;
-KmOSReplace = 0;
-
-(* Fudge factors (ideally we'd like these to be 1.) *)
-OneLoopFudgeFactor["gghg"] = 1/(2 Sqrt[2]);
-TwoLoopFudgeFactor["gghg"] = 1/(2 Sqrt[2]);
-OneLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
-TwoLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
-
 BaseDirectory = FileNameJoin[{PPHJSharedDirectory, "Dependencies"}];
 
-ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput = 16, args},
-	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression (*// SetPrecision[#, precinput]&*) // Map[FRationalize];
-	
+Print["Importing configuration."];
+ConfigurationFile = FileNameJoin[{PPHJSharedDirectory, "BaseConfiguration.wls"}];
+Get[ConfigurationFile];
+
+PointPreprocessor := If[InexactNumberQ[#], 
+	Rationalize[SetPrecision[#, FloatInputSetPrecisionDigits], FloatInputRationalizePrecision],
+	#
+] &;
+
+ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, args},
+	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression // Map[PointPreprocessor];
 	intArgs = StringReplace[commandsin[[8+1 ;; 8+5]], "e" -> "*10^"] // ToExpression;
 	boolArgs = StringReplace[commandsin[[13+1 ;; 13+7]], "e" -> "*10^"] // ToExpression // Map[ # > 0 &];
 	
@@ -48,11 +44,22 @@ ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, precinput =
 	  "inc_ytmt" -> boolArgs[[4]],
 	  "inc_ybqcd" -> boolArgs[[5]],
 	  "inc_ybmb" -> boolArgs[[6]],
-	  "inc_ybmt" -> boolArgs[[7]]
+	  "inc_ybmt" -> boolArgs[[7]],
+	  
+	  "stflip" -> False
 	|>;
+	
+	If[MemberQ[FlippedstChannels + 1, args["selected_channel"]] && args["eval_mode"] === 0,
+		Print["Note: Computing current channel by using the flipped datafile. All of the following output will be with s, and t flipped."];
+		{args["s"], args["t"], args["stflip"]} = {args["t"], args["s"], True};
+	];
 	
 	Print["Arguments translated: "];
 	Do[Print @ arg, {arg, Normal @ args}];
+	
+	If[! MatchQ[args["eval_mode"], 0],
+		Print["Only exact mode (0) is enabled in the current version."];
+	];
 	
 	args
 ];

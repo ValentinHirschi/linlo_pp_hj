@@ -15,4 +15,4 @@ If[$ScriptCommandLine[[11]] === "1" || $ScriptCommandLine[[11]] === "2",
 ];
 
 (* Run script.. *)
-ProcessingFunction[Delete[$ScriptCommandLine, 1]]
+ProcessingFunction[Delete[$ScriptCommandLine, 1]];
