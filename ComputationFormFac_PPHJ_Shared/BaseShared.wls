@@ -12,18 +12,25 @@ PointPreprocessor := If[InexactNumberQ[#],
 	#
 ] &;
 
-ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, args},
+ReadArguments[commandsin__] := Module[{floatArgs, floatArgsOrig, intArgs, boolArgs, args},
 	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression // Map[PointPreprocessor];
+	floatArgsOrig = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression;
 	intArgs = StringReplace[commandsin[[8+1 ;; 8+5]], "e" -> "*10^"] // ToExpression;
 	boolArgs = StringReplace[commandsin[[13+1 ;; 13+7]], "e" -> "*10^"] // ToExpression // Map[ # > 0 &];
 	
+	(* We keep also the unprocessed input, in order to scan for permutations. *)
 	args = <| 
 	  "s" -> floatArgs[[1]],
 	  "t" -> floatArgs[[2]],
+	  "s_orig" -> floatArgsOrig[[1]],
+	  "t_orig" -> floatArgsOrig[[2]],
 	  "mu" -> floatArgs[[3]],
 	  "mh" -> floatArgs[[4]],
 	  "mb" -> floatArgs[[5]],
 	  "mt" -> floatArgs[[6]],
+	  "mh_orig" -> floatArgsOrig[[4]],
+	  "mb_orig" -> floatArgsOrig[[5]],
+	  "mt_orig" -> floatArgsOrig[[6]],
 	  "yb" -> floatArgs[[7]],
 	  "yt" -> floatArgs[[8]],
 	  "nloop" -> intArgs[[1]],
@@ -44,15 +51,8 @@ ReadArguments[commandsin__] := Module[{floatArgs, intArgs, boolArgs, args},
 	  "inc_ytmt" -> boolArgs[[4]],
 	  "inc_ybqcd" -> boolArgs[[5]],
 	  "inc_ybmb" -> boolArgs[[6]],
-	  "inc_ybmt" -> boolArgs[[7]],
-	  
-	  "stflip" -> False
+	  "inc_ybmt" -> boolArgs[[7]]
 	|>;
-	
-	If[MemberQ[FlippedstChannels + 1, args["selected_channel"]] && args["eval_mode"] === 0,
-		Print["Note: Computing current channel by using the flipped datafile. All of the following output will be with s, and t flipped."];
-		{args["s"], args["t"], args["stflip"]} = {args["t"], args["s"], True};
-	];
 	
 	Print["Arguments translated: "];
 	Do[Print @ arg, {arg, Normal @ args}];

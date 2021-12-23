@@ -47,10 +47,16 @@ ParallelMatrixExpansionCores = 1;
 
 (* Default expansion order for the one- and two-loop integrals *)
 ExpansionOrder1L = 80;
-ExpansionOrder2L = 55;
-
-(* Compute the following channels by flipping s and t *)
-FlippedstChannels = {};
+ExpansionOrder2L = 65;
 
 (* Turn on/off exporting of the integrals *)
-WriteIntegralsToCache = True;
+WriteIntegralsToCacheBoundaryData = True;
+WriteIntegralsToCacheProcessed = True;
+
+(* When this option is on, integrals are stored in memory within the script and not written to the physical cache.
+	This overwrites WriteIntegralsToCacheBoundaryData, WriteIntegralsToCacheProcessed, and sets them to False.
+  *)
+KeepIntegralsInRAM = False;
+
+(* Clears the respective point in memory when a command is called involving the following channel: *)
+KeepIntegralsInRAMUntilChannel = 3;

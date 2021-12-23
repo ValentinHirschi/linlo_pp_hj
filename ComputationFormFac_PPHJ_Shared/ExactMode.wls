@@ -17,6 +17,9 @@ Data1LDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "1LCombi
 Data2LDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "2LCombined", "DataPoints/"}];
 DataHeDirectoryStatic = FileNameJoin[{DataDirectory, "GridPrecomputed", "HeCombined", "DataPoints/"}];
 DynamicIntegralsTopDirectory = FileNameJoin[{DataDirectory, ExactModeDirectory, "Integrals"}];
+ProcessedIntegralsDirectory = FileNameJoin[{DataDirectory, ExactModeDirectory, "Processed"}];
+
+ProcessedIntegralRAMCache = <||>;
 
 TrimDataDirectory[fl_] := StringReplace[fl, DataDirectory -> ""];
 
@@ -34,6 +37,19 @@ If[!ValueQ[IndexingFile],
 		Print[];
 	];
 ];
+
+If[KeepIntegralsInRAM === True,
+	DynamicIndexing = False;
+	WriteIntegralsToCacheBoundaryData = False;
+	WriteIntegralsToCacheProcessed = False;
+	
+	If[DynamicIndexing === True,
+		Print[];
+		Print["Note: dynamic indexing is automatically turned off when the integrals are kept in RAM."];
+		Print[];
+	];
+];
+
 Print["Indexing file for boundary points: ", IndexingFile];
 
 AmplitudeDataDirectory = FileNameJoin[{DataDirectory, "Amplitude"}];
@@ -69,19 +85,19 @@ Get[FileNameJoin[{NotationPath, "FamilyHeProcessing.m"}]];
 
 Module[{MyFile},
 	Do[
-		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> If[stflip, "-stflip", ""] <> "-" <> "top" <> ".mx"}];
+		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "top" <> ".mx"}];
 		If[FileExistsQ[MyFile],
 			Print["Importing: ", MyFile];
-			{FFs1Loop[CurrAmpType, "top", stflip], FFs2Loop[CurrAmpType, "top", stflip]} = Import[MyFile];
+			{FFs1Loop[CurrAmpType, "top"], FFs2Loop[CurrAmpType, "top"]} = Import[MyFile];
 		];
 		
-		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> If[stflip, "-stflip", ""] <> "-" <> "topbottom" <> ".mx"}];
+		MyFile = FileNameJoin[{AmplitudeDataDirectory, CurrAmpType <> "-" <> "topbottom" <> ".mx"}];
 		If[FileExistsQ[MyFile],
 			Print["Importing: ", MyFile];
-			{FFs1Loop[CurrAmpType, "topbottom", stflip], FFs2Loop[CurrAmpType, "topbottom", stflip]} = Import[MyFile];
+			{FFs1Loop[CurrAmpType, "topbottom"], FFs2Loop[CurrAmpType, "topbottom"]} = Import[MyFile];
 		];
 		,
-		{CurrAmpType, {"gghg", "qqhg1", "qqhg2", "qqhg3"}}, {stflip, {False, True}}
+		{CurrAmpType, {"gghg", "qqhg1", "qqhg2", "qqhg3"}}
 	];
 ];
 
@@ -154,15 +170,15 @@ If[!FileExistsQ[IndexingFile],
 		DoIndexing[{DataHeDirectoryStatic}, "He"];
 	];
 	
-	Export[IndexingFile, IndexingData]
+	Export[IndexingFile, IndexingData];
+	
+	Print["Indexing finished."];
 	,
 	
 	Print["Loading index of points.."];
 	IndexingData = Import[IndexingFile];
 ];
 
-
-Print["Indexing finished."];
 
 (* There are functions for converting notation in the **Processing.m notebooks. However, the notation changed once more, so this is a function to move to the final notation. 
 	This can be improved in the future by combining it with the previous notebooks. *)
@@ -185,13 +201,13 @@ PlugNumericsIntoExpression[ex_, point_, maxepsord_] := Module[{Tmp},
 	Series[Tmp,{eps,0,maxepsord}]//Normal//ReplaceAll[Log[a_]:>PowerExpand[Log[a]]]//Expand//N
 ];
 
-ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, NewPointComputedProcessed, AllDataComputed = {},
-		ComputeNext, DataFilesExported, RunModes, NumericalPointData, FFs1LoopNum, FFs2LoopNum, NewPointComputed, ExportFileName, FFExportFileName, CouplingReplacements, RunMode,
+ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted, MyPointTop, MyPointBottom, NewPointComputedProcessed, AllDataComputed = {},
+		ComputeNext, DataFilesExported, RunModes, NumericalPointData, FFs1LoopNum, FFs2LoopNum, NewPointComputed, ProcessedExportFileNames, FFExportFileName, CouplingReplacements, RunMode,
 		(* Variable definitions copied over from the original script. *)
 		floatArgs, intArgs, boolArgs, FormFactors,
 		Compute1L = True (* Note that the 1L integrals also appear in the 2-loop form factors, due to the UV subtraction. *), Compute2L, ComputeHe,
 		CurrAmplitudeType, FormFactorsExist,
-		FoundProcessedIntegrals},
+		FoundProcessedIntegrals, IntegralsProcessedSplit, IntegralsProcessedSinglePerm, ImportProcessedIntegrals, ProcessIntegrals},
 		
 	Which[
 		args["nf"] === 5, 
@@ -214,6 +230,11 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	];
 		
 	MyPoint = {s -> args["s"], t -> args["t"], pp4 -> args["mh"]^2, mmt -> args["mt"]^2, mmb -> args["mb"]^2} // Association;
+	MyPointOrig = {s -> args["s_orig"], t -> args["t_orig"], pp4 -> args["mh_orig"]^2, mmt -> args["mt_orig"]^2, mmb -> args["mb_orig"]^2} // Association;
+	MyPointPermuted = Table[
+		Perm -> Thread[{s, t, pp4, mmt, mmb} -> ({s, t, pp4, mmt, mmb} /. SwapRelations[[1]][Perm] /. MyPointOrig // Map[PointPreprocessor])]
+	, {Perm, 6}] // Association;
+	
 	MyPointTop = MyPoint // Map[#/MyPoint[mmt]&] // KeyTake[{s, t, pp4}];
 	
 	If[args["nf"] === 4,
@@ -232,7 +253,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 	
 	(* Since the script can be called multiple times for the same point with different options for eps order and mu, we check if the FormFactors are already in the data directory. *)
 	FFExportFileName = FileNameJoin[{DataDirectory, ExactModeDirectory, "FormFactors", 
-		RunMode <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> CurrAmplitudeType <> If[args["stflip"], "-stflip", ""], (GetPointHash @ MyPoint) <> ".mx"}];
+		RunMode <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> CurrAmplitudeType, (GetPointHash @ MyPoint) <> ".mx"}];
 		
 	FormFactorsExist = (FileExistsQ[FFExportFileName] && ReuseFFs);
 	
@@ -306,16 +327,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 			];
 		];
 	
-	ExportFileName = FileNameJoin[{DataDirectory, ExactModeDirectory, "Processed", (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPoint) <> ".mx"}];
-	FoundProcessedIntegrals = FileExistsQ[ExportFileName];
-	
-	Print["Locations of the processed integrals: ", ExportFileName];
-	Print["Found match?: ", FoundProcessedIntegrals];
-	Print["Reusing processed integrals: ", ReuseProcessedIntegrals];
-	Print["Location of the form factors:", FFExportFileName];
-	Print["Form factors exist: ", FormFactorsExist];
-	
-	If[(!(FoundProcessedIntegrals && ReuseProcessedIntegrals)) && !FormFactorsExist,
+	ProcessIntegrals[] := Module[{},
 		If[Compute1L, 
 			If[MemberQ[RunModes, "top"], 
 				ComputeNext["1L", MyPointTop];
@@ -354,33 +366,9 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 				MyPoint,
 				AllDataComputed
 			};
-		
-		If[!WriteIntegralsToCacheProcessed === False,
-			Print["Exporting processed results.."];
-			
-			ThreadSafeExport[ExportFileName, NumericalPointData];
-		];
-		
-		,
-		
-		If[FoundProcessedIntegrals,
-			Print["Integrals are already computed. Importing.."];
-			NumericalPointData = Import[ExportFileName];
-		];
 	];
-		
-	If[! FormFactorsExist, 
-		(* {1-loop ffs, 2-loop ffs} *)
-		If[args["nloop"] === 1,
-			FormFactors = FFs1Loop[CurrAmplitudeType, RunMode, args["stflip"]] // PlugNumericsIntoExpression[#, NumericalPointData, 2] &;
-		];
-		If[args["nloop"] === 2,
-			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode, args["stflip"]] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
-		];
-		
-		ThreadSafeExport[FFExportFileName, {MyPoint, FormFactors}];
-		,
-		
+	
+	If[FormFactorsExist,
 		Print["Form factors already computed. Loading result."];
 		FormFactors = Import[FFExportFileName];
 		
@@ -388,8 +376,99 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointTop, MyPointBottom, N
 		If[FormFactors[[1,0]] === Association,
 			FormFactors = FormFactors[[2]];
 		];
+		,
+		
+		(* Form factors do not exist yet. Check if integrals are available. *)
+		ProcessedExportFileNames = Table[
+			perm -> FileNameJoin[{ProcessedIntegralsDirectory, (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPointPermuted[perm]) <> ".mx"}]	
+			, {perm, 6}] // Association;
+			
+		If[!KeepIntegralsInRAM,
+			FoundProcessedIntegrals = And @@ (FileExistsQ /@ Values[ProcessedExportFileNames]);
+			,
+			
+			(* We are keeping integrals in RAM. *)
+			FoundProcessedIntegrals = And @@ (KeyExistsQ[ProcessedIntegralRAMCache, #]& /@ Values[MyPointPermuted]);
+		];
+	
+		If[!KeepIntegralsInRAM,
+			Print["Locations of the processed integrals: "];
+			ProcessedExportFileNames // Map[Print[#]&];
+		];
+		
+		Print["Found match for processed integrals: ", FoundProcessedIntegrals];
+		Print["Reusing processed integrals: ", ReuseProcessedIntegrals];
+		Print[];
+		Print["Location of the form factors:", FFExportFileName];
+		Print["Form factors exist: ", FormFactorsExist];
+		Print[];
+(*		Print["My point permuted"];
+		MyPointPermuted // Map[Print];*)
+		
+		If[!(FoundProcessedIntegrals && ReuseProcessedIntegrals),
+			(* Integrals not available or re-use is off. *)
+			(* The below function sets the variable NumericalPointData *)
+			ProcessIntegrals[];
+			
+			(* Split up all the processed integrals into separate files, for each respective permutation. *)
+			IntegralsProcessedSplit = Table[
+				perm -> Select[AllDataComputed, MatchQ[#[[1]], MS[_, _, perm /. SwapRelations[[3]], _]]&] /. MS[a_, b_, perm_, c_] :> MS[a, b, c]
+			, {perm, 6}] // Association;
+			
+			(* If integrals should be written to physical cache. *)
+			If[!WriteIntegralsToCacheProcessed === False,
+				KeyValueMap[
+					ThreadSafeExport[ProcessedExportFileNames[#1], {MyPointPermuted[#1], #2}]&
+					, IntegralsProcessedSplit
+				];
+			];
+			
+			(* If integrals should be written to RAM. *)
+			If[KeepIntegralsInRAM,
+				KeyValueMap[
+					(ProcessedIntegralRAMCache[MyPointPermuted[#1]] = {MyPointPermuted[#1], #2};) &
+					, IntegralsProcessedSplit
+				];
+			];
+			,
+			
+			(* Integrals are found, and we are re-using results *)
+			If[!KeepIntegralsInRAM,
+				(* Import from file-system*)
+				NumericalPointData = {
+					MyPoint,
+					Table[Import[ProcessedExportFileNames[perm]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
+				};
+				,
+				                                                                                                               
+				(* Use association *)
+				NumericalPointData = {
+					MyPoint,
+					Table[ProcessedIntegralRAMCache[MyPointPermuted[perm]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
+				};
+			];
+		];
+		
+		Print["Plugging results into form factors.."];
+	
+		(* {1-loop ffs, 2-loop ffs} *)
+		If[args["nloop"] === 1,
+			FormFactors = FFs1Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 2] &;
+		];
+		If[args["nloop"] === 2,
+			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
+		];
+		
+		ThreadSafeExport[FFExportFileName, {MyPoint, FormFactors}];
 	];
 	
+	(* Check if we have to clear after the last channel *)
+	If[KeepIntegralsInRAMUntilChannel === args["selected_channel"] - 1 && KeepIntegralsInRAM,
+		Print["Clearing integrals from memory in current point.."];
+		KeyDropFrom[ProcessedIntegralRAMCache, MyPointPermuted // Values];
+	];
+	
+	(* Form factors are loaded into the appropriate variable. Plug in the free parameters: *)
 	CouplingReplacements = {
 		yt -> args["yt"],
 		yb -> args["yb"],
