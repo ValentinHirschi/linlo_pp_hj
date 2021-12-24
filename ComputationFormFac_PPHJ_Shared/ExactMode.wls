@@ -23,6 +23,13 @@ ProcessedIntegralRAMCache = <||>;
 
 TrimDataDirectory[fl_] := StringReplace[fl, DataDirectory -> ""];
 
+FloatToString:=Module[{Digs=(RealDigits@*N)[#]},
+	If[Digs[[2]] > 0,
+		StringJoin[Insert[Digs[[1]]//Map[ToString],".",Digs[[2]]+1]],
+		Join[{"0","."},ConstantArray["0", -Digs[[2]]],Digs[[1]] // Map[ToString]] // StringJoin
+	]
+]&;
+
 If[!ValueQ[IndexingFile],
 	IndexingFile = FileNameJoin[{DataDirectory, ExactModeDirectory, "Indexing.mx"}];
 	,
@@ -207,7 +214,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		floatArgs, intArgs, boolArgs, FormFactors,
 		Compute1L = True (* Note that the 1L integrals also appear in the 2-loop form factors, due to the UV subtraction. *), Compute2L, ComputeHe,
 		CurrAmplitudeType, FormFactorsExist,
-		FoundProcessedIntegrals, IntegralsProcessedSplit, IntegralsProcessedSinglePerm, ImportProcessedIntegrals, ProcessIntegrals},
+		FoundProcessedIntegrals, IntegralsProcessedSplit, IntegralsProcessedSinglePerm, ImportProcessedIntegrals, ProcessIntegrals, BenchMarkTimes = {}},
 		
 	Which[
 		args["nf"] === 5, 
@@ -368,6 +375,9 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			};
 	];
 	
+	BenchMarkTimes = {};
+	AppendTo[BenchMarkTimes, {"Start", AbsoluteTime[]}];
+	
 	If[FormFactorsExist,
 		Print["Form factors already computed. Loading result."];
 		FormFactors = Import[FFExportFileName];
@@ -376,8 +386,10 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		If[FormFactors[[1,0]] === Association,
 			FormFactors = FormFactors[[2]];
 		];
-		,
 		
+		AppendTo[BenchMarkTimes, {"FormFactorsImported", AbsoluteTime[]}];
+		
+		,
 		(* Form factors do not exist yet. Check if integrals are available. *)
 		ProcessedExportFileNames = Table[
 			perm -> FileNameJoin[{ProcessedIntegralsDirectory, (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPointPermuted[perm]) <> ".mx"}]	
@@ -405,10 +417,14 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 (*		Print["My point permuted"];
 		MyPointPermuted // Map[Print];*)
 		
+		AppendTo[BenchMarkTimes, {"SearchCompleted", AbsoluteTime[]}];
+		
 		If[!(FoundProcessedIntegrals && ReuseProcessedIntegrals),
 			(* Integrals not available or re-use is off. *)
 			(* The below function sets the variable NumericalPointData *)
 			ProcessIntegrals[];
+			
+			AppendTo[BenchMarkTimes, {"IntegralsProcessed", AbsoluteTime[]}];
 			
 			(* Split up all the processed integrals into separate files, for each respective permutation. *)
 			IntegralsProcessedSplit = Table[
@@ -430,6 +446,9 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 					, IntegralsProcessedSplit
 				];
 			];
+			
+			AppendTo[BenchMarkTimes, {"IntegralsWritten", AbsoluteTime[]}];
+			
 			,
 			
 			(* Integrals are found, and we are re-using results *)
@@ -450,7 +469,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		];
 		
 		Print["Plugging results into form factors.."];
-	
+		
 		(* {1-loop ffs, 2-loop ffs} *)
 		If[args["nloop"] === 1,
 			FormFactors = FFs1Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 2] &;
@@ -459,13 +478,11 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
 		];
 		
+		AppendTo[BenchMarkTimes, {"FormFactorsComputed", AbsoluteTime[]}];
+		
 		ThreadSafeExport[FFExportFileName, {MyPoint, FormFactors}];
-	];
-	
-	(* Check if we have to clear after the last channel *)
-	If[KeepIntegralsInRAMUntilChannel === args["selected_channel"] - 1 && KeepIntegralsInRAM,
-		Print["Clearing integrals from memory in current point.."];
-		KeyDropFrom[ProcessedIntegralRAMCache, MyPointPermuted // Values];
+		
+		AppendTo[BenchMarkTimes, {"FormFactorsExported", AbsoluteTime[]}];
 	];
 	
 	(* Form factors are loaded into the appropriate variable. Plug in the free parameters: *)
@@ -483,7 +500,21 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		Kyos -> KyOSReplace
 	};
 
+	If[Length[ProcessedIntegralRAMCache] > 6 * MaxPointsInRAM,
+		(* Clear a point from the cache. *)
+		Print["Clearing a point from memory."];
+		ProcessedIntegralRAMCache = ProcessedIntegralRAMCache[[7 ;; -1]];
+	];
+
 	FormFactors = SeriesCoefficient[FormFactors /. CouplingReplacements, {eps, 0, args["eps_order"]}];
+	
+	AppendTo[BenchMarkTimes, {"End", AbsoluteTime[]}];
+	
+	Print[];
+	Print["Benchmarking:"];
+	Partition[BenchMarkTimes, 2, 1] // Map[Print[#[[1,1]] <> " - " <> #[[2,1]] <> " = ", FloatToString @ (#[[2,2]] - #[[1,2]])] &];
+	Print[BenchMarkTimes[[-1,1]] <> " - " <> BenchMarkTimes[[1,1]], " = ", FloatToString @ (BenchMarkTimes[[-1,2]] - BenchMarkTimes[[1,2]])];
+	Print[];
 	
 	FormFactors
 ];

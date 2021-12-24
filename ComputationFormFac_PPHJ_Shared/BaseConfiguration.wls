@@ -56,7 +56,7 @@ WriteIntegralsToCacheProcessed = True;
 (* When this option is on, integrals are stored in memory within the script and not written to the physical cache.
 	This overwrites WriteIntegralsToCacheBoundaryData, WriteIntegralsToCacheProcessed, and sets them to False.
   *)
-KeepIntegralsInRAM = False;
+KeepIntegralsInRAM = True;
 
-(* Clears the respective point in memory when a command is called involving the following channel: *)
-KeepIntegralsInRAMUntilChannel = 3;
+(* Maximum number of points kept in RAM: *)
+MaxPointsInRAM = 2;
