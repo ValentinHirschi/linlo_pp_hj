@@ -214,7 +214,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		floatArgs, intArgs, boolArgs, FormFactors,
 		Compute1L = True (* Note that the 1L integrals also appear in the 2-loop form factors, due to the UV subtraction. *), Compute2L, ComputeHe,
 		CurrAmplitudeType, FormFactorsExist,
-		FoundProcessedIntegrals, IntegralsProcessedSplit, IntegralsProcessedSinglePerm, ImportProcessedIntegrals, ProcessIntegrals, BenchMarkTimes = {}},
+		FoundProcessedIntegrals, IntegralsProcessedSplit, IntegralsProcessedSinglePerm, ImportProcessedIntegrals, ProcessIntegrals, BenchMarkTimes = {}, PointMetaData},
 		
 	Which[
 		args["nf"] === 5, 
@@ -391,8 +391,9 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		
 		,
 		(* Form factors do not exist yet. Check if integrals are available. *)
+		PointMetaData = (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L";
 		ProcessedExportFileNames = Table[
-			perm -> FileNameJoin[{ProcessedIntegralsDirectory, (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L", (GetPointHash @ MyPointPermuted[perm]) <> ".mx"}]	
+			perm -> FileNameJoin[{ProcessedIntegralsDirectory, PointMetaData, (GetPointHash @ MyPointPermuted[perm]) <> ".mx"}]	
 			, {perm, 6}] // Association;
 			
 		If[!KeepIntegralsInRAM,
@@ -400,7 +401,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			,
 			
 			(* We are keeping integrals in RAM. *)
-			FoundProcessedIntegrals = And @@ (KeyExistsQ[ProcessedIntegralRAMCache, #]& /@ Values[MyPointPermuted]);
+			FoundProcessedIntegrals = And @@ (KeyExistsQ[ProcessedIntegralRAMCache, {PointMetaData, #}]& /@ Values[MyPointPermuted]);
 		];
 	
 		If[!KeepIntegralsInRAM,
@@ -442,7 +443,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			(* If integrals should be written to RAM. *)
 			If[KeepIntegralsInRAM,
 				KeyValueMap[
-					(ProcessedIntegralRAMCache[MyPointPermuted[#1]] = {MyPointPermuted[#1], #2};) &
+					(ProcessedIntegralRAMCache[{PointMetaData, MyPointPermuted[#1]}] = {MyPointPermuted[#1], #2};) &
 					, IntegralsProcessedSplit
 				];
 			];
@@ -463,7 +464,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 				(* Use association *)
 				NumericalPointData = {
 					MyPoint,
-					Table[ProcessedIntegralRAMCache[MyPointPermuted[perm]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
+					Table[ProcessedIntegralRAMCache[{PointMetaData, MyPointPermuted[perm]}] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
 				};
 			];
 		];
