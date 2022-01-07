@@ -217,14 +217,13 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		FoundProcessedIntegrals, IntegralsProcessedSplit, IntegralsProcessedSinglePerm, ImportProcessedIntegrals, ProcessIntegrals, BenchMarkTimes = {}, PointMetaData},
 		
 	Which[
-		args["nf"] === 5, 
+		Chop[args["mb"]] === 0, 
+		Print["Running in \"top\" mode, with mb = 0."];
 		RunMode = "top";,
 		
-		args["nf"] === 4, 
-		RunMode = "topbottom";,
-		
 		True,
-		Print["Only nf = 5 (top contributions) and nf = 4 (top-bottom contributions) are supported..!"];
+		Print["Running in \"topbottom\" mode, with mb != 0."];
+		RunMode = "topbottom";
 	];	
 	
 	Which[
@@ -497,6 +496,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		incybmb -> If[args["inc_ybmb"], 1, 0],
 		incytmb -> If[args["inc_ytmb"], 1, 0],
 		incybmt -> If[args["inc_ybmt"], 1, 0],
+		nq -> args["nf"],
 		Kmos -> KmOSReplace,
 		Kyos -> KyOSReplace
 	};

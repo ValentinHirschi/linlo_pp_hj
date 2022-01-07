@@ -75,13 +75,8 @@ ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFa
 
 	args = ReadArguments[commandsin];
 	
-	If[Chop[args["mb"]] === 0 && args["nf"] === 4,
-		Print["Cannot run plugin with mb = 0, and nf = 4.. Use nf = 5 for massless bottom quark contributions."];
-		Abort[];
-	];
-	
-	If[args["nloop"] === 1 && args["eval_mode"] === 2,
-		Print["Can not use nloop = 1 and eval_mode = 2."];
+	If[args["eval_mode"] > 0,
+		Print["The interpolated modes are broken at the moment."];
 		Abort[];
 	];
 	
