@@ -242,7 +242,10 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 	, {Perm, 6}] // Association;
 	
 	MyPointTop = MyPoint // Map[#/MyPoint[mmt]&] // KeyTake[{s, t, pp4}];
-	MyPointBottom = MyPoint // Map[#/MyPoint[mmb]&] // KeyTake[{s, t, pp4}];
+	Which[
+		! Chop[args["mb"]] === 0, 
+		MyPointBottom = MyPoint // Map[#/MyPoint[mmb]&] // KeyTake[{s, t, pp4}];
+	];
 	
 	Compute2L = args["nloop"] > 1;
 	ComputeHe = (args["nloop"] > 1) && (RunMode === "topbottom");
