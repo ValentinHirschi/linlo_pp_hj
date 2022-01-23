@@ -32,7 +32,7 @@ WaitForInput[] := Module[{NewLine},
 		Print["Received ", Length[NewLines], " lines."];
 		
 		If[!NewLine === {},
-			MyConfig["InputProcessor"][# //EchoLabel["NewLine"] // StringSplit[#, RegularExpression @ " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"]& // DeleteCases[#, ""]& //EchoLabel["NewLineSplit"] // Map[StringTrim]]& /@ NewLines
+			MyConfig["InputProcessor"][# // StringSplit[#, RegularExpression @ " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"]& // DeleteCases[#, ""]& // Map[StringTrim]]& /@ NewLines
 		];
 	];
 ];

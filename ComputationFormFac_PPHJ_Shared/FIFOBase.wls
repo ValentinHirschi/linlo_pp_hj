@@ -32,7 +32,7 @@ With[{RunCommands = HoldForm[
 		Print["Launching ", FIFOListeners," instances."];
 		LaunchKernels[FIFOListeners];
 		$DistributedContexts = None;
-		DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory];
+		DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile];
 
 		ParallelEvaluate[ReleaseHold[RunCommands]];
 	];
