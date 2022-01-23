@@ -19,6 +19,9 @@ FloatInputSetPrecisionDigits = 9;
 (* Consequent rationalization precision *)
 FloatInputRationalizePrecision = 10^-16;
 
+(* Number of fifo listeners per instance. *)
+FIFOListeners = 1;
+
 (* --------------- Specific to the exact mode. --------------- *)
 
 (* Search in the ExactMode data directory for computed points, and add new points dynamically to the index. *)

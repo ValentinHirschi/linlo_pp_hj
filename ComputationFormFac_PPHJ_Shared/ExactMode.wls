@@ -267,6 +267,11 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			Print["Computing " <> ComputeType <> " integrals.."];
 			Get[FileNameJoin[{SessionsPath, ComputeType <> ".mx"}]];
 			
+			UpdateConfiguration[WorkingPrecision -> 700, ChopPrecision -> 300, RadiusOfConvergence -> 4];
+			
+			(*Print[CurrentConfiguration[]];
+			Abort[];*)
+			
 			(* Override some options from the session files. *)
 			Block[{Print}, 
 				If[ComputeType === "1L", 

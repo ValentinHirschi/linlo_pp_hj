@@ -69,7 +69,7 @@ ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFa
 	
 	outString = "";
 	outString = StringJoin[outString, ToString[$ProcessID]<>"\\n"];
-	outString = StringJoin[outString, ToString[Join[{$ScriptCommandLine[[1]]},commandsin]]<>"\\n"];
+	outString = StringJoin[outString, ToString[Join[{ScriptName},commandsin]]<>"\\n"];
 	
 	outFilename = commandsin[[-1]];	
 

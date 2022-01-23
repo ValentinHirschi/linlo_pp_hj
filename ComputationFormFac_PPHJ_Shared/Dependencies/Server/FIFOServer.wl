@@ -9,7 +9,7 @@ WriteOutputLine::usage = "Write line to the output file."
 
 Begin["`Private`"];
 
-TailProcess = Null;
+(*TailProcess = Null;*)
 MyConfig = Association[{
 	"RefreshTime" -> 1,
 	"InputProcessor" -> (Null&)
@@ -19,22 +19,20 @@ MyConfig = Association[{
 ConfigureFIFOServer[ConfOptions_] := (
 		MyConfig = Merge[{MyConfig, ConfOptions}, Last];
 		
-		If[!(TailProcess === Null), KillProcess[TailProcess]];
-		TailProcess = StartProcess[{"tail", "-f", MyConfig["InputFile"]}];
+(*		If[!(TailProcess === Null), KillProcess[TailProcess]];
+		TailProcess = StartProcess[{"cat", MyConfig["InputFile"]}];*)
 	);
 	
 WaitForInput[] := Module[{NewLine},
 	While[True,
 		Pause[MyConfig["RefreshTime"]];
 
-		NewLine = ReadString[TailProcess, EndOfBuffer];
+		(*NewLine = RunProcess[TailProcess, EndOfBuffer];*)
+		NewLines = RunProcess["cat " <> MyConfig["InputFile"]//StringSplit[#," "]&]["StandardOutput"] // StringTrim // StringSplit[#, "\n"]&;
+		Print["Received ", Length[NewLines], " lines."];
 		
-		If[NewLine === EndOfFile,
-			Print["Warning: EndOfFile returned. Does the FIFO file exist?"];
-			,
-			If[!NewLine === "",
-				MyConfig["InputProcessor"][NewLine // StringSplit[#, " "]& // DeleteCases[#, ""]& // Map[StringTrim]]
-			];
+		If[!NewLine === {},
+			MyConfig["InputProcessor"][# //EchoLabel["NewLine"] // StringSplit[#, RegularExpression @ " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"]& // DeleteCases[#, ""]& //EchoLabel["NewLineSplit"] // Map[StringTrim]]& /@ NewLines
 		];
 	];
 ];
