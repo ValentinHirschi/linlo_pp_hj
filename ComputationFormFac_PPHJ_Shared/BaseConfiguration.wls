@@ -14,13 +14,13 @@ OneLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 TwoLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 
 (* Number of digits to consider in the input*)
-FloatInputSetPrecisionDigits = 9;
+FloatInputSetPrecisionDigits = 16;
 
 (* Consequent rationalization precision *)
-FloatInputRationalizePrecision = 10^-16;
+FloatInputRationalizePrecision = 10^-9;
 
 (* Number of fifo listeners per instance. *)
-FIFOListeners = 1;
+FIFOListeners = 6;
 
 (* --------------- Specific to the exact mode. --------------- *)
 
@@ -49,8 +49,8 @@ DefaultExactModeDirectory = "ExactMode";
 ParallelMatrixExpansionCores = 1;
 
 (* Default expansion order for the one- and two-loop integrals *)
-ExpansionOrder1L = 80;
-ExpansionOrder2L = 65;
+ExpansionOrder1L = 100;
+ExpansionOrder2L = 100;
 
 (* Turn on/off exporting of the integrals *)
 WriteIntegralsToCacheBoundaryData = True;
