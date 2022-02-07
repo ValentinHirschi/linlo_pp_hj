@@ -12,28 +12,41 @@ Begin["`Private`"];
 (*TailProcess = Null;*)
 MyConfig = Association[{
 	"RefreshTime" -> 1,
-	"InputProcessor" -> (Null&)
+	"InputProcessor" -> (Null&),
+	"QueueRun" -> False
 }];
 
 (* No sanity checking done here. *)
 ConfigureFIFOServer[ConfOptions_] := (
 		MyConfig = Merge[{MyConfig, ConfOptions}, Last];
 		
-(*		If[!(TailProcess === Null), KillProcess[TailProcess]];
-		TailProcess = StartProcess[{"cat", MyConfig["InputFile"]}];*)
+		If[!(TailProcess === Null), KillProcess[TailProcess]];
+		TailProcess = StartProcess[{"tail", "-f", MyConfig["InputFile"]}];
 	);
 	
-WaitForInput[] := Module[{NewLine},
+WaitForInput[] := Module[{NewLine, TCResult, NewLines},
 	While[True,
 		Pause[MyConfig["RefreshTime"]];
 
-		(*NewLine = RunProcess[TailProcess, EndOfBuffer];*)
-		NewLines = RunProcess["cat " <> MyConfig["InputFile"]//StringSplit[#," "]&]["StandardOutput"] // StringTrim // StringSplit[#, "\n"]&;
-		Print["Received ", Length[NewLines], " lines."];
+		NewLine = ReadString[TailProcess, EndOfBuffer];
 		
-		If[!NewLine === {},
-			MyConfig["InputProcessor"][# // StringSplit[#, RegularExpression @ " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"]& // DeleteCases[#, ""]& // Map[StringTrim]]& /@ NewLines
+		If[NewLine === EndOfFile,
+			Print["Warning: EndOfFile returned. Does the FIFO file exist?"];
+			,
+			If[!NewLine === "",
+				NewLines = NewLine // StringTrim // StringSplit[#, "\n"]& // Map[EchoLabel["FIFOServer.wl: "][#]&];
+				Print["Received ", Length[NewLines], " lines."];
+				
+				MyConfig["InputProcessor"][# // StringSplit[#, RegularExpression @ " (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"]& // DeleteCases[#, ""]& // Map[StringTrim]]& /@ NewLines
+			];
 		];
+		
+		If[MyConfig["QueueRun"],
+			Do[
+				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+			, {j, 20}];
+		];
+
 	];
 ];
 

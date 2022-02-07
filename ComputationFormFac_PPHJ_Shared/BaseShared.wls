@@ -7,12 +7,10 @@ Print["Importing configuration."];
 ConfigurationFile = FileNameJoin[{PPHJSharedDirectory, "BaseConfiguration.wls"}];
 Get[ConfigurationFile];
 
-PointPreprocessor := If[InexactNumberQ[#], 
-	Rationalize[SetPrecision[#, FloatInputSetPrecisionDigits], FloatInputRationalizePrecision],
-	#
-] &;
+RationalizeDigits[ex_, d_] := FromDigits[RealDigits[ex] // MapAt[#[[1 ;; Max[d, Length @ #]]]&, 1]];
+PointPreprocessor := If[InexactNumberQ[#], RationalizeDigits[SetPrecision[#, FloatInputSetPrecisionDigits], FloatInputRationalizeDigits], #]&;
 
-ReadArguments[commandsin__] := Module[{floatArgs, floatArgsOrig, intArgs, boolArgs, args},
+ReadArguments[commandsin_] := Module[{floatArgs, floatArgsOrig, intArgs, boolArgs, args},
 	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression // Map[PointPreprocessor];
 	floatArgsOrig = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression;
 	intArgs = StringReplace[commandsin[[8+1 ;; 8+5]], "e" -> "*10^"] // ToExpression;
@@ -64,8 +62,17 @@ ReadArguments[commandsin__] := Module[{floatArgs, floatArgsOrig, intArgs, boolAr
 	args
 ];
 
-ProcessingFunction[commandsin__] := Module[{args, outFilename, outString, FormFactors, FudgeFactor, argsAlt},
-	Print["Arguments received: " <> ToString[commandsin]];
+ProcessingFunctionParallel[commandsin_, kernel_] := Module[{},
+	If[$KernelID === kernel,
+		Print["Kernel ", $KernelID, " running commands: ", commandsin];
+		ProcessingFunction[commandsin];
+		,
+		Print["Skipping: ", $KernelID, " ", kernel];
+	];
+];
+
+ProcessingFunction[commandsin_] := Module[{args, outFilename, outString, FormFactors, FudgeFactor, argsAlt},
+	(*Print["Arguments received: " <> ToString[commandsin]];*)
 	
 	outString = "";
 	outString = StringJoin[outString, ToString[$ProcessID]<>"\\n"];
