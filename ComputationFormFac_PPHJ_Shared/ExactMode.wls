@@ -51,7 +51,7 @@ If[EnablePermutationHack,
 	KeepIntegralsInRAM = True;
 	Print["MaxPointsInRAM = 1;"];
 	MaxPointsInRAM = 1;
-	Print["Internal permutation scan of integral families is done at precision of ", PermutationHackRationalizePrecision, "."];
+	Print["Internal permutation scan of integral families is done at precision of ", PermutationHackRationalizeDigits, "."];
 ];
 
 PermutationHackPointPreprocessor := If[InexactNumberQ[#], RationalizeDigits[SetPrecision[#, FloatInputSetPrecisionDigits], PermutationHackRationalizeDigits], #] &;
@@ -426,6 +426,11 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		,
 		(* Form factors do not exist yet. Check if integrals are available. *)
 		PointMetaData = (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L";
+		If[!KeyExistsQ[ProcessedIntegralRAMCache, PointMetaData], 
+			(* Make sure the memory cache has an entry for the current runmode. *)
+			ProcessedIntegralRAMCache[PointMetaData] = Association[];
+		];
+		
 		ProcessedExportFileNames = Table[
 			perm -> FileNameJoin[{ProcessedIntegralsDirectory, PointMetaData, (GetPointHash @ MyPointPermuted[perm]) <> ".mx"}]	
 			, {perm, 6}] // Association;
@@ -435,7 +440,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			,
 			
 			(* We are keeping integrals in RAM. *)
-			FoundProcessedIntegrals = And @@ (KeyExistsQ[ProcessedIntegralRAMCache, {PointMetaData, #}]& /@ Values[MyPointPermutedHackAware]);
+			FoundProcessedIntegrals = And @@ (KeyExistsQ[ProcessedIntegralRAMCache[PointMetaData], #]& /@ Values[MyPointPermutedHackAware]);
 		];
 	
 		If[!KeepIntegralsInRAM,
@@ -477,7 +482,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			(* If integrals should be written to RAM. *)
 			If[KeepIntegralsInRAM,
 				KeyValueMap[
-					(ProcessedIntegralRAMCache[{PointMetaData, MyPointPermutedHackAware[#1]}] = {MyPointPermuted[#1], #2};) &
+					(ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[#1]] = {MyPointPermuted[#1], #2};) &
 					, IntegralsProcessedSplit
 				];
 			];
@@ -498,7 +503,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 				(* Use association *)
 				NumericalPointData = {
 					MyPoint,
-					Table[ProcessedIntegralRAMCache[{PointMetaData, MyPointPermutedHackAware[perm]}] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
+					Table[ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[perm]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
 				};
 			];
 		];
@@ -536,11 +541,13 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		Kyos -> KyOSReplace
 	};
 
-	If[Length[ProcessedIntegralRAMCache] > 6 * MaxPointsInRAM,
-		(* Clear a point from the cache. *)
-		Print["Clearing a point from memory."];
-		ProcessedIntegralRAMCache = ProcessedIntegralRAMCache[[7 ;; -1]];
-	];
+	Do[
+		If[Length[ProcessedIntegralRAMCache[k]] > 6 * MaxPointsInRAM,
+			(* Clear a point from the cache. *)
+			Print["Clearing a point from memory: ", k];
+			ProcessedIntegralRAMCache[k] = ProcessedIntegralRAMCache[k][[7 ;; -1]];
+		];
+	, {k, Keys @ ProcessedIntegralRAMCache}];
 
 	FormFactors = SeriesCoefficient[FormFactors /. CouplingReplacements, {eps, 0, args["eps_order"]}];
 	

@@ -75,7 +75,7 @@ ParallelMatrixExpansionCores = 1;
 
 (* Default expansion order for the one- and two-loop integrals *)
 ExpansionOrder1L = 100;
-ExpansionOrder2L = 75;
+ExpansionOrder2L = 60;
 
 (* Turn on/off exporting of the integrals *)
 WriteIntegralsToCacheBoundaryData = True;
