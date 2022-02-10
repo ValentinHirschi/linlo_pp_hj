@@ -16,9 +16,6 @@ TwoLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 (* Number of fifo listeners per instance. *)
 FIFOListeners = 4;
 
-(* Parallel FIFO file directory *)
-ParallelFIFODirectory = FileNameJoin[{PPHJSharedDirectory, "ParallelFIFO"}];
-
 (* --------------- Internal precision handling. --------------- *)
 
 (* Processing of command line parameters: *)

@@ -264,6 +264,12 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		Perm -> Thread[{s, t, pp4, mmt, mmb} -> ({s, t, pp4, mmt, mmb} /. SwapRelations[[1]][Perm] /. MyPointOrig // Map[PermutationHackPointPreprocessor])]
 	, {Perm, 6}] // Association;
 	MyPointPermutedHackAware = If[EnablePermutationHack === True, MyPointPermutedLowPrecision, MyPointPermuted];
+	If[EnablePermutationHack,
+		If[!Length[Values[MyPointPermutedLowPrecision] // DeleteDuplicates] === Length[Values[MyPointPermuted] // DeleteDuplicates],
+			Print["Unable to distinguish permutations within internal lookups. Please increase precision of the permutation hack."];
+			Abort[];
+		];
+	];
 	
 	MyPointTop = MyPoint // Map[#/MyPoint[mmt]&] // KeyTake[{s, t, pp4}];
 	Which[
