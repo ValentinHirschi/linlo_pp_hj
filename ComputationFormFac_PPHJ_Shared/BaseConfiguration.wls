@@ -87,4 +87,4 @@ WriteIntegralsToCacheProcessed = True;
 KeepIntegralsInRAM = False;
 
 (* Maximum number of points kept in RAM: *)
-MaxPointsInRAM = 4;
+MaxPointsInRAM = 1;
