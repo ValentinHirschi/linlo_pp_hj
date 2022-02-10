@@ -20,6 +20,7 @@ DynamicIntegralsTopDirectory = FileNameJoin[{DataDirectory, ExactModeDirectory, 
 ProcessedIntegralsDirectory = FileNameJoin[{DataDirectory, ExactModeDirectory, "Processed"}];
 
 ProcessedIntegralRAMCache = <||>;
+PermutationTagCounter = 0;
 
 TrimDataDirectory[fl_] := StringReplace[fl, DataDirectory -> ""];
 
@@ -441,6 +442,13 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			
 			(* We are keeping integrals in RAM. *)
 			FoundProcessedIntegrals = And @@ (KeyExistsQ[ProcessedIntegralRAMCache[PointMetaData], #]& /@ Values[MyPointPermutedHackAware]);
+			If[FoundProcessedIntegrals,
+				(* Check that all integrals have the same tag. If there are mixed tags, we don't buffer these results, as they are affected by the lookup precision. *)
+				If[!SameQ[Sequence @@ ((ProcessedIntegralRAMCache[PointMetaData][#][[3]] & /@ Values[MyPointPermutedHackAware]))],
+					Print["Warning: Mixed tags found in internal lookup table. Discarding buffered results and recomputing.!"];
+					FoundProcessedIntegrals = False;
+				];
+			];
 		];
 	
 		If[!KeepIntegralsInRAM,
@@ -481,8 +489,9 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			
 			(* If integrals should be written to RAM. *)
 			If[KeepIntegralsInRAM,
+			    PermutationTagCounter += 1;
 				KeyValueMap[
-					(ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[#1]] = {MyPointPermuted[#1], #2};) &
+					(ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[#1]] = {MyPointPermuted[#1], #2, PermutationTagCounter};) &
 					, IntegralsProcessedSplit
 				];
 			];
@@ -502,8 +511,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 				                                                                                                               
 				(* Use association *)
 				NumericalPointData = {
-					(* We take the point from the RAMCache since it is higher precision than the lookup precision, and less likely to cause a problem A/(A+delta) *)
-					(* This does not save us completely if the cache overwrote an older point by a new one within a small delta. *)
+					(* We take the point from the RAMCache since it is higher precision than the lookup precision, and won't cause a problem A/(A+delta) *)
 					ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[1]][[1]],
 					Table[ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[perm]][[2]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
 				};
