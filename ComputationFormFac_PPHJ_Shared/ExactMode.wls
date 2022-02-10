@@ -49,8 +49,8 @@ If[EnablePermutationHack,
 	Print["Permutation hack enabled."];
 	Print["KeepIntegralsInRAM = True;"];
 	KeepIntegralsInRAM = True;
-	Print["MaxPointsInRAM = 1;"];
-	MaxPointsInRAM = 1;
+(*	Print["MaxPointsInRAM = 1;"];
+	MaxPointsInRAM = 1;*)
 	Print["Internal permutation scan of integral families is done at precision of ", PermutationHackRationalizeDigits, "."];
 ];
 
