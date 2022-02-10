@@ -7,7 +7,7 @@ Print["Importing configuration."];
 ConfigurationFile = FileNameJoin[{PPHJSharedDirectory, "BaseConfiguration.wls"}];
 Get[ConfigurationFile];
 
-RationalizeDigits[ex_, d_] := FromDigits[RealDigits[ex] // MapAt[#[[1 ;; Min[d, Length @ #]]]&, 1]];
+RationalizeDigits[ex_, d_] :=  Sign[ex]FromDigits[RealDigits[ex] // MapAt[#[[1 ;; Min[d, Length @ #]]]&, 1]];
 PointPreprocessor := If[InexactNumberQ[#], RationalizeDigits[SetPrecision[#, FloatInputSetPrecisionDigits], FloatInputRationalizeDigits], #]&;
 
 ReadArguments[commandsin_] := Module[{floatArgs, floatArgsOrig, intArgs, boolArgs, args},
