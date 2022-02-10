@@ -21,8 +21,6 @@ SchedulerSwapRelations = <|1->{s->s,t->t},2->{s->t,t->s},3->{s->pp4-s-t,t->t},4-
 (* Low precision point preprocessor for purposes of identifying identical points to be sent to the parallel kernels. *)
 SchedulerPointPreprocessor := If[InexactNumberQ[#], RationalizeDigits[SetPrecision[#, FloatInputSetPrecisionDigits], SchedulerRationalizeDigits], #] &;
 
-EvaluationQueue = {};
-
 SchedulerProcessingFunction[commands__] := Module[{args, MyPointOrig, MyPointPermuted, SchedulerPreprocessor, CallKernel, ScheduleForKernel = "?", jobs},
 	(* Looks at the incoming point, and schedules it to the appropriate kernels. *)
 	
@@ -38,14 +36,15 @@ SchedulerProcessingFunction[commands__] := Module[{args, MyPointOrig, MyPointPer
 	, {proc, FIFOListeners}];
 	
 	If[ScheduleForKernel == "?",
-		Print["Point not encountered before. Scheduling on next kernel."];
+		Print["Point not encountered before: " <> ToString[MyPointOrig // Map[N], InputForm] <> ". Scheduling on next kernel."];
 		ScheduleForKernel = (KernelWrapper = Mod[KernelWrapper + 1, FIFOListeners]) + 1;
+		,
+		Print["Point (or permutations thereof) encountered before: " <> ToString[MyPointOrig // Map[N], InputForm] <> ". Scheduling on: ", ScheduleForKernel];
 	];
 	
-	Print["Scheduling point on kernel: ", ScheduleForKernel];
-	SchedulerMapper[ScheduleForKernel] = Join[SchedulerMapper[ScheduleForKernel], {MyPointPermuted[1]}] // DeleteDuplicates // Part[#, - Min[Length @ #, 10] ;; -1]&;
+	SchedulerMapper[ScheduleForKernel] = Join[SchedulerMapper[ScheduleForKernel], {MyPointPermuted[1]}] // DeleteDuplicates // Part[#, - Min[Length @ #, FIFOListeners * 100] ;; -1]&;
 	
-	(* Add to evaluation queue: *)		
+	(* Send to kernel: *)		
 	With[{pcommands = commands, pScheduleForKernel = ScheduleForKernel},
 		Parallel`Developer`Send[Reverse[Parallel`Protected`$sortedkernels][[ScheduleForKernel]], ProcessingFunctionParallel[pcommands, pScheduleForKernel]];
 		Parallel`Developer`ReceiveIfReady[Reverse[Parallel`Protected`$sortedkernels][[ScheduleForKernel]]];
@@ -85,7 +84,6 @@ With[{RunCommands = HoldForm[
 		
 		$DistributedContexts = None;
 		DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile];
-		SetSharedVariable[EvaluationQueue];
 		
 		ParallelEvaluate[ReleaseHold[RunCommands]];
 
