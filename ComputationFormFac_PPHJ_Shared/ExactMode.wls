@@ -505,7 +505,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 					(* We take the point from the RAMCache since it is higher precision than the lookup precision, and less likely to cause a problem A/(A+delta) *)
 					(* This does not save us completely if the cache overwrote an older point by a new one within a small delta. *)
 					ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[1]][[1]],
-					Table[ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[perm]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
+					Table[ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[perm]][[2]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
 				};
 			];
 		];
