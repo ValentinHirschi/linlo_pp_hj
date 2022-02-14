@@ -13,7 +13,7 @@ Get[FileNameJoin[{BaseDirectory, "Server", "FIFOServer.wl"}]];
 
 (* We admit an internal scheduler which listens to one FIFO file, and which always distributes jobs associated with the same point to the same parallel kernel *)
 SchedulerMapper = Association[];
-KernelWrapper = -1;
+KernelWrapper = 0;
 
 (* Todo: load this from Dependencies instead. However, then we need to make sure eps is initialized in the right order. *)
 SchedulerSwapRelations = <|1->{s->s,t->t},2->{s->t,t->s},3->{s->pp4-s-t,t->t},4->{s->s,t->pp4-s-t},5->{s->t,t->pp4-s-t},6->{s->pp4-s-t,t->s}|>;
@@ -21,7 +21,8 @@ SchedulerSwapRelations = <|1->{s->s,t->t},2->{s->t,t->s},3->{s->pp4-s-t,t->t},4-
 (* Low precision point preprocessor for purposes of identifying identical points to be sent to the parallel kernels. *)
 SchedulerPointPreprocessor := If[InexactNumberQ[#], RationalizeDigits[SetPrecision[#, FloatInputSetPrecisionDigits], SchedulerRationalizeDigits], #] &;
 
-SchedulerProcessingFunction[commands__] := Module[{args, MyPointOrig, MyPointPermuted, SchedulerPreprocessor, CallKernel, ScheduleForKernel = "?", jobs},
+SchedulerProcessingFunction[commands__] := Module[{args, MyPointOrig, MyPointPermuted, SchedulerPreprocessor, CallKernel, ScheduleForKernel = "?", jobs,
+	numParallelKernels = Length @ Parallel`Protected`$sortedkernels},
 	(* Looks at the incoming point, and schedules it to the appropriate kernels. *)
 	
 	Block[{(* Suppress printing *)Print}, args = ReadArguments[commands]];
@@ -33,11 +34,15 @@ SchedulerProcessingFunction[commands__] := Module[{args, MyPointOrig, MyPointPer
 		If[Or @@ (Table[MemberQ[SchedulerMapper[proc], MyPointPermuted[[perm]]], {perm, 6}]),
 			ScheduleForKernel = proc;
 		];
-	, {proc, FIFOListeners}];
+	, {proc, numParallelKernels}];
+	
+	(* Update kernelwrapper in case that some subkernel(s) dropped out. (Not fully clear if this works, and ideally all subkernels should stay alive.) *)
+	KernelWrapper = Mod[KernelWrapper - 1, numParallelKernels] + 1;
 	
 	If[ScheduleForKernel == "?",
 		Print["Point not encountered before: " <> ToString[MyPointOrig // Map[N], InputForm] <> ". Scheduling on next kernel."];
-		ScheduleForKernel = (KernelWrapper = Mod[KernelWrapper + 1, FIFOListeners]) + 1;
+		(* Add one to KernelWrapper *)
+		ScheduleForKernel = (KernelWrapper = Mod[KernelWrapper, Length @ Parallel`Protected`$sortedkernels] + 1);
 		,
 		Print["Point (or permutations thereof) encountered before: " <> ToString[MyPointOrig // Map[N], InputForm] <> ". Scheduling on: ", ScheduleForKernel];
 	];
