@@ -149,6 +149,7 @@ inline bool %(C_prefix)spphj_gghg_exists(const std::string& name) {
 }
 
 extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
+						const int & pphj_run_id,
 						const bool & do_debug,
 		                const bool & HEFT_selected,
 						const int & eval_mode,
@@ -216,6 +217,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
 	// The glu-glu channel is by convention #3	
 	const int selected_channel = 3;
 
+	ostr<<pphj_run_id<<" ";
 	ostr<<s<< " ";
     ostr<<t<<" ";
 	ostr<<mu_r<<" ";
@@ -237,7 +239,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
     ostr<<inc_ybmb<<" ";
     ostr<<inc_ybmt<<" ";
 	
-	ostr<<" "<<tmp_file;
+	ostr<<" "<<tmp_file<<"\n";
 
 	std::string command = ostr.str();
 	if (do_debug) { std::cout<<"About to call wrapper with: "<<command<<std::endl<< std::flush; }
