@@ -50,8 +50,6 @@ If[EnablePermutationHack,
 	Print["Permutation hack enabled."];
 	Print["KeepIntegralsInRAM = True;"];
 	KeepIntegralsInRAM = True;
-(*	Print["MaxPointsInRAM = 1;"];
-	MaxPointsInRAM = 1;*)
 	Print["Internal permutation scan of integral families is done at precision of ", PermutationHackRationalizeDigits, "."];
 ];
 
@@ -245,6 +243,8 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		RunMode = "topbottom";
 	];	
 	
+	Print["Calltag: ", args["calltag"]];
+	
 	Which[
 		args["amplitude_type"] == "gghg",
 		CurrAmplitudeType = args["amplitude_type"];
@@ -413,6 +413,19 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 	BenchMarkTimes = {};
 	AppendTo[BenchMarkTimes, {"Start", AbsoluteTime[]}];
 	
+	PointMetaData = (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L";
+		
+	(* Check if entry for current calltag *)
+	If[!KeyExistsQ[ProcessedIntegralRAMCache, args["calltag"]], 
+		(* Make sure the memory cache has an entry for the current runmode. *)
+		ProcessedIntegralRAMCache[args["calltag"]] = Association[];
+	];
+		
+	(* Make sure the memory cache has an entry for the current runmode. *)
+	If[!KeyExistsQ[ProcessedIntegralRAMCache[args["calltag"]], PointMetaData], 
+		ProcessedIntegralRAMCache[args["calltag"]][PointMetaData] = Association[];
+	];
+	
 	If[FormFactorsExist,
 		Print["Form factors already computed. Loading result."];
 		FormFactors = Import[FFExportFileName];
@@ -426,12 +439,6 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		
 		,
 		(* Form factors do not exist yet. Check if integrals are available. *)
-		PointMetaData = (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L";
-		If[!KeyExistsQ[ProcessedIntegralRAMCache, PointMetaData], 
-			(* Make sure the memory cache has an entry for the current runmode. *)
-			ProcessedIntegralRAMCache[PointMetaData] = Association[];
-		];
-		
 		ProcessedExportFileNames = Table[
 			perm -> FileNameJoin[{ProcessedIntegralsDirectory, PointMetaData, (GetPointHash @ MyPointPermuted[perm]) <> ".mx"}]	
 			, {perm, 6}] // Association;
@@ -441,10 +448,10 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			,
 			
 			(* We are keeping integrals in RAM. *)
-			FoundProcessedIntegrals = And @@ (KeyExistsQ[ProcessedIntegralRAMCache[PointMetaData], #]& /@ Values[MyPointPermutedHackAware]);
+			FoundProcessedIntegrals = And @@ (KeyExistsQ[ProcessedIntegralRAMCache[args["calltag"]][PointMetaData], #]& /@ Values[MyPointPermutedHackAware]);
 			If[FoundProcessedIntegrals,
 				(* Check that all integrals have the same tag. If there are mixed tags, we don't buffer these results, as they are affected by the lookup precision. *)
-				If[!SameQ[Sequence @@ ((ProcessedIntegralRAMCache[PointMetaData][#][[3]] & /@ Values[MyPointPermutedHackAware]))],
+				If[!SameQ[Sequence @@ ((ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][#][[3]] & /@ Values[MyPointPermutedHackAware]))],
 					Print["Warning: Mixed tags found in internal lookup table. Discarding buffered results and recomputing.!"];
 					FoundProcessedIntegrals = False;
 				];
@@ -491,7 +498,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			If[KeepIntegralsInRAM,
 			    PermutationTagCounter += 1;
 				KeyValueMap[
-					(ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[#1]] = {MyPointPermuted[#1], #2, PermutationTagCounter};) &
+					(ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][MyPointPermutedHackAware[#1]] = {MyPointPermuted[#1], #2, PermutationTagCounter};) &
 					, IntegralsProcessedSplit
 				];
 			];
@@ -512,8 +519,8 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 				(* Use association *)
 				NumericalPointData = {
 					(* We take the point from the RAMCache since it is higher precision than the lookup precision, and won't cause a problem A/(A+delta) *)
-					ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[1]][[1]],
-					Table[ProcessedIntegralRAMCache[PointMetaData][MyPointPermutedHackAware[perm]][[2]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
+					ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][MyPointPermutedHackAware[1]][[1]],
+					Table[ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][MyPointPermutedHackAware[perm]][[2]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
 				};
 			];
 		];
@@ -552,12 +559,12 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 	};
 
 	Do[
-		If[Length[ProcessedIntegralRAMCache[k]] > 6 * MaxPointsInRAM,
+		If[Length[ProcessedIntegralRAMCache[args["calltag"]][k]] > 6 * MaxPointsInRAM,
 			(* Clear a point from the cache. *)
 			Print["Clearing a point from memory: ", k];
-			ProcessedIntegralRAMCache[k] = ProcessedIntegralRAMCache[k][[7 ;; -1]];
+			ProcessedIntegralRAMCache[args["calltag"]][k] = ProcessedIntegralRAMCache[args["calltag"]][k][[7 ;; -1]];
 		];
-	, {k, Keys @ ProcessedIntegralRAMCache}];
+	, {k, Keys @ ProcessedIntegralRAMCache[args["calltag"]]}];
 
 	FormFactors = SeriesCoefficient[FormFactors /. CouplingReplacements, {eps, 0, args["eps_order"]}];
 	

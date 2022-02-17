@@ -10,7 +10,9 @@ Get[ConfigurationFile];
 RationalizeDigits[ex_, d_] := Sign[ex]FromDigits[RealDigits[ex] // MapAt[#[[1 ;; Min[d, Length @ #]]]&, 1]];
 PointPreprocessor := If[InexactNumberQ[#], RationalizeDigits[SetPrecision[#, FloatInputSetPrecisionDigits], FloatInputRationalizeDigits], #]&;
 
-ReadArguments[commandsin_] := Module[{floatArgs, floatArgsOrig, intArgs, boolArgs, args},
+ReadArguments[commandsin2_] := Module[{floatArgs, floatArgsOrig, intArgs, boolArgs, args, commandsin = commandsin2[[2 ;; -1]], calltag},
+	calltag = commandsin2[[1]] // ToExpression;
+	
 	floatArgs = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression // Map[PointPreprocessor];
 	floatArgsOrig = StringReplace[commandsin[[1 ;; 8]], "e" -> "*10^"] // ToExpression;
 	intArgs = StringReplace[commandsin[[8+1 ;; 8+5]], "e" -> "*10^"] // ToExpression;
@@ -18,6 +20,7 @@ ReadArguments[commandsin_] := Module[{floatArgs, floatArgsOrig, intArgs, boolArg
 	
 	(* We keep also the unprocessed input, in order to scan for permutations. *)
 	args = <| 
+	  "calltag" -> calltag,
 	  "s" -> floatArgs[[1]],
 	  "t" -> floatArgs[[2]],
 	  "s_orig" -> floatArgsOrig[[1]],

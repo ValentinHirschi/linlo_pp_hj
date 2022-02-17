@@ -14,7 +14,7 @@ OneLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 TwoLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 
 (* Number of fifo listeners per instance. *)
-FIFOListeners = 4;
+FIFOListeners = 1;
 
 (* --------------- Internal precision handling. --------------- *)
 
@@ -41,11 +41,11 @@ FIFOListeners = 4;
 		but since this is not possible, we employ this hack. *)
 		
 EnablePermutationHack = True;
-PermutationHackRationalizeDigits = 6;
+PermutationHackRationalizeDigits = 7;
 
 (* Precision of points for the scheduler. This does not affect the results,
 	but points are considered to be the same for scheduling purposes to the parallel kernels. *)
-SchedulerRationalizeDigits = 6;	
+SchedulerRationalizeDigits = 7;	
 
 (* --------------- Specific to the exact mode. --------------- *)
 
@@ -86,5 +86,5 @@ WriteIntegralsToCacheProcessed = True;
   *)
 KeepIntegralsInRAM = False;
 
-(* Maximum number of points kept in RAM: *)
-MaxPointsInRAM = 1;
+(* Maximum number of points kept in RAM per calltag: *)
+MaxPointsInRAM = 3;
