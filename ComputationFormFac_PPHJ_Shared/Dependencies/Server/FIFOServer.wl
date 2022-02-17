@@ -20,15 +20,20 @@ MyConfig = Association[{
 ConfigureFIFOServer[ConfOptions_] := (
 		MyConfig = Merge[{MyConfig, ConfOptions}, Last];
 		
-		If[!(TailProcess === Null), KillProcess[TailProcess]];
-		TailProcess = StartProcess[{"tail", "-f", MyConfig["InputFile"]}];
+(*		If[!(TailProcess === Null), KillProcess[TailProcess]];
+		TailProcess = StartProcess[{"tail", "-f", MyConfig["InputFile"]}];*)
 	);
 	
-WaitForInput[] := Module[{NewLine, TCResult, NewLines},
+WaitForInput[] := Module[{NewLine, TCResult, NewLines, fifoproc},
 	While[True,
-		Pause[MyConfig["RefreshTime"]];
-
-		NewLine = ReadString[TailProcess, EndOfBuffer];
+		fifoproc = StartProcess[{"cat", MyConfig["InputFile"]}];
+		While[ProcessStatus[fifoproc] === "Running", 
+			Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+			Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+		     Pause[MyConfig["RefreshTime"]];
+		 ];
+		NewLine=ReadString[fifoproc];
+		KillProcess[fifoproc];
 		
 		If[NewLine === EndOfFile,
 			Print["Warning: EndOfFile returned. Does the FIFO file exist?"];
@@ -41,11 +46,11 @@ WaitForInput[] := Module[{NewLine, TCResult, NewLines},
 			];
 		];
 		
-		If[MyConfig["QueueRun"],
+		(*If[MyConfig["QueueRun"],
 			Do[
 				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
 			, {j, 20}];
-		];
+		];*)
 
 	];
 ];
