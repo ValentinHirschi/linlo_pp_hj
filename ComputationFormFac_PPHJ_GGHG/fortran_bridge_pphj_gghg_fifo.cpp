@@ -244,7 +244,7 @@ extern"C" void %(C_prefix)sget_pphj_gghg_tensor_coefs_(
 	std::string command = ostr.str();
 	if (do_debug) { std::cout<<"About to call wrapper with: "<<command<<std::endl<< std::flush; }
 	int fd;
-	fd = open(mathematica_input_file.c_str(), O_WRONLY); 
+	fd = open(mathematica_input_file.c_str(), O_WRONLY | O_APPEND); 
 	write(fd, command.c_str(), strlen(command.c_str())); 
     close(fd);
         if (do_debug) { std::cout<<"Mathematica command sent and waiting for output."<<std::endl<<std::flush; }
