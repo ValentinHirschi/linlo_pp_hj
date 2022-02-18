@@ -20,23 +20,55 @@ MyConfig = Association[{
 ConfigureFIFOServer[ConfOptions_] := (
 		MyConfig = Merge[{MyConfig, ConfOptions}, Last];
 		
-(*		If[!(TailProcess === Null), KillProcess[TailProcess]];
-		TailProcess = StartProcess[{"tail", "-f", MyConfig["InputFile"]}];*)
+		FIFOMode = False;
+		If[KeyExistsQ[MyConfig, "InputFile"],
+			If[StringContainsQ[RunProcess[{"file", MyConfig["InputFile"]}]["StandardOutput"], "named pipe"],
+				FIFOMode = True;
+			];
+		];
+		Print["FIFOMode: ", FIFOMode];
+		
+		(*TailProcess = StartProcess[{"tail", "-f", MyConfig["InputFile"]}];*)
 	);
 	
-WaitForInput[] := Module[{NewLine, TCResult, NewLines, fifoproc},
+WaitForInput[] := Module[{NewLine, TCResult, NewLines, fifoproc, CurrLineNumber = 1, FileImported, LastModified},
 	While[True,
-		fifoproc = StartProcess[{"cat", MyConfig["InputFile"]}];
-		While[ProcessStatus[fifoproc] === "Running", 
-			Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
-			Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
-		     Pause[MyConfig["RefreshTime"]];
-		 ];
-		NewLine=ReadString[fifoproc];
-		KillProcess[fifoproc];
-		
+		If[FIFOMode,
+			fifoproc = StartProcess[{"cat", MyConfig["InputFile"]}];
+			While[ProcessStatus[fifoproc] === "Running", 
+				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+				Pause[MyConfig["RefreshTime"]];
+			];
+			
+			NewLine=ReadString[fifoproc];
+			KillProcess[fifoproc];
+			
+			,
+			
+			FileModifiedQ := With[{ModificationDate = FileDate[MyConfig["InputFile"], "Modification"]}, 
+				If[LastModified === ModificationDate, False, LastModified = ModificationDate; True]
+			];
+			
+			While[!FileModifiedQ,
+				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+				Pause[MyConfig["RefreshTime"]];
+			];
+			
+			Print["File change detected."];
+
+			FileImported = Import[MyConfig["InputFile"], "Text"] // StringTrim // StringSplit[#, "\n"]&;
+			NewLine = FileImported[[CurrLineNumber ;; -1]] // Map[StringTrim] // DeleteCases[#, ""]& // Riffle[#, "\n"]& // StringJoin;
+			
+			CurrLineNumber = (Length @ FileImported) + 1;
+	
+		];
+
 		If[NewLine === EndOfFile,
-			Print["Warning: EndOfFile returned. Does the FIFO file exist?"];
+			If[FIFOMode,
+				Print["Warning: EndOfFile returned. Does the file still exist?"];
+			];
 			,
 			If[!NewLine === "",
 				NewLines = NewLine // StringTrim // StringSplit[#, "\n"]& // Map[EchoLabel["FIFOServer.wl: "][#]&];
@@ -46,12 +78,7 @@ WaitForInput[] := Module[{NewLine, TCResult, NewLines, fifoproc},
 			];
 		];
 		
-		(*If[MyConfig["QueueRun"],
-			Do[
-				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
-			, {j, 20}];
-		];*)
-
+		Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
 	];
 ];
 

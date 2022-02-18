@@ -69,10 +69,10 @@ With[{RunCommands = HoldForm[
 		FIFOServer`ConfigureFIFOServer[{
 			"InputFile" -> FileNameJoin[{ScriptDirectory, fifoFilename}],
 			"InputProcessor" -> ProcessingFunction,
-			"RefreshTime" -> 0.25
+			"RefreshTime" -> 1
 			}];
 
-		Print["Tailing FIFO pipe."];
+		Print["Tailing file/pipe."];
 		FIFOServer`WaitForInput[];
 		,
 		
