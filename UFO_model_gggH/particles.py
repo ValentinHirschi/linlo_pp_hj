@@ -315,7 +315,7 @@ G__minus__ = G__plus__.anti()
 
 # Wavefunction renormalization
 
-n_coupling_orders = 16
+n_coupling_orders = 17
 b.loop_particles = [[[5,21]]]
 b.counterterm = { tuple([1,]+[0,]*n_coupling_orders+[0,]) :CTParam.bWcft_UV.value}
 

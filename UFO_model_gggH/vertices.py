@@ -137,6 +137,12 @@ GGGHHEFT = Vertex(name = 'GGGHHEFT',
 # ======================================================================
 # Effective fake vertex for ggH QCD-HEFT
 # ======================================================================
+GGHHEFT0LTREE = Vertex(name = 'GGHHEFT0LTREE',
+                particles = [ P.G, P.G, P.H ],
+                color = [ 'Identity(1,2)' ],
+                lorentz = [ L.ggHTensStruc1],
+                couplings = {(0,0):C.GGH_HEFT_0L_C1_TREE}
+                )
 GGHHEFT0L = Vertex(name = 'GGHHEFT0L',
                 particles = [ P.G, P.G, P.H ],
                 color = [ 'Identity(1,2)' ],

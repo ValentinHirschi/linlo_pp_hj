@@ -10,6 +10,10 @@ from function_library import complexconjugate, re, im, csc, sec, acsc, asec
 # ======================================================================
 # Infinite HEFT
 # ======================================================================
+GGH_HEFT_0L_C1_TREE = Coupling(name = 'GGH_HEFT_LO_C1_TREE',
+                value = '(CHEFT)*(complex(0,1))*GGH_HEFT_LO',
+                order = {'GGHEFTTREE':1,"QCD":2,"QED":1})
+
 GGH_HEFT_0L_C1 = Coupling(name = 'GGH_HEFT_LO_C1',
                 value = '(CHEFT)*(complex(0,1))*GGH_HEFT_LO',
                 order = {'GGHEFT':1,"QCD":2,"QED":1})

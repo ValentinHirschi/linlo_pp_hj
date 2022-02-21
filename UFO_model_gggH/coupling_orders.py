@@ -94,6 +94,11 @@ WW = CouplingOrder(name='WW',
                    perturbative_expansion=0)
 
 # HEFT COUPLING ORDERS
+GGHEFTTREE = CouplingOrder(name='GGHEFTTREE',
+                       hierarchy=1,
+                       expansion_order=-1,
+                       perturbative_expansion=0)
+
 GGHEFT = CouplingOrder(name='GGHEFT',
                        hierarchy=1,
                        expansion_order=-1,
