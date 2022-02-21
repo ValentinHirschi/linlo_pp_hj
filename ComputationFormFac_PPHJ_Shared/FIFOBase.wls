@@ -27,27 +27,39 @@ SchedulerProcessingFunction[commands__] := Module[{args, MyPointOrig, MyPointPer
 	
 	Block[{(* Suppress printing *)Print}, args = ReadArguments[commands]];
 	
-	MyPointOrig = {s -> args["s_orig"], t -> args["t_orig"], pp4 -> args["mh_orig"]^2} // Association;
-	MyPointPermuted = Table[Perm -> Thread[{s, t, pp4} -> ({s, t, pp4} /. SchedulerSwapRelations[Perm] /. MyPointOrig // Map[SchedulerPointPreprocessor])], {Perm, 6}] // Association;
+	If[args["calltag"] >= 0,
+		MyPointOrig = {s -> args["s_orig"], t -> args["t_orig"], pp4 -> args["mh_orig"]^2} // Association;
+		MyPointPermuted = Table[Perm -> Thread[{s, t, pp4} -> ({s, t, pp4} /. SchedulerSwapRelations[Perm] /. MyPointOrig // Map[SchedulerPointPreprocessor])], {Perm, 6}] // Association;
 	
-	Do[
-		If[Or @@ (Table[MemberQ[SchedulerMapper[proc], MyPointPermuted[[perm]]], {perm, 6}]),
-			ScheduleForKernel = proc;
+		Do[
+			If[Or @@ (Table[MemberQ[SchedulerMapper[proc], MyPointPermuted[[perm]]], {perm, 6}]),
+				ScheduleForKernel = proc;
+			];
+		, {proc, numParallelKernels}];
+	
+		(* Update kernelwrapper in case that some subkernel(s) dropped out. (Not fully clear if this works, and ideally all subkernels should stay alive.) *)
+		KernelWrapper = Mod[KernelWrapper - 1, numParallelKernels] + 1;
+	
+		If[ScheduleForKernel == "?",
+			Print["Point not encountered before: " <> ToString[MyPointOrig // Map[N], InputForm] <> ". Scheduling on next kernel."];
+			(* Add one to KernelWrapper *)
+			ScheduleForKernel = (KernelWrapper = Mod[KernelWrapper, Length @ Parallel`Protected`$sortedkernels] + 1);
+			,
+			Print["Point (or permutations thereof) encountered before: " <> ToString[MyPointOrig // Map[N], InputForm] <> ". Scheduling on: ", ScheduleForKernel];
 		];
-	, {proc, numParallelKernels}];
 	
-	(* Update kernelwrapper in case that some subkernel(s) dropped out. (Not fully clear if this works, and ideally all subkernels should stay alive.) *)
-	KernelWrapper = Mod[KernelWrapper - 1, numParallelKernels] + 1;
-	
-	If[ScheduleForKernel == "?",
-		Print["Point not encountered before: " <> ToString[MyPointOrig // Map[N], InputForm] <> ". Scheduling on next kernel."];
-		(* Add one to KernelWrapper *)
-		ScheduleForKernel = (KernelWrapper = Mod[KernelWrapper, Length @ Parallel`Protected`$sortedkernels] + 1);
+		SchedulerMapper[ScheduleForKernel] = Join[SchedulerMapper[ScheduleForKernel], {MyPointPermuted[1]}] // DeleteDuplicates // Part[#, - Min[Length @ #, FIFOListeners * 100] ;; -1]&;
+		
 		,
-		Print["Point (or permutations thereof) encountered before: " <> ToString[MyPointOrig // Map[N], InputForm] <> ". Scheduling on: ", ScheduleForKernel];
+		
+		ScheduleForKernel = Abs[args["calltag"]];
+		Print["Negative calltag. Scheduling to fixed kernel: ", ScheduleForKernel];
+		
+		If[Length[Parallel`Protected`$sortedkernels] < ScheduleForKernel,
+			Print["Kernel does not exist. Scheduling instead to kernel 1."];
+			ScheduleForKernel = 1;
+		];
 	];
-	
-	SchedulerMapper[ScheduleForKernel] = Join[SchedulerMapper[ScheduleForKernel], {MyPointPermuted[1]}] // DeleteDuplicates // Part[#, - Min[Length @ #, FIFOListeners * 100] ;; -1]&;
 	
 	(* Send to kernel: *)		
 	With[{pcommands = commands, pScheduleForKernel = ScheduleForKernel},
