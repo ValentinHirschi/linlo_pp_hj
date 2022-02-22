@@ -36,8 +36,10 @@ WaitForInput[] := Module[{NewLine, TCResult, NewLines, fifoproc, CurrLineNumber 
 		If[FIFOMode,
 			fifoproc = StartProcess[{"cat", MyConfig["InputFile"]}];
 			While[ProcessStatus[fifoproc] === "Running", 
-				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
-				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+				If[ParallelMode === "Single" && FIFOListeners > 1,
+					Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+					Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+				];
 				Pause[MyConfig["RefreshTime"]];
 			];
 			
@@ -46,13 +48,16 @@ WaitForInput[] := Module[{NewLine, TCResult, NewLines, fifoproc, CurrLineNumber 
 			
 			,
 			
-			FileModifiedQ := With[{ModificationDate = FileDate[MyConfig["InputFile"], "Modification"]}, 
+			FileModifiedQ := If[!FileExistsQ[MyConfig["InputFile"]], False, With[{ModificationDate = FileDate[MyConfig["InputFile"], "Modification"]}, 
 				If[LastModified === ModificationDate, False, LastModified = ModificationDate; True]
-			];
+			]];
 			
 			While[!FileModifiedQ,
-				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
-				Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+				If[ParallelMode === "Single" && FIFOListeners > 1,
+					Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+					Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+				];
+				
 				Pause[MyConfig["RefreshTime"]];
 			];
 			
@@ -78,7 +83,9 @@ WaitForInput[] := Module[{NewLine, TCResult, NewLines, fifoproc, CurrLineNumber 
 			];
 		];
 		
-		Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+		If[ParallelMode === "Single" && FIFOListeners > 1,
+			Quiet[Parallel`Developer`QueueRun[], Parallel`Developer`QueueRun::hmm];
+		];
 	];
 ];
 

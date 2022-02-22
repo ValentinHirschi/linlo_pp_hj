@@ -88,31 +88,62 @@ With[{RunCommands = HoldForm[
 		FIFOServer`WaitForInput[];
 		,
 		
-		(* Configure parallel kernels *)
-		Print["Launching ", FIFOListeners," instances."];
+		Which[
+			ParallelMode === "Single",
+			(* Configure parallel kernels *)
+			Print["Launching ", FIFOListeners," instances with one listening thread."];
 		
-		SetSystemOptions["ParallelOptions" -> "RelaunchFailedKernels" -> False];
-		SetSystemOptions["ParallelOptions" -> "RecoveryMode" -> "Abandon"];
+			SetSystemOptions["ParallelOptions" -> "RelaunchFailedKernels" -> False];
+			SetSystemOptions["ParallelOptions" -> "RecoveryMode" -> "Abandon"];
 		
-		LaunchKernels[FIFOListeners];
-		ParallelEvaluate[Print["Started kernel: ", $KernelID];];
+			LaunchKernels[FIFOListeners];
+			ParallelEvaluate[Print["Started kernel: ", $KernelID];];
 		
-		SchedulerMapper = Association @ Table[proc -> {}, {proc, FIFOListeners}];
+			SchedulerMapper = Association @ Table[proc -> {}, {proc, FIFOListeners}];
 		
-		$DistributedContexts = None;
-		DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile];
+			$DistributedContexts = None;
+			DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile];
 		
-		ParallelEvaluate[ReleaseHold[RunCommands]];
+			ParallelEvaluate[ReleaseHold[RunCommands]];
 
-		(* Load FIFO server and process from main fifo file. *)
-		FIFOServer`ConfigureFIFOServer[{
-			"InputFile" -> FileNameJoin[{ScriptDirectory, fifoFilename}],
-			"InputProcessor" -> SchedulerProcessingFunction,
-			"RefreshTime" -> 0.25,
-			"QueueRun" -> True
-			}];
+			(* Load FIFO server and process from main fifo file. *)
+			FIFOServer`ConfigureFIFOServer[{
+				"InputFile" -> FileNameJoin[{ScriptDirectory, fifoFilename}],
+				"InputProcessor" -> SchedulerProcessingFunction,
+				"RefreshTime" -> 0.25,
+				"QueueRun" -> True
+				}];
 
-		Print["Tailing FIFO pipe."];
-		FIFOServer`WaitForInput[];
+			Print["Tailing FIFO pipe: ", FileNameJoin[{ScriptDirectory, fifoFilename}]];
+			FIFOServer`WaitForInput[];
+			
+			, ParallelMode === "Multi",
+			Print["Launching ", FIFOListeners," instances with multiple listening threads."];
+			
+			LaunchKernels[FIFOListeners];
+			$DistributedContexts = None;
+			DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile];
+			
+			ParallelEvaluate[
+				ReleaseHold[RunCommands];
+				Get[FileNameJoin[{BaseDirectory, "Server", "FIFOServer.wl"}]];
+			
+				Module[{MyFIFOFile = FileNameJoin[{ScriptDirectory, fifoFilename}] // StringReplace[#, a__ ~~ "." ~~ FileExtension[#] :> a <> "_" <> ToString[$KernelID] <> "." <> FileExtension[#]]&},
+					(* Load FIFO server and process from main fifo file. *)
+					FIFOServer`ConfigureFIFOServer[{
+						"InputFile" -> MyFIFOFile,
+						"InputProcessor" -> ProcessingFunction,
+						"RefreshTime" -> 1
+						}];
+
+					Print["Tailing file/pipe: ", MyFIFOFile];
+					
+					FIFOServer`WaitForInput[];
+				];
+			];
+			
+			, True,
+			Print["Parallel mode not recognized. Put ParallelMode = \"Multi\" or \"Single\" in BaseConfiguration.wls"];
+		];
 	];
 ];
