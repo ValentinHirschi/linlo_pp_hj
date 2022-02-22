@@ -132,6 +132,7 @@ c         Assign nloop=-1 to the meaning of HEFT 0l
           integer pphj_eps_order
           logical do_debug
           integer pphj_run_id
+          integer input_id
 
           inc_ytqcd = .False.
           inc_ytmb = .False.
@@ -142,6 +143,7 @@ c         Assign nloop=-1 to the meaning of HEFT 0l
           pphj_nf = NINT(MDL_PPHJ_nf)
           do_debug = (MDL_PPHJ_DEBUG.ge.0.0d0)
           pphj_run_id = NINT(MDL_PPHJ_RUN_ID)
+          input_id = NINT(MDL_PPHJ_INPUT_ID)
           eval_mode = 0
           pphj_eps_order = 0
 
@@ -158,7 +160,7 @@ c         Assign nloop=-1 to the meaning of HEFT 0l
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 0-loop HEFT tensor'
-             call %(C_prefix)sget_pphj_qqhg_tensor_coefs(pphj_run_id,do_debug,
+             call %(C_prefix)sget_pphj_qqhg_tensor_coefs(input_id,pphj_run_id,do_debug,
      &           HEFTselected, eval_mode, selected_channel, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
@@ -207,6 +209,7 @@ c         Assign nloop=-2 to the meaning of HEFT 1l
           integer pphj_eps_order
           logical do_debug
           integer pphj_run_id
+          integer input_id
 
           inc_ytqcd = .False.
           inc_ytmb = .False.
@@ -217,6 +220,7 @@ c         Assign nloop=-2 to the meaning of HEFT 1l
           eval_mode = 0
           pphj_nf = NINT(MDL_PPHJ_nf)
           pphj_run_id = NINT(MDL_PPHJ_RUN_ID)
+          input_id = NINT(MDL_PPHJ_INPUT_ID)
           do_debug = (MDL_PPHJ_DEBUG.ge.0.0d0)
           pphj_eps_order = 0
 
@@ -233,7 +237,7 @@ c         Assign nloop=-2 to the meaning of HEFT 1l
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 1-loop HEFT tensor'
-             call %(C_prefix)sget_pphj_qqhg_tensor_coefs(pphj_run_id,do_debug,
+             call %(C_prefix)sget_pphj_qqhg_tensor_coefs(input_id,pphj_run_id,do_debug,
      &           HEFTselected, eval_mode, selected_channel, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
@@ -281,6 +285,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           integer pphj_nf, pphj_eps_order
           logical do_debug
           integer pphj_run_id
+          integer input_id
 
           inc_ytqcd = MDL_QQGH1LQCD_yt.gt.0.0d0
           inc_ytmb = MDL_QQGH1LQCD_yt.gt.0.0d0
@@ -290,6 +295,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           inc_ybmt = MDL_QQGH1LQCD_yb.gt.0.0d0
           pphj_nf = NINT(MDL_PPHJ_nf)
           pphj_run_id = NINT(MDL_PPHJ_RUN_ID)
+          input_id = NINT(MDL_PPHJ_INPUT_ID)
           do_debug = (MDL_PPHJ_DEBUG.ge.0.0d0)
           eval_mode = NINT(MDL_QQGH1LQCD_eval_mode)
           pphj_eps_order = NINT(MDL_QQGH1LQCD_eps_order)
@@ -306,7 +312,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 1-loop tensor'
-             call %(C_prefix)sget_pphj_qqhg_tensor_coefs(pphj_run_id,do_debug,
+             call %(C_prefix)sget_pphj_qqhg_tensor_coefs(input_id,pphj_run_id,do_debug,
      &           HEFTselected, eval_mode, selected_channel, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,
@@ -354,6 +360,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           integer pphj_nf, pphj_eps_order
           logical do_debug
           integer pphj_run_id
+          integer input_id
 
           inc_ytqcd = MDL_QQGH2LQCD_ytqcd.gt.0.0d0
           inc_ytmb = MDL_QQGH2LQCD_ytmb.gt.0.0d0
@@ -365,6 +372,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
           eval_mode = NINT(MDL_QQGH2LQCD_eval_mode)
           pphj_nf = NINT(MDL_PPHJ_nf)
           pphj_run_id = NINT(MDL_PPHJ_RUN_ID)
+          input_id = NINT(MDL_PPHJ_INPUT_ID)
           do_debug = (MDL_PPHJ_DEBUG.ge.0.0d0)
 
           ! We parse PQQG to the C routine
@@ -379,7 +387,7 @@ c         Assign nloop=1 to the meaning of QCD 0l
      &                      FOUNDIT)
           if (.NOT.FOUNDIT) THEN
 c             Write(*,*) 'Recomputing 2-loop tensor'
-             call %(C_prefix)sget_pphj_qqhg_tensor_coefs(pphj_run_id,do_debug,
+             call %(C_prefix)sget_pphj_qqhg_tensor_coefs(input_id,pphj_run_id,do_debug,
      &           HEFTselected, eval_mode, selected_channel, pphj_eps_order, nloop, pphj_nf,
      &           inc_ytqcd, inc_ytmb, inc_ytmt,
      &           inc_ybqcd, inc_ybmb, inc_ybmt,

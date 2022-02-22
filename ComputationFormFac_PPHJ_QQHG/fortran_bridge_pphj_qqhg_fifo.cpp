@@ -151,6 +151,7 @@ inline bool %(C_prefix)spphj_qqhg_exists(const std::string& name) {
 
 
 extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs_(
+						const int & input_ID,
 						const int & pphj_run_id,
 						const bool & do_debug,
 		                const bool & HEFT_selected,
@@ -192,10 +193,16 @@ extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs_(
 	ostr.precision(17);
 	ostr<<scientific;
 
-	std::string mathematica_input_file("%(path_prefix)s/mathematicaRoutines/mathematica_input.fifo");
+    std::ostringstream mm_file_path_ss;
+	if (input_ID>0) {
+		mm_file_path_ss<<"%(path_prefix)s/mathematicaRoutines/mathematica_input_"<<input_ID<<".fifo";
+	} else {
+		mm_file_path_ss<<"%(path_prefix)s/mathematicaRoutines/mathematica_input.fifo";
+	}
+	std::string mathematica_input_file = mm_file_path_ss.str();
 
 	if (!%(C_prefix)spphj_qqhg_exists(mathematica_input_file)) {
-	   std::cerr<<"Could Not find 'mathematica_input.fifo'. Place it somewhere as defined in fortran_bridge_pphj_qqhg_fifo.cpp"<<std::endl;
+	   std::cerr<<"Could Not find '"<<mathematica_input_file<<"'. Place it somewhere as defined in fortran_bridge_pphj_qqhg_fifo.cpp"<<std::endl;
        exit (EXIT_FAILURE);
 	}
 
