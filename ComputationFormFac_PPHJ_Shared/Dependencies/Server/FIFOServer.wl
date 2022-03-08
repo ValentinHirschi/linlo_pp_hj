@@ -48,9 +48,11 @@ WaitForInput[] := Module[{NewLine, TCResult, NewLines, fifoproc, CurrLineNumber 
 			
 			,
 			
-			FileModifiedQ := If[!FileExistsQ[MyConfig["InputFile"]], False, With[{ModificationDate = FileDate[MyConfig["InputFile"], "Modification"]}, 
-				If[LastModified === ModificationDate, False, LastModified = ModificationDate; True]
-			]];
+			FileModifiedQ := If[!FileExistsQ[MyConfig["InputFile"]], False, 
+				With[{ModificationLines = (*RunProcess[{"wc", "-l", MyConfig["InputFile"]}]["StandardOutput"]*)FileSize[MyConfig["InputFile"]]}, 
+					If[LastModified === ModificationLines, False, LastModified = ModificationLines; True]
+				]
+			];
 			
 			While[!FileModifiedQ,
 				If[ParallelMode === "Single" && FIFOListeners > 1,
