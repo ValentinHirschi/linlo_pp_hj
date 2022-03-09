@@ -106,7 +106,7 @@ With[{RunCommands = HoldForm[
 			SchedulerMapper = Association @ Table[proc -> {}, {proc, FIFOListeners}];
 		
 			$DistributedContexts = None;
-			DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile];
+			DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile, FIFOFileDirectoryFinal];
 		
 			ParallelEvaluate[ReleaseHold[RunCommands]];
 
@@ -126,7 +126,7 @@ With[{RunCommands = HoldForm[
 			
 			LaunchKernels[FIFOListeners];
 			$DistributedContexts = None;
-			DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile];
+			DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile, FIFOFileDirectoryFinal];
 			
 			ParallelEvaluate[
 				ReleaseHold[RunCommands];
