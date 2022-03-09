@@ -224,7 +224,8 @@ extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs_(
     ostr<<inc_ybmb<<" ";
     ostr<<inc_ybmt<<" ";
 
-	string tmp_file = "%(path_prefix)s/mathematicaRoutines/"+%(C_prefix)spphj_qqhg_uuid::%(C_prefix)sgenerate_uuid_v4()+".tmp";
+	//string tmp_file = "%(path_prefix)s/mathematicaRoutines/"+%(C_prefix)spphj_qqhg_uuid::%(C_prefix)sgenerate_uuid_v4()+".tmp";
+	string tmp_file = "/tmp/"+%(C_prefix)spphj_qqhg_uuid::%(C_prefix)sgenerate_uuid_v4()+".tmp";
 	ostr<<" "<<tmp_file;
 	//ostr<<" 2>&1 > "<<tmp_file;
 	ostr<<" 2>&1 > /dev/null";
