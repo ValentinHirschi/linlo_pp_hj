@@ -3,8 +3,6 @@
 
 BaseDirectory = FileNameJoin[{PPHJSharedDirectory, "Dependencies"}];
 
-If[!ValueQ[EchoLabel], EchoLabel[lab_] = Echo];
-
 Print["Importing configuration."];
 ConfigurationFile = FileNameJoin[{PPHJSharedDirectory, "BaseConfiguration.wls"}];
 Get[ConfigurationFile];

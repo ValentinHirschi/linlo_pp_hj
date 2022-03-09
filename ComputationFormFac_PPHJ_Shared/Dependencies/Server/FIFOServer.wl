@@ -9,6 +9,8 @@ WriteOutputLine::usage = "Write line to the output file."
 
 Begin["`Private`"];
 
+If[!ValueQ[EchoLabel], EchoLabel[lab_] = Echo];
+
 (*TailProcess = Null;*)
 MyConfig = Association[{
 	"RefreshTime" -> 1,
