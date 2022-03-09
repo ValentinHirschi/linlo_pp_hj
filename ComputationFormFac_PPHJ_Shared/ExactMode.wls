@@ -527,6 +527,8 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		
 		Print["Plugging results into form factors.."];
 		
+		Export["/home/martijn/Desktop/temp.mx", NumericalPointData];
+		
 		(* {1-loop ffs, 2-loop ffs} *)
 		If[args["nloop"] === 1,
 			FormFactors = FFs1Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 2] &;

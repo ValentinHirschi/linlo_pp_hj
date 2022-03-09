@@ -8,6 +8,8 @@ If[Length[$ScriptCommandLine] > 3,
 	IndexingFile = $ScriptCommandLine[[4]];
 ];
 
+SetOptions[$Output, FormatType -> OutputForm];
+
 Get[FileNameJoin[{PPHJSharedDirectory, "BaseShared.wls"}]];
 Get[FileNameJoin[{BaseDirectory, "Server", "FIFOServer.wl"}]];
 
@@ -128,7 +130,7 @@ With[{RunCommands = HoldForm[
 				ReleaseHold[RunCommands];
 				Get[FileNameJoin[{BaseDirectory, "Server", "FIFOServer.wl"}]];
 			
-				Module[{MyFIFOFile = FileNameJoin[{ScriptDirectory, fifoFilename}] // StringReplace[#, a__ ~~ "." ~~ FileExtension[#] :> a <> "_" <> ToString[$KernelID] <> "." <> FileExtension[#]]&},
+				Module[{MyFIFOFile = FileNameJoin[{If[ValueQ[FIFOFileDirectory], FIFOFileDirectory, ScriptDirectory], fifoFilename}] // StringReplace[#, a__ ~~ "." ~~ FileExtension[#] :> a <> "_" <> ToString[$KernelID] <> "." <> FileExtension[#]]&},
 					(* Load FIFO server and process from main fifo file. *)
 					FIFOServer`ConfigureFIFOServer[{
 						"InputFile" -> MyFIFOFile,
