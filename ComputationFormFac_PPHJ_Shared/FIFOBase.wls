@@ -13,6 +13,8 @@ SetOptions[$Output, FormatType -> OutputForm];
 Get[FileNameJoin[{PPHJSharedDirectory, "BaseShared.wls"}]];
 Get[FileNameJoin[{BaseDirectory, "Server", "FIFOServer.wl"}]];
 
+FIFOFileDirectoryFinal = If[ValueQ[FIFOFileDirectory], FIFOFileDirectory, ScriptDirectory];
+
 (* We admit an internal scheduler which listens to one FIFO file, and which always distributes jobs associated with the same point to the same parallel kernel *)
 SchedulerMapper = Association[];
 KernelWrapper = 0;
@@ -81,7 +83,7 @@ With[{RunCommands = HoldForm[
 		
 		(* Load FIFO server and process from main fifo file. *)
 		FIFOServer`ConfigureFIFOServer[{
-			"InputFile" -> FileNameJoin[{ScriptDirectory, fifoFilename}],
+			"InputFile" -> FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}],
 			"InputProcessor" -> ProcessingFunction,
 			"RefreshTime" -> 1
 			}];
@@ -110,7 +112,7 @@ With[{RunCommands = HoldForm[
 
 			(* Load FIFO server and process from main fifo file. *)
 			FIFOServer`ConfigureFIFOServer[{
-				"InputFile" -> FileNameJoin[{ScriptDirectory, fifoFilename}],
+				"InputFile" -> FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}],
 				"InputProcessor" -> SchedulerProcessingFunction,
 				"RefreshTime" -> 0.25,
 				"QueueRun" -> True
@@ -130,7 +132,7 @@ With[{RunCommands = HoldForm[
 				ReleaseHold[RunCommands];
 				Get[FileNameJoin[{BaseDirectory, "Server", "FIFOServer.wl"}]];
 			
-				Module[{MyFIFOFile = FileNameJoin[{If[ValueQ[FIFOFileDirectory], FIFOFileDirectory, ScriptDirectory], fifoFilename}] // StringReplace[#, a__ ~~ "." ~~ FileExtension[#] :> a <> "_" <> ToString[$KernelID] <> "." <> FileExtension[#]]&},
+				Module[{MyFIFOFile = FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}] // StringReplace[#, a__ ~~ "." ~~ FileExtension[#] :> a <> "_" <> ToString[$KernelID] <> "." <> FileExtension[#]]&},
 					(* Load FIFO server and process from main fifo file. *)
 					FIFOServer`ConfigureFIFOServer[{
 						"InputFile" -> MyFIFOFile,
