@@ -83,7 +83,7 @@ With[{RunCommands = HoldForm[
 		
 		(* Load FIFO server and process from main fifo file. *)
 		FIFOServer`ConfigureFIFOServer[{
-			"InputFile" -> FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}],
+			"InputFile" -> AbsoluteFileName[FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}]],
 			"InputProcessor" -> ProcessingFunction,
 			"RefreshTime" -> 1
 			}];
@@ -112,7 +112,7 @@ With[{RunCommands = HoldForm[
 
 			(* Load FIFO server and process from main fifo file. *)
 			FIFOServer`ConfigureFIFOServer[{
-				"InputFile" -> FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}],
+				"InputFile" -> AbsoluteFileName[FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}]],
 				"InputProcessor" -> SchedulerProcessingFunction,
 				"RefreshTime" -> 0.25,
 				"QueueRun" -> True
@@ -132,7 +132,7 @@ With[{RunCommands = HoldForm[
 				ReleaseHold[RunCommands];
 				Get[FileNameJoin[{BaseDirectory, "Server", "FIFOServer.wl"}]];
 			
-				Module[{MyFIFOFile = FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}] // StringReplace[#, a__ ~~ "." ~~ FileExtension[#] :> a <> "_" <> ToString[$KernelID] <> "." <> FileExtension[#]]&},
+				Module[{MyFIFOFile = AbsoluteFileName[FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}] // StringReplace[#, a__ ~~ "." ~~ FileExtension[#] :> a <> "_" <> ToString[$KernelID] <> "." <> FileExtension[#]]&]},
 					(* Load FIFO server and process from main fifo file. *)
 					FIFOServer`ConfigureFIFOServer[{
 						"InputFile" -> MyFIFOFile,
