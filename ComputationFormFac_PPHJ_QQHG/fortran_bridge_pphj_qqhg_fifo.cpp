@@ -153,6 +153,7 @@ inline bool %(C_prefix)spphj_qqhg_exists(const std::string& name) {
 extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs_(
 						const int & input_ID,
 						const int & pphj_run_id,
+						const int & pphj_batch_id,
 						const bool & do_debug,
 		                const bool & HEFT_selected,
 						const int & eval_mode,
@@ -195,11 +196,21 @@ extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs_(
 
     std::ostringstream mm_file_path_ss;
 	if (input_ID>0) {
-		//mm_file_path_ss<<"%(path_prefix)s/mathematicaRoutines/mathematica_input_"<<input_ID<<".fifo";
-		mm_file_path_ss<<"/tmp/mathematica_input_"<<input_ID<<".fifo";
+		if (pphj_batch_id < -1) {
+			mm_file_path_ss<<"%(path_prefix)s/mathematicaRoutines/mathematica_input_"<<input_ID<<".fifo";
+		} else if (pphj_batch_id == -1) {
+			mm_file_path_ss<<"/tmp/mathematica_input_"<<input_ID<<".fifo";
+		} else {
+			mm_file_path_ss<<"/tmp/batch_"<<pphj_batch_id<<"/mathematica_input_"<<input_ID<<".fifo";
+		}
 	} else {
-		//mm_file_path_ss<<"%(path_prefix)s/mathematicaRoutines/mathematica_input.fifo";
-		mm_file_path_ss<<"/tmp/mathematica_input.fifo";
+		if (pphj_batch_id < -1) {
+			mm_file_path_ss<<"%(path_prefix)s/mathematicaRoutines/mathematica_input.fifo";
+		} else if (pphj_batch_id == -1) {
+			mm_file_path_ss<<"/tmp/mathematica_input.fifo";
+		} else {
+			mm_file_path_ss<<"/tmp/batch_"<<pphj_batch_id<<"/mathematica_input.fifo";
+		}
 	}
 	std::string mathematica_input_file = mm_file_path_ss.str();
 
@@ -208,8 +219,14 @@ extern"C" void %(C_prefix)sget_pphj_qqhg_tensor_coefs_(
        exit (EXIT_FAILURE);
 	}
 
-	//string tmp_file = "%(path_prefix)s/mathematicaRoutines/"+%(C_prefix)spphj_qqhg_uuid::%(C_prefix)sgenerate_uuid_v4()+"_tmp.fifo";
-	string tmp_file = "/tmp/"+%(C_prefix)spphj_qqhg_uuid::%(C_prefix)sgenerate_uuid_v4()+"_tmp.fifo";
+	string tmp_file;
+	if (pphj_batch_id < -1) {
+		tmp_file = "%(path_prefix)s/mathematicaRoutines/"+%(C_prefix)spphj_qqhg_uuid::%(C_prefix)sgenerate_uuid_v4()+"_tmp.fifo";
+	} else if (pphj_batch_id == -1) {
+		tmp_file = "/tmp/"+%(C_prefix)spphj_qqhg_uuid::%(C_prefix)sgenerate_uuid_v4()+"_tmp.fifo";
+	} else {
+		tmp_file = "/tmp/batch_"+std::to_string(pphj_batch_id)+"/"+%(C_prefix)spphj_qqhg_uuid::%(C_prefix)sgenerate_uuid_v4()+"_tmp.fifo";
+	}
 
 	// Create the output fifo file
 	//std::string mkfifo("mkfifo "+tmp_file);
