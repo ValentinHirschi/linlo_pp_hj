@@ -7,6 +7,18 @@ Print["Importing configuration."];
 ConfigurationFile = FileNameJoin[{PPHJSharedDirectory, "BaseConfiguration.wls"}];
 Get[ConfigurationFile];
 
+SetOptions[OpenAppend, PageWidth -> Infinity]
+
+AppendKernelIDToFileName[fn_] := If[
+	$KernelID === 0,
+		ExpandFileName[fn],
+		ExpandFileName[fn // StringReplace[#, a__ ~~ "." ~~ FileExtension[#] :> a <> "_" <> ToString[$KernelID] <> "." <> FileExtension[#]]&]
+	];
+	
+If[!ShortLogFN === "",
+	PutAppend[{DateString[], "INIT"}, AppendKernelIDToFileName[ShortLogFN], CharacterEncoding -> "UTF-8"];
+];
+
 RationalizeDigits[ex_, d_] := Sign[ex]FromDigits[RealDigits[ex] // MapAt[#[[1 ;; Min[d, Length @ #]]]&, 1]];
 PointPreprocessor := If[InexactNumberQ[#], RationalizeDigits[SetPrecision[#, FloatInputSetPrecisionDigits], FloatInputRationalizeDigits], #]&;
 
@@ -76,6 +88,11 @@ ProcessingFunctionParallel[commandsin_, kernel_] := Module[{},
 
 ProcessingFunction[commandsin_] := Module[{args, outFilename, outString, FormFactors, FudgeFactor, argsAlt},
 	(*Print["Arguments received: " <> ToString[commandsin]];*)
+	
+	(* Export arguments and sent to log file. *)
+	If[!ShortLogFN === "",
+		PutAppend[{DateString[], "IN", commandsin}, AppendKernelIDToFileName[ShortLogFN], CharacterEncoding -> "UTF-8"]
+	];
 	
 	outString = "";
 	outString = StringJoin[outString, ToString[$ProcessID]<>"\\n"];

@@ -10,6 +10,11 @@ If[Length[$ScriptCommandLine] > 3,
 
 SetOptions[$Output, FormatType -> OutputForm];
 
+ShortLogFN = "";
+If[Length[$ScriptCommandLine] > 5,
+    If[ Not[$ScriptCommandLine[[6]]=="default"], ShortLogFN = $ScriptCommandLine[[6]]; ];
+];
+
 Get[FileNameJoin[{PPHJSharedDirectory, "BaseShared.wls"}]];
 Get[FileNameJoin[{BaseDirectory, "Server", "FIFOServer.wl"}]];
 
@@ -87,7 +92,7 @@ With[{RunCommands = HoldForm[
 		
 		(* Load FIFO server and process from main fifo file. *)
 		FIFOServer`ConfigureFIFOServer[{
-			"InputFile" -> AbsoluteFileName[FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}]],
+			"InputFile" -> ExpandFileName[FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}]],
 			"InputProcessor" -> ProcessingFunction,
 			"RefreshTime" -> 1
 			}];
@@ -110,13 +115,13 @@ With[{RunCommands = HoldForm[
 			SchedulerMapper = Association @ Table[proc -> {}, {proc, FIFOListeners}];
 		
 			$DistributedContexts = None;
-			DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile, FIFOFileDirectoryFinal];
+			DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile, FIFOFileDirectoryFinal, ShortLogFN];
 		
 			ParallelEvaluate[ReleaseHold[RunCommands]];
 
 			(* Load FIFO server and process from main fifo file. *)
 			FIFOServer`ConfigureFIFOServer[{
-				"InputFile" -> AbsoluteFileName[FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}]],
+				"InputFile" -> ExpandFileName[FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}]],
 				"InputProcessor" -> SchedulerProcessingFunction,
 				"RefreshTime" -> 0.25,
 				"QueueRun" -> True
@@ -130,13 +135,13 @@ With[{RunCommands = HoldForm[
 			
 			LaunchKernels[FIFOListeners];
 			$DistributedContexts = None;
-			DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile, FIFOFileDirectoryFinal];
+			DistributeDefinitions[fifoFilename, ScriptPath, ScriptName, ScriptDirectory, PPHJSharedDirectory, ExactModeDirectory, IndexingFile, FIFOFileDirectoryFinal, ShortLogFN];
 			
 			ParallelEvaluate[
 				ReleaseHold[RunCommands];
 				Get[FileNameJoin[{BaseDirectory, "Server", "FIFOServer.wl"}]];
 			
-				Module[{MyFIFOFile = AbsoluteFileName[FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}] // StringReplace[#, a__ ~~ "." ~~ FileExtension[#] :> a <> "_" <> ToString[$KernelID] <> "." <> FileExtension[#]]&]},
+				Module[{MyFIFOFile = AppendKernelIDToFileName[FileNameJoin[{FIFOFileDirectoryFinal, fifoFilename}]]},
 					(* Load FIFO server and process from main fifo file. *)
 					FIFOServer`ConfigureFIFOServer[{
 						"InputFile" -> MyFIFOFile,

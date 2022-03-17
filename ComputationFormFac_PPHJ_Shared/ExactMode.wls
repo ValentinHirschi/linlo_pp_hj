@@ -576,5 +576,9 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 	Print[BenchMarkTimes[[-1,1]] <> " - " <> BenchMarkTimes[[1,1]], " = ", FloatToString @ (BenchMarkTimes[[-1,2]] - BenchMarkTimes[[1,2]])];
 	Print[];
 	
+	If[!ShortLogFN === "",
+		PutAppend[{DateString[], "OUT", "Recycled FF's: " <> ToString[FormFactorsExist], MyPoint}, AppendKernelIDToFileName[ShortLogFN], CharacterEncoding -> "UTF-8"]
+	];
+	
 	FormFactors
 ];
