@@ -1145,6 +1145,14 @@ PPHJ_INPUT_ID = Parameter(name='PPHJ_INPUT_ID',
                      lhablock='PPHJ',
                      lhacode=[10013])
 
+PPHJ_BATCH_ID = Parameter(name='PPHJ_BATCH_ID',
+                     nature='external',
+                     type='real',
+                     value=-1.0,
+                     texname='\\text{PPHJ_BATCH_ID}',
+                     lhablock='PPHJ',
+                     lhacode=[10014])
+
 # ----
 
 GGGH1LQCD_yt = Parameter(name='GGGH1LQCD_yt',
