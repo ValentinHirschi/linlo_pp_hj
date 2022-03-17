@@ -2,10 +2,10 @@
 (* ::Package:: *)
 
 If[Length[$ScriptCommandLine] > 2,
-	ExactModeDirectory = $ScriptCommandLine[[3]];
+    If[ Not[$ScriptCommandLine[[3]]=="default"], ExactModeDirectory = $ScriptCommandLine[[3]]; ];
 ];
 If[Length[$ScriptCommandLine] > 3,
-	IndexingFile = $ScriptCommandLine[[4]];
+    If[ Not[$ScriptCommandLine[[4]]=="default"], IndexingFile = $ScriptCommandLine[[4]]; ];
 ];
 
 SetOptions[$Output, FormatType -> OutputForm];
@@ -14,6 +14,10 @@ Get[FileNameJoin[{PPHJSharedDirectory, "BaseShared.wls"}]];
 Get[FileNameJoin[{BaseDirectory, "Server", "FIFOServer.wl"}]];
 
 FIFOFileDirectoryFinal = If[ValueQ[FIFOFileDirectory], FIFOFileDirectory, ScriptDirectory];
+
+If[Length[$ScriptCommandLine] > 4,
+    If[ Not[$ScriptCommandLine[[5]]=="default"], FIFOFileDirectoryFinal = $ScriptCommandLine[[5]]; ];
+];
 
 (* We admit an internal scheduler which listens to one FIFO file, and which always distributes jobs associated with the same point to the same parallel kernel *)
 SchedulerMapper = Association[];
