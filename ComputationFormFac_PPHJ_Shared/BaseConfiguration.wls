@@ -13,8 +13,10 @@ TwoLoopFudgeFactor["gghg"] = 1/(2 Sqrt[2]);
 OneLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 TwoLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 
+TwoLoopFudgeFactor["abelian"] = 1/(Sqrt[2]);
+
 (* Number of fifo listeners per instance. *)
-FIFOListeners = 64;
+FIFOListeners = 1;
 ParallelMode = "Multi"; (* Single: listen to a single mathematica_input.fifo file. Multi: listen to multiple mathematica_input_X.fifo files, each subkernels essentially behaving like a separate process. *)
 
 (* --------------- Internal precision handling. --------------- *)
@@ -41,7 +43,7 @@ ParallelMode = "Multi"; (* Single: listen to a single mathematica_input.fifo fil
 		would call the appropriate channel in the unpermuted configuration, or would add u to the argument list,
 		but since this is not possible, we employ this hack. *)
 		
-EnablePermutationHack = True;
+EnablePermutationHack = False;
 PermutationHackRationalizeDigits = 7;
 
 (* Precision of points for the scheduler. This does not affect the results,

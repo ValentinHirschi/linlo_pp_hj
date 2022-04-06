@@ -49,11 +49,15 @@ ReadArguments[commandsin2_] := Module[{floatArgs, floatArgsOrig, intArgs, boolAr
 	  "nloop" -> intArgs[[1]],
 	  "eval_mode" -> intArgs[[2]],
 	  
-	  (* 1, 2, 3 indicate the quark channels. 4 indicates the gluons. *)
+	  (* 1, 2, 3 indicate the quark channels. 4 indicates the gluons, 5 the abelian expression provided by Hjalte. *)
 	  "selected_channel" -> intArgs[[3]] + 1,
-	  If[intArgs[[3]] <= 2,
+	  Which[
+	      intArgs[[3]] <= 2,
 	      "amplitude_type" -> "qqhg",
-	      "amplitude_type" -> "gghg"
+	      intArgs[[3]] == 3,
+	      "amplitude_type" -> "gghg",
+	      intArgs[[3]] == 4,
+	      "amplitude_type" -> "abelian"
 	  ],
 	  
 	  "eps_order" -> intArgs[[4]],
@@ -68,6 +72,7 @@ ReadArguments[commandsin2_] := Module[{floatArgs, floatArgsOrig, intArgs, boolAr
 	|>;
 	
 	Print["Arguments translated: "];
+	
 	Do[Print @ arg, {arg, Normal @ args}];
 	
 	If[! MatchQ[args["eval_mode"], 0],
@@ -88,7 +93,6 @@ ProcessingFunctionParallel[commandsin_, kernel_] := Module[{},
 
 ProcessingFunction[commandsin_] := Module[{args, outFilename, outString, FormFactors, FudgeFactor, argsAlt},
 	(*Print["Arguments received: " <> ToString[commandsin]];*)
-	
 	(* Export arguments and sent to log file. *)
 	If[!ShortLogFN === "",
 		PutAppend[{DateString[], "IN", commandsin}, AppendKernelIDToFileName[ShortLogFN], CharacterEncoding -> "UTF-8"]
@@ -99,7 +103,6 @@ ProcessingFunction[commandsin_] := Module[{args, outFilename, outString, FormFac
 	outString = StringJoin[outString, ToString[Join[{ScriptName},commandsin]]<>"\\n"];
 	
 	outFilename = commandsin[[-1]];	
-
 	args = ReadArguments[commandsin];
 	
 	If[args["eval_mode"] > 0,

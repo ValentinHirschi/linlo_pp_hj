@@ -120,9 +120,10 @@ Module[{MyFile},
 			{FFs1Loop[CurrAmpType, "topbottom"], FFs2Loop[CurrAmpType, "topbottom"]} = Import[MyFile];
 		];
 		,
-		{CurrAmpType, {"gghg", "qqhg1", "qqhg2", "qqhg3"}}
+		{CurrAmpType, {"gghg", "qqhg1", "qqhg2", "qqhg3", "abelian"}}
 	];
 ];
+
 
 (* Linker for points on the grid and their associated file. *)
 IndexingData = Association[
@@ -232,7 +233,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		CurrAmplitudeType, FormFactorsExist,
 		FoundProcessedIntegrals, IntegralsProcessedSplit, IntegralsProcessedSinglePerm, ImportProcessedIntegrals, ProcessIntegrals, BenchMarkTimes = {}, PointMetaData,
 		MyPointPermutedLowPrecision, MyPointPermutedHackAware},
-		
+
 	Which[
 		Chop[args["mb"]] === 0, 
 		Print["Running in \"top\" mode, with mb = 0."];
@@ -246,12 +247,12 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 	Print["Calltag: ", args["calltag"]];
 	
 	Which[
-		args["amplitude_type"] == "gghg",
-		CurrAmplitudeType = args["amplitude_type"];
-		
-		, args["amplitude_type"] == "qqhg",
+		args["amplitude_type"] == "qqhg",
 		(* Add channel index from argument. *)
 		CurrAmplitudeType = args["amplitude_type"] <> ToString[args["selected_channel"]];
+		
+		, True,
+		CurrAmplitudeType = args["amplitude_type"];
 	];
 		
 	MyPoint = {s -> args["s"], t -> args["t"], pp4 -> args["mh"]^2, mmt -> args["mt"]^2, mmb -> args["mb"]^2} // Association;
