@@ -15,6 +15,8 @@ TwoLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 
 TwoLoopFudgeFactor["abelian"] = 1/(Sqrt[2]);
 
+(*FFMode = "Abelian";*)
+
 (* Number of fifo listeners per instance. *)
 FIFOListeners = 1;
 ParallelMode = "Multi"; (* Single: listen to a single mathematica_input.fifo file. Multi: listen to multiple mathematica_input_X.fifo files, each subkernels essentially behaving like a separate process. *)

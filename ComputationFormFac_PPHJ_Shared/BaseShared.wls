@@ -51,14 +51,19 @@ ReadArguments[commandsin2_] := Module[{floatArgs, floatArgsOrig, intArgs, boolAr
 	  
 	  (* 1, 2, 3 indicate the quark channels. 4 indicates the gluons, 5 the abelian expression provided by Hjalte. *)
 	  "selected_channel" -> intArgs[[3]] + 1,
+	  
 	  Which[
-	      intArgs[[3]] <= 2,
-	      "amplitude_type" -> "qqhg",
-	      intArgs[[3]] == 3,
-	      "amplitude_type" -> "gghg",
-	      intArgs[[3]] == 4,
-	      "amplitude_type" -> "abelian"
-	  ],
+		  ToLowerCase[FFMode] === "abelian",
+		     "amplitude_type" -> "abelian",
+		  (*ToLowerCase[FFMode] === "full",*)
+		  True,
+   		  Which[
+   		      intArgs[[3]] <= 2,
+   		      "amplitude_type" -> "qqhg",
+   		      intArgs[[3]] == 3,
+   		      "amplitude_type" -> "gghg"
+   		  ]
+		],
 	  
 	  "eps_order" -> intArgs[[4]],
 	  "nf" -> intArgs[[5]],
