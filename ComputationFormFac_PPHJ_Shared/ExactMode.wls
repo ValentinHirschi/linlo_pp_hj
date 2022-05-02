@@ -59,7 +59,6 @@ If[KeepIntegralsInRAM === True,
 	Print["KeepIntegralsInRAM is enabled. Dynamic indexing is turned off. Only form factors are written to file-system cache."];
 	DynamicIndexing = False;
 	WriteIntegralsToCacheBoundaryData = False;
-	WriteIntegralsToCacheProcessed = False;
 	
 	If[DynamicIndexing === True,
 		Print[];
@@ -226,13 +225,14 @@ PlugNumericsIntoExpression[ex_, point_, maxepsord_] := Module[{Tmp},
 ];
 
 ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted, MyPointTop, MyPointBottom, NewPointComputedProcessed, AllDataComputed = {},
-		ComputeNext, DataFilesExported, RunModes, NumericalPointData, FFs1LoopNum, FFs2LoopNum, NewPointComputed, ProcessedExportFileNames, FFExportFileName, CouplingReplacements, RunMode,
+		ComputeNext, DataFilesExported, ComputeParts, NumericalPointData, FFs1LoopNum, FFs2LoopNum, NewPointComputed, FFExportFileName, FFExportFileNameGen, CouplingReplacements, RunMode,
 		(* Variable definitions copied over from the original script. *)
 		floatArgs, intArgs, boolArgs, FormFactors,
 		Compute1L = True (* Note that the 1L integrals also appear in the 2-loop form factors, due to the UV subtraction. *), Compute2L, ComputeHe,
-		CurrAmplitudeType, FormFactorsExist,
+		CurrAmplitudeType, FormFactorsExist, FormFactorsExistTop, FormFactorsExistBottom,
 		FoundProcessedIntegrals, IntegralsProcessedSplit, IntegralsProcessedSinglePerm, ImportProcessedIntegrals, ProcessIntegrals, BenchMarkTimes = {}, PointMetaData,
-		MyPointPermutedLowPrecision, MyPointPermutedHackAware},
+		MyPointPermutedLowPrecision, MyPointPermutedHackAware, ComputeAndExportFFs,
+		MyPointHe1, MyPointHe2},
 
 	Which[
 		Chop[args["mb"]] === 0, 
@@ -281,19 +281,35 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 	
 	Compute2L = args["nloop"] > 1;
 	ComputeHe = (args["nloop"] > 1) && (RunMode === "topbottom");
-	
-	Which[
-		RunMode === "top", RunModes = {"top"};,
-		RunMode === "topbottom", RunModes = {"top", "bottom"};
-	];
-	
+
 	Print["Processing point: ", MyPoint];
 	
 	(* Since the script can be called multiple times for the same point with different options for eps order and mu, we check if the FormFactors are already in the data directory. *)
-	FFExportFileName = FileNameJoin[{DataDirectory, ExactModeDirectory, "FormFactors", 
-		RunMode <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> CurrAmplitudeType, (GetPointHash @ MyPoint) <> ".mx"}];
-		
-	FormFactorsExist = (FileExistsQ[FFExportFileName] && ReuseFFs);
+	FFExportFileNameGen[fftype_] := FileNameJoin[{DataDirectory, ExactModeDirectory, "FormFactors", fftype <> "-" <> ToString[args["nloop"]] <> "L" <> "-" <> CurrAmplitudeType, (GetPointHash @ MyPoint) <> ".mx"}];
+	FFExportFileName = FFExportFileNameGen[RunMode];
+	
+	FormFactorsExistTop = (FileExistsQ[FFExportFileNameGen["top"]] && ReuseFFs);
+	FormFactorsExistBottom = (FileExistsQ[FFExportFileNameGen["bottom"]] && ReuseFFs);
+	
+	
+	
+	Which[
+		RunMode === "top",
+		FormFactorsExist = FormFactorsExistTop,
+			
+		RunMode === "topbottom",
+		FormFactorsExist = FormFactorsExistBottom
+	];
+	
+	Which[
+		RunMode === "top", ComputeParts = {"top"};,
+		RunMode === "topbottom", 
+			If[!FormFactorsExistTop || (!RecycleFFTop === True),
+				ComputeParts = {"top", "bottom"};
+				,
+				ComputeParts = {"bottom"};
+			];
+	];
 	
 	ComputeNext[ComputeType_, ComputePoint_] := Module[{MyHash, NearestPointFile, NearestPointData, FExport},
 			Print["Computing " <> ComputeType <> " integrals.."];
@@ -372,33 +388,36 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 	
 	ProcessIntegrals[] := Module[{},
 		If[Compute1L, 
-			If[MemberQ[RunModes, "top"], 
+			If[MemberQ[ComputeParts, "top"], 
 				ComputeNext["1L", MyPointTop];
 				AppendTo[AllDataComputed, NewPointComputed // ConvertDiffExpResults1L // Last // ConvertNotationFinal[#, {Fam1L -> "O"}] & // ReplaceAll[MS["O", a__] :> MS[{"O", "top"}, a]]];
 			];
-			If[MemberQ[RunModes, "bottom"], 
+			If[MemberQ[ComputeParts, "bottom"], 
 				ComputeNext["1L", MyPointBottom];
 				AppendTo[AllDataComputed, NewPointComputed // ConvertDiffExpResults1L // Last // ConvertNotationFinal[#, {Fam1L -> "O"}] & // ReplaceAll[MS["O", a__] :> MS[{"O", "bottom"}, a]]];
 			];
 		];
 	
 		If[Compute2L, 
-			If[MemberQ[RunModes, "top"], 
+			If[MemberQ[ComputeParts, "top"], 
 				ComputeNext["2L", MyPointTop];
 				AppendTo[AllDataComputed, NewPointComputed // ConvertDiffExpResults2L // Last // ConvertNotationFinal[#, TLNamingReps] & // ReplaceAll[MS[lab_, a__] :> MS[{lab, "top"}, a]]];
 			];
-			If[MemberQ[RunModes, "bottom"], 
+			If[MemberQ[ComputeParts, "bottom"], 
 				ComputeNext["2L", MyPointBottom];
 				AppendTo[AllDataComputed, NewPointComputed // ConvertDiffExpResults2L // Last // ConvertNotationFinal[#, TLNamingReps] & // ReplaceAll[MS[lab_, a__] :> MS[{lab, "bottom"}, a]]];
 			];
 		];
 	
 		If[ComputeHe, 
-			If[And @@ (MemberQ[RunModes, #] & /@ {"top", "bottom"}),
-				ComputeNext["He", MyPoint];
+			If[MemberQ[ComputeParts, "bottom"],
+				MyPointHe1 = MyPoint // Map[# / MyPoint[mmt]&];
+				MyPointHe2 = {s, t, pp4, mmt, mmb} -> ((* Flipped! *){s, t, pp4, mmb, mmt} /. Normal[MyPoint]) // Thread // Association // Map[# / MyPoint[mmt]&];
+										
+				ComputeNext["He", MyPointHe1];
 				AppendTo[AllDataComputed, NewPointComputed // ConvertDiffExpResultsHe // Last  // ConvertNotationFinal[#, {FamHe -> "He"}] & // ReplaceAll[MS["He", a__] :> MS[{"He", "top", "bottom"}, a]]];
 				
-				ComputeNext["He", {s, t, pp4, mmt, mmb} -> ((* Flipped! *){s, t, pp4, mmb, mmt} /. Normal[MyPoint]) // Thread];
+				ComputeNext["He", MyPointHe2];
 				AppendTo[AllDataComputed, NewPointComputed // ConvertDiffExpResultsHe // Last  // ConvertNotationFinal[#, {FamHe -> "He"}] & // ReplaceAll[MS["He", a__] :> MS[{"He", "bottom", "top"}, a]]];
 			]; 
 		];
@@ -414,7 +433,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 	BenchMarkTimes = {};
 	AppendTo[BenchMarkTimes, {"Start", AbsoluteTime[]}];
 	
-	PointMetaData = (StringJoin @ RunModes) <> "-" <> ToString[args["nloop"]] <> "L";
+	PointMetaData = RunMode <> "-" <> ToString[args["nloop"]] <> "L";
 		
 	(* Check if entry for current calltag *)
 	If[!KeyExistsQ[ProcessedIntegralRAMCache, args["calltag"]], 
@@ -439,33 +458,17 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		AppendTo[BenchMarkTimes, {"FormFactorsImported", AbsoluteTime[]}];
 		
 		,
-		(* Form factors do not exist yet. Check if integrals are available. *)
-		ProcessedExportFileNames = Table[
-			perm -> FileNameJoin[{ProcessedIntegralsDirectory, PointMetaData, (GetPointHash @ MyPointPermuted[perm]) <> ".mx"}]	
-			, {perm, 6}] // Association;
-			
-		If[!KeepIntegralsInRAM,
-			FoundProcessedIntegrals = And @@ (FileExistsQ /@ Values[ProcessedExportFileNames]);
-			,
-			
-			(* We are keeping integrals in RAM. *)
-			FoundProcessedIntegrals = And @@ (KeyExistsQ[ProcessedIntegralRAMCache[args["calltag"]][PointMetaData], #]& /@ Values[MyPointPermutedHackAware]);
-			If[FoundProcessedIntegrals,
-				(* Check that all integrals have the same tag. If there are mixed tags, we don't buffer these results, as they are affected by the lookup precision. *)
-				If[!SameQ[Sequence @@ ((ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][#][[3]] & /@ Values[MyPointPermutedHackAware]))],
-					Print["Warning: Mixed tags found in internal lookup table. Discarding buffered results and recomputing.!"];
-					FoundProcessedIntegrals = False;
-				];
+		(* We are keeping integrals in RAM. *)
+		FoundProcessedIntegrals = And @@ (KeyExistsQ[ProcessedIntegralRAMCache[args["calltag"]][PointMetaData], #]& /@ Values[MyPointPermutedHackAware]);
+		If[FoundProcessedIntegrals,
+			(* Check that all integrals have the same tag. If there are mixed tags, we don't buffer these results, as they are affected by the lookup precision. *)
+			If[!SameQ[Sequence @@ ((ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][#][[3]] & /@ Values[MyPointPermutedHackAware]))],
+				Print["Warning: Mixed tags found in internal lookup table. Discarding buffered results and recomputing.!"];
+				FoundProcessedIntegrals = False;
 			];
-		];
-	
-		If[!KeepIntegralsInRAM,
-			Print["Locations of the processed integrals: "];
-			ProcessedExportFileNames // Map[Print[#]&];
 		];
 		
 		Print["Found match for processed integrals: ", FoundProcessedIntegrals];
-		Print["Reusing processed integrals: ", ReuseProcessedIntegrals];
 		Print[];
 		Print["Location of the form factors:", FFExportFileName];
 		Print["Form factors exist: ", FormFactorsExist];
@@ -475,33 +478,22 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		
 		AppendTo[BenchMarkTimes, {"SearchCompleted", AbsoluteTime[]}];
 		
-		If[!(FoundProcessedIntegrals && ReuseProcessedIntegrals),
+		If[!(FoundProcessedIntegrals),
 			(* Integrals not available or re-use is off. *)
 			(* The below function sets the variable NumericalPointData *)
 			ProcessIntegrals[];
 			
 			AppendTo[BenchMarkTimes, {"IntegralsProcessed", AbsoluteTime[]}];
 			
-			(* Split up all the processed integrals into separate files, for each respective permutation. *)
+			(* Split up all the processed integrals into separate parts, for each respective permutation. *)
 			IntegralsProcessedSplit = Table[
 				perm -> Select[AllDataComputed, MatchQ[#[[1]], MS[_, _, perm /. SwapRelations[[3]], _]]&] /. MS[a_, b_, perm_, c_] :> MS[a, b, c]
 			, {perm, 6}] // Association;
 			
-			(* If integrals should be written to physical cache. *)
-			If[!WriteIntegralsToCacheProcessed === False,
-				KeyValueMap[
-					ThreadSafeExport[ProcessedExportFileNames[#1], {MyPointPermuted[#1], #2}]&
-					, IntegralsProcessedSplit
-				];
-			];
-			
-			(* If integrals should be written to RAM. *)
-			If[KeepIntegralsInRAM,
-			    PermutationTagCounter += 1;
-				KeyValueMap[
-					(ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][MyPointPermutedHackAware[#1]] = {MyPointPermuted[#1], #2, PermutationTagCounter};) &
-					, IntegralsProcessedSplit
-				];
+			PermutationTagCounter += 1;
+			KeyValueMap[
+				(ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][MyPointPermutedHackAware[#1]] = {MyPointPermuted[#1], #2, PermutationTagCounter};) &
+				, IntegralsProcessedSplit
 			];
 			
 			AppendTo[BenchMarkTimes, {"IntegralsWritten", AbsoluteTime[]}];
@@ -509,38 +501,63 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			,
 			
 			(* Integrals are found, and we are re-using results *)
-			If[!KeepIntegralsInRAM,
-				(* Import from file-system*)
-				NumericalPointData = {
-					MyPoint,
-					Table[Import[ProcessedExportFileNames[perm]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
-				};
-				,
-				                                                                                                               
-				(* Use association *)
-				NumericalPointData = {
-					(* We take the point from the RAMCache since it is higher precision than the lookup precision, and won't cause a problem A/(A+delta) *)
-					ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][MyPointPermutedHackAware[1]][[1]],
-					Table[ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][MyPointPermutedHackAware[perm]][[2]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
-				};
-			];
+			NumericalPointData = {
+				(* We take the point from the RAMCache since it is higher precision than the lookup precision, and is less likely to cause a problem A/(A+delta) *)
+				ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][MyPointPermutedHackAware[1]][[1]],
+				Table[ProcessedIntegralRAMCache[args["calltag"]][PointMetaData][MyPointPermutedHackAware[perm]][[2]] /. MS[a_, b_, c_] :> MS[a, b, perm /. SwapRelations[[3]], c], {perm, 6}] // Flatten
+			};
 		];
 		
 		Print["Plugging results into form factors.."];
 		
-		(* {1-loop ffs, 2-loop ffs} *)
-		If[args["nloop"] === 1,
-			FormFactors = FFs1Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 2] &;
+		ComputeAndExportFFs[fftype_] := Module[{ZeroIfPartial, ffload},
+			If[fftype === "topbottompartial", 
+				ffload = "topbottom",
+				ffload = fftype;			
+			];
+			
+			ZeroIfPartial[ex_] := If[
+				fftype === "topbottompartial",
+				(* Remove top integrals, we'll add them from the recycled result. *)
+				ex /. MS[{l_, "top"}, r___] :> 0, 
+				(* Otherwise, return the default expression. *)
+				ex
+			];
+		
+			If[args["nloop"] === 1,
+				FormFactors = FFs1Loop[CurrAmplitudeType, ffload] // ZeroIfPartial // PlugNumericsIntoExpression[#, NumericalPointData, 2] &;
+			];
+			
+			If[args["nloop"] === 2,
+				FormFactors = FFs2Loop[CurrAmplitudeType, ffload] // ZeroIfPartial // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
+			];
+			
+			ThreadSafeExport[FFExportFileNameGen[fftype], {MyPoint, FormFactors}];
 		];
-		If[args["nloop"] === 2,
-			FormFactors = FFs2Loop[CurrAmplitudeType, RunMode] // PlugNumericsIntoExpression[#, NumericalPointData, 0] &;
+		
+		Which[
+			RunMode === "top",
+			ComputeAndExportFFs["top"];
+			
+			, RunMode === "topbottom",
+			If[RecycleFFTop === True,
+				If[!FormFactorsExistTop,
+					ComputeAndExportFFs["top"];
+				];
+				ComputeAndExportFFs["topbottompartial"];
+				
+				(* Add top contribution *)
+				FormFactors = FormFactors + (Import[FFExportFileNameGen["top"]] // If[#[[1, 0]] === Association, #[[2]], #]&);
+				ThreadSafeExport[FFExportFileNameGen["topbottom"], {MyPoint, FormFactors}];
+				,
+				
+				(* No recycling happening. *)
+				ComputeAndExportFFs["topbottom"];
+			]
 		];
+		
 		
 		AppendTo[BenchMarkTimes, {"FormFactorsComputed", AbsoluteTime[]}];
-		
-		ThreadSafeExport[FFExportFileName, {MyPoint, FormFactors}];
-		
-		AppendTo[BenchMarkTimes, {"FormFactorsExported", AbsoluteTime[]}];
 	];
 	
 	(* Form factors are loaded into the appropriate variable. Plug in the free parameters: *)

@@ -13,6 +13,7 @@ TwoLoopFudgeFactor["gghg"] = 1/(2 Sqrt[2]);
 OneLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 TwoLoopFudgeFactor["qqhg"] = 1/(Sqrt[2]);
 
+OneLoopFudgeFactor["abelian"] = 1/(Sqrt[2]);
 TwoLoopFudgeFactor["abelian"] = 1/(Sqrt[2]);
 
 (*FFMode = "Abelian";*)
@@ -57,11 +58,11 @@ SchedulerRationalizeDigits = 7;
 (* Search in the ExactMode data directory for computed points, and add new points dynamically to the index. *)
 DynamicIndexing = True;
 
-(* Check if integrals have already been computed and processed. *)
-ReuseProcessedIntegrals = True;
-
 (* Reuse form factors. *)
 ReuseFFs = True;
+
+(* Recycle top results? *)
+RecycleFFTop = True;
 
 (* Number of digits at which the integrals are exported. *)
 ExportPrecision = 100;
@@ -84,7 +85,6 @@ ExpansionOrder2L = 60;
 
 (* Turn on/off exporting of the integrals *)
 WriteIntegralsToCacheBoundaryData = True;
-WriteIntegralsToCacheProcessed = True;
 
 (* When this option is on, integrals are stored in memory within the script and not written to the physical cache.
 	This overwrites WriteIntegralsToCacheBoundaryData, WriteIntegralsToCacheProcessed, and sets them to False.

@@ -84,7 +84,7 @@ SchedulerProcessingFunction[commands__] := Module[{args, MyPointOrig, MyPointPer
 With[{RunCommands = HoldForm[
 		Get[FileNameJoin[{PPHJSharedDirectory, "BaseShared.wls"}]];
 		Get[FileNameJoin[{PPHJSharedDirectory, "ExactMode.wls"}]];
-		Get[FileNameJoin[{PPHJSharedDirectory, "InterpolatedMode.wls"}]];
+		(*Get[FileNameJoin[{PPHJSharedDirectory, "InterpolatedMode.wls"}]];*)
 	]},
 
 	If[FIFOListeners === 1,

@@ -10,9 +10,9 @@ If[$ScriptCommandLine[[11]] === "0" || $ScriptCommandLine[[11]] === "2",
 	Get[FileNameJoin[{PPHJSharedDirectory, "ExactMode.wls"}]];	
 ];
 
-If[$ScriptCommandLine[[11]] === "1" || $ScriptCommandLine[[11]] === "2",
+(*If[$ScriptCommandLine[[11]] === "1" || $ScriptCommandLine[[11]] === "2",
 	Get[FileNameJoin[{PPHJSharedDirectory, "InterpolatedMode.wls"}]];
-];
+];*)
 
 (* Run script.. *)
 ProcessingFunction[Delete[$ScriptCommandLine, 1]];
