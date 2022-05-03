@@ -412,7 +412,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		If[ComputeHe, 
 			If[MemberQ[ComputeParts, "bottom"],
 				MyPointHe1 = MyPoint // Map[# / MyPoint[mmt]&];
-				MyPointHe2 = {s, t, pp4, mmt, mmb} -> ((* Flipped! *){s, t, pp4, mmb, mmt} /. Normal[MyPoint]) // Thread // Association // Map[# / MyPoint[mmt]&];
+				MyPointHe2 = {s, t, pp4, mmt, mmb} -> ((* Flipped! *){s, t, pp4, mmb, mmt} /. Normal[MyPoint]) // Thread // Association // Map[# / MyPoint[mmb]&];
 										
 				ComputeNext["He", MyPointHe1];
 				AppendTo[AllDataComputed, NewPointComputed // ConvertDiffExpResultsHe // Last  // ConvertNotationFinal[#, {FamHe -> "He"}] & // ReplaceAll[MS["He", a__] :> MS[{"He", "top", "bottom"}, a]]];
