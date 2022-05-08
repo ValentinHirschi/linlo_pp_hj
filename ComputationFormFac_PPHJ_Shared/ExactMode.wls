@@ -472,6 +472,11 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 		Print[];
 		Print["Location of the form factors:", FFExportFileName];
 		Print["Form factors exist: ", FormFactorsExist];
+		If[RunMode === "topbottom" && RecycleFFTop === True,
+			Print["Running in topbottom mode with recycling enabled."];
+			Print["Form factors exist top: ", FormFactorsExistTop];
+		];
+		
 		Print[];
 (*		Print["My point permuted"];
 		MyPointPermuted // Map[Print];*)
