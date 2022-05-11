@@ -6,10 +6,10 @@ ScriptName = Last[FileNameSplit[ScriptPath]];
 ScriptDirectory = FileNameJoin @ FileNameSplit[ScriptPath][[1 ;; -2]];
 
 DataDirectory = FileNameJoin[{ScriptDirectory, "Dependencies", "Data"}];
-CacheDirectory = FileNameJoin[{DataDirectory, "ExactMode"}];
-CacheIntegralsDirectory = FileNameJoin[{DataDirectory, "ExactMode", "Integrals"}];
-CacheFormFactorsDirectory = FileNameJoin[{DataDirectory, "ExactMode", "FormFactors"}];
-CacheIndexingFile = FileNameJoin[{DataDirectory, "ExactMode", "Indexing.mx"}];
+CacheDirectory = FileNameJoin[{DataDirectory, $ScriptCommandLine[[2]]}];
+CacheIntegralsDirectory = FileNameJoin[{DataDirectory, $ScriptCommandLine[[2]], "Integrals"}];
+CacheFormFactorsDirectory = FileNameJoin[{DataDirectory, $ScriptCommandLine[[2]], "FormFactors"}];
+CacheIndexingFile = FileNameJoin[{DataDirectory, $ScriptCommandLine[[2]], "Indexing.mx"}];
 
 CorruptedList = {};
 
