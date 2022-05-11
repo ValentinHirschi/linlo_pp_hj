@@ -289,7 +289,7 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 	FFExportFileName = FFExportFileNameGen[RunMode];
 	
 	FormFactorsExistTop = (FileExistsQ[FFExportFileNameGen["top"]] && ReuseFFs);
-	FormFactorsExistBottom = (FileExistsQ[FFExportFileNameGen["bottom"]] && ReuseFFs);
+	FormFactorsExistBottom = (FileExistsQ[FFExportFileNameGen["topbottom"]] && ReuseFFs);
 	
 	
 	
