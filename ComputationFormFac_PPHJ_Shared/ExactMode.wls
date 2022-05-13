@@ -523,8 +523,8 @@ ProcessingFunctionExact[args__] := Module[{MyPoint, MyPointOrig, MyPointPermuted
 			
 			ZeroIfPartial[ex_] := If[
 				fftype === "topbottompartial",
-				(* Remove top integrals, we'll add them from the recycled result. *)
-				ex /. MS[{l_, "top"}, r___] :> 0, 
+				(* Remove top contributions, we'll add them from the recycled result. *)
+				ex /. {incytqcd -> 0, incytmt -> 0}, 
 				(* Otherwise, return the default expression. *)
 				ex
 			];
