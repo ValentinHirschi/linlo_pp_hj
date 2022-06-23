@@ -1,4 +1,4 @@
-ALL PS POINTS SHOULD BE:
+The sample phase-space point common to all these benchmark results is:
  -----------------------------
  n   E   px   py   pz   m
  1   0.50000000000000000E+03  0.00000000000000000E+00  0.00000000000000000E+00  0.50000000000000000E+03  0.00000000000000000E+00
@@ -7,23 +7,32 @@ ALL PS POINTS SHOULD BE:
  4   0.49218750000000011E+03 -0.10919109249939793E+03 -0.43788030840236962E+03  0.19643491540070877E+03  0.97256078979354563E-05
  -----------------------------
 
+And the parameters are the default ones specified in <MG_root>/PLUGIN/linlo_pp_hj/UFO_model_gggH/restrict_validation.dat
+
 *** 1-loop validation
 
 >>> VALIDATION_1L_TEST_OUTPUT/SubProcesses/P50_gg_hg
+ Total Matrix element =    1.1760899905579926E-003  GeV^           0
 
 >>> VALIDATION_1L_TEST_OUTPUT/SubProcesses/P60_ddx_hg
+ Total Matrix element =    7.6556204223734661E-005  GeV^           0
 
 >>> VALIDATION_1L_TEST_OUTPUT/SubProcesses/P70_dg_hd
+ Total Matrix element =    2.9512722165391040E-004  GeV^           0
 
 >>> VALIDATION_1L_TEST_OUTPUT/SubProcesses/P80_gd_hd
+ Total Matrix element =    4.8478304668049021E-005  GeV^           0
 
 *** 2-loop validation
 
 >>> VALIDATION_2L_TEST_OUTPUT/SubProcesses/P10_gg_hg
+ Total Matrix element =   -6.5051125360046573E-005  GeV^           0
 
 >>> VALIDATION_2L_TEST_OUTPUT/SubProcesses/P20_ddx_hg
+ Total Matrix element =   -3.8986824946822173E-005  GeV^           0
 
 >>> VALIDATION_2L_TEST_OUTPUT/SubProcesses/P30_dg_hd
+ Total Matrix element =    6.9332482079887978E-005  GeV^           0
 
 >>> VALIDATION_2L_TEST_OUTPUT/SubProcesses/P40_gd_hd
-
+ Total Matrix element =    1.6113997560826668E-005  GeV^           0

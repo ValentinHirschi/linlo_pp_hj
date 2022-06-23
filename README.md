@@ -22,11 +22,12 @@ One reason for this separation is that the mixed QCD-EW amplitudes were computed
 # Installation
 
 * This plugin requires a `Python2` version of `MadGraph5_aMC@NLO`, and you should therefore first install `MG5aMC v2.7.3` (https://launchpad.net/mg5amcnlo/2.0/2.7.x/+download/MG5_aMC_v2.7.3.tar.gz).
-* This plugin requires `Mathematica v 12.1.1.0+` for correctly running `DiffExp`.
-* Clone this repository into the folder `PLUGIN`  located under root of your `v2.7.3` `MG5aMC` installation.
+* This plugin requires `Mathematica v 12+` for correctly running `DiffExp`.
+* Clone this repository into the folder `PLUGIN`  located under the root of your `v2.7.3` `MG5aMC` installation.
 * Download the additional resources (boundary conditions) from:
-<TODO:MakeSureThisIsALongTermHost> (filesize: `~15 GB`)
+<email:valentin.hirschi@gmail.com> (filesize: `~15 GB`)
 and extract them into a folder named `GridPrecomputed` in `<MG_root>/PLUGIN/linlo_pp_hj/ComputationFormFac_PPHJ_Shared/Dependencies/Data/` (this can take time as this tarball contains about `250k` files).
+Make sure to remove the file `Indexing.mx` if present in that `Data` directory.
 
 # Basic usage
 
@@ -69,11 +70,28 @@ and started with:
 
 `wolframscript gghg_coefs_fifo.wls mathematica_input.fifo default default /tmp /tmp/DiffExp_log.txt`
 
-it should then automatically pick up the "job" specified in `/tmp/mathematica_input.fifo` and start computing the form factors.
-Once they are returned, you should see the fortran program launched earlier with `./check` return, with the following output to:
+After some indexing preparatory work (that only happens the very first time your run the worker), it should then automatically pick up the "job" specified in `/tmp/mathematica_input.fifo` and start computing the form factors.
+Once they are returned (it takes about 20 minutes), you should see the Fortran program launched earlier with `./check` finally return, with the output given below.
+Note that the Mathematica `DiffExp` worker will *not* terminate and simply remain idle while awaiting for a new query to be posted to the `mathematica_input.fifo` stream.
 
 ```
-PUT FORTRAN OUTPUT HERE ONCE WORKING
+[...]
+  Phase space point:
+
+ -----------------------------
+ n   E   px   py   pz   m
+ 1   0.5000000E+03  0.0000000E+00  0.0000000E+00  0.5000000E+03  0.0000000E+00
+ 2   0.5000000E+03  0.0000000E+00  0.0000000E+00 -0.5000000E+03  0.0000000E+00
+ 3   0.5078125E+03  0.1091911E+03  0.4378803E+03 -0.1964349E+03  0.1250000E+03
+ 4   0.4921875E+03 -0.1091911E+03 -0.4378803E+03  0.1964349E+03  0.9725608E-05
+ -----------------------------
+ 1) Matrix element for (GGHG1LQCD=0 GGHG2LQCD=2 PPHJ=2) =    3.1475112000507670E-005
+ 2) Matrix element for (GGHG1LQCD=1 GGHG2LQCD=1 PPHJ=2) =   -6.5051125360046573E-005
+ 3) Matrix element for (GGHG1LQCD=2 GGHG2LQCD=0 PPHJ=2) =    1.1760899905579926E-003
+ Selected squared coupling orders combination for the sum below:
+
+ Total Matrix element =   -6.5051125360046573E-005  GeV^           0
+ -----------------------------
 ```
 
 Please note that this result corresponds only to `2*Re( Fin(A2L) * Conjugate( Fin(A1L) ) )`, where `Fin(A1L)` (resp. `Fin(A2L)`) is the finite part of the renormalised, but not IR-subtracted, 1-loop (resp. 2-loop) amplitude.
@@ -201,7 +219,7 @@ LIBNAME=LINLO make libLINLO.a
 ```
 in the `<PROCESS_OUTPUT_DIR>/lib` directory, which will produce the `<PROCESS_OUTPUT_DIR>/lib/libLINLO.a` library that is ready to be interfaced to other codes.
 
-# Advanced usage of the wolfram `DiffExp` worker
+# Advanced usage of the wolfram DiffExp worker
 
 As stated above, the `DiffExp` worker responsible for evaluating the form factors is started from within `<MG_root>/PLUGIN/linlo_pp_hj/ComputationFormFac_PPHJ_GGHG/mathematicaRoutines` with the following arguments:
 
