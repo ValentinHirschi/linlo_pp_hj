@@ -1,0 +1,17 @@
+# Prevent MadGraph from automatically updating
+set auto_update 0
+
+# Choose to communicate between Fortran and Mathematica using fifo files.
+set_IO_mode fifo
+
+# Import the UFO model with the two-loop exact "effective vertex" and with default parameters serving for validation
+import model ./PLUGIN/linlo_pp_hj/UFO_model_gggH-validation
+
+# Enumerate the partonic processes you are interested in:
+add process g g  > h g GGHG1LQCD<=2 GGHG2LQCD<=0 PPHJ^2==2 GGHG1LQCD^2==2 GGHG2LQCD^2==0 @50
+add process d d~ > h g QQHG1LQCD<=2 QQHG2LQCD<=0 PPHJ^2==2 QQHG1LQCD^2==2 QQHG2LQCD^2==0 @60
+add process d g  > h d QQHG1LQCD<=2 QQHG2LQCD<=0 PPHJ^2==2 QQHG1LQCD^2==2 QQHG2LQCD^2==0 @70
+add process g d  > h d QQHG1LQCD<=2 QQHG2LQCD<=0 PPHJ^2==2 QQHG1LQCD^2==2 QQHG2LQCD^2==0 @80
+
+# Now output the matrix element code to disk
+output standalone_ggHg VALIDATION_1L_TEST_OUTPUT

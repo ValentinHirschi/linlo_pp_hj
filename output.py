@@ -538,8 +538,10 @@ fortran_bridge%.o : fortran_bridge%.cpp
         # fix helas code for inclusion of coupling updates:
         _helas_dir = pjoin(self.dir_path, 'Source','DHELAS')
         _template_dir = pjoin(_plugin_path,'Templates')
+        _is_of_type_linlo_pphj = False
         for proc in self.relevant_processes.values():
             if proc['gluon_number'] in [-1,]:
+                _is_of_type_linlo_pphj = True
                 helas_def ='\n      double precision pin(0:3,3)\n      integer selected_channel'
                 with open(pjoin(_template_dir,'qqg_coupling_update.f'),'r') as file:
                     helas_string = file.read()
@@ -600,6 +602,19 @@ fortran_bridge%.o : fortran_bridge%.cpp
 
         super(My_ggHg_Exporter,self).finalize(matrix_elements, history, mg5options, flaglist)
 
+        prefix = 'PROC_%d'%matrix_elements.get_matrix_elements()[0].get('processes')[0].get('id')
+
+        if _is_of_type_linlo_pphj:
+            # Add special access functions to be able to dynamically update PLUGIN parameters
+            couplings_code = None
+            with open(pjoin(self.dir_path,'Source','MODEL','couplings.f'),'r') as f:
+                couplings_code = f.read()
+            couplings_addendum_code = None
+            with open(pjoin(_plugin_path,'Templates','couplings_addendeum_user_hooks.f'),'r') as f:
+                couplings_addendum_code = (f.read())%{'proc_prefix': prefix}
+            with open(pjoin(self.dir_path,'Source','MODEL','couplings.f'),'w') as f:
+                f.write(couplings_code+'\n'+couplings_addendum_code)
+
         # Overwite lha_read.f to make it able to work with absolute paths
         shutil.copy( pjoin(_plugin_path,'Templates','lha_read.f'), 
                      pjoin(self.dir_path,'Source','MODEL','lha_read.f') )
@@ -615,10 +630,8 @@ fortran_bridge%.o : fortran_bridge%.cpp
         shutil.copy( aloha_functions_template, pjoin(self.dir_path,'Source','DHELAS','aloha_functions.f') )
         misc.compile(arg=['clean'],cwd=pjoin(self.dir_path,'Source','DHELAS'))
         misc.compile(arg=[],cwd=pjoin(self.dir_path,'Source','DHELAS'))
-
+        
         # Compile the global library
-        prefix = 'PROC_%d'%matrix_elements.get_matrix_elements()[0].get('processes')[0].get('id')
-
         open(pjoin(self.dir_path, 'lib','makefile'),'w').write(
             open(pjoin(_plugin_path,'Templates','global_library_makefile'),'r').read()%
                 {'proc_prefix': prefix}
