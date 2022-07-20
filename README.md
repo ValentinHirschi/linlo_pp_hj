@@ -28,14 +28,19 @@ One reason for this separation is that the mixed QCD-EW amplitudes were computed
 
 > https://dataverse.uclouvain.be/api/access/datafile/11624
  (1LCombined.tar.gz: `0.5 GB`)
+
 > https://dataverse.uclouvain.be/api/access/datafile/11625
  (HeCombined.tar.gz: `1.1 GB`)
+
 > https://dataverse.uclouvain.be/api/access/datafile/11627
  (2LCombined_part1.tar.gz: `4.5 GB`)
+
 > https://dataverse.uclouvain.be/api/access/datafile/11626
  (2LCombined_part2.tar.gz: `2.6 GB`)
+
 > https://dataverse.uclouvain.be/api/access/datafile/11628
  (2LCombined_part3.tar.gz: `3.6 GB`)
+ 
 > https://dataverse.uclouvain.be/api/access/datafile/11629
  (2LCombined_part4.tar.gz: `3.6 GB`)
 
