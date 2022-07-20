@@ -25,9 +25,24 @@ One reason for this separation is that the mixed QCD-EW amplitudes were computed
 * This plugin requires `Mathematica v 12+` for correctly running `DiffExp`.
 * Clone this repository into the folder `PLUGIN`  located under the root of your `v2.7.3` `MG5aMC` installation.
 * Download the additional resources (boundary conditions) from:
-<email:valentin.hirschi@gmail.com> (filesize: `~15 GB`)
-and extract them into a folder named `GridPrecomputed` in `<MG_root>/PLUGIN/linlo_pp_hj/ComputationFormFac_PPHJ_Shared/Dependencies/Data/` (this can take time as this tarball contains about `250k` files).
-Make sure to remove the file `Indexing.mx` if present in that `Data` directory.
+
+> https://dataverse.uclouvain.be/api/access/datafile/11624
+ (1LCombined.tar.gz: `0.5 GB`)
+> https://dataverse.uclouvain.be/api/access/datafile/11625
+ (HeCombined.tar.gz: `1.1 GB`)
+> https://dataverse.uclouvain.be/api/access/datafile/11627
+ (2LCombined_part1.tar.gz: `4.5 GB`)
+> https://dataverse.uclouvain.be/api/access/datafile/11626
+ (2LCombined_part2.tar.gz: `2.6 GB`)
+> https://dataverse.uclouvain.be/api/access/datafile/11628
+ (2LCombined_part3.tar.gz: `3.6 GB`)
+> https://dataverse.uclouvain.be/api/access/datafile/11629
+ (2LCombined_part4.tar.gz: `3.6 GB`)
+
+and extract them into a folder named `GridPrecomputed` in `<MG_root>/PLUGIN/linlo_pp_hj/ComputationFormFac_PPHJ_Shared/Dependencies/Data/` (this can take time as the tarballs contain a total of about `250k` files).
+All the files in the folder decompressed from `2LCombined_part[2-4].tar.gz` must be moved into the `<MG_root>/PLUGIN/linlo_pp_hj/ComputationFormFac_PPHJ_Shared/Dependencies/Data/GridPrecomputed/2LCombined/DataPoints` folder created when decompressing `2LCombined_part1.tar.gz`.
+
+Also make sure to remove the file `Indexing.mx` if present in that `Data` directory.
 
 # Basic usage
 
